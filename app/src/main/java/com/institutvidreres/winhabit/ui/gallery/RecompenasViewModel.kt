@@ -6,8 +6,4 @@ import androidx.lifecycle.ViewModel
 
 class RecompenasViewModel : ViewModel() {
 
-    private val _text = MutableLiveData<String>().apply {
-        value = "RECOMPENSAS"
-    }
-    val text: LiveData<String> = _text
 }

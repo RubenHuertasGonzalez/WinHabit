@@ -7,11 +7,11 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.institutvidreres.winhabit.databinding.FragmentHomeBinding
+import com.institutvidreres.winhabit.databinding.FragmentInicioBinding
 
 class InicioFragment : Fragment() {
 
-    private var _binding: FragmentHomeBinding? = null
+    private var _binding: FragmentInicioBinding? = null
 
     private val binding get() = _binding!!
 
@@ -23,13 +23,9 @@ class InicioFragment : Fragment() {
         val homeViewModel =
             ViewModelProvider(this).get(InicioViewModel::class.java)
 
-        _binding = FragmentHomeBinding.inflate(inflater, container, false)
+        _binding = FragmentInicioBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val textView: TextView = binding.textHome
-        homeViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
-        }
         return root
     }
 

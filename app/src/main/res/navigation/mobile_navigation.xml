@@ -8,15 +8,15 @@
         android:id="@+id/inicioFragment"
         android:name="com.institutvidreres.winhabit.ui.home.InicioFragment"
         android:label="INICIO"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_inicio" />
     <fragment
         android:id="@+id/recompensasFragment"
         android:name="com.institutvidreres.winhabit.ui.gallery.RecompensasFragment"
         android:label="RECOMPENSAS"
-        tools:layout="@layout/fragment_gallery" />
+        tools:layout="@layout/fragment_recompensas" />
     <fragment
         android:id="@+id/logrosFragment"
         android:name="com.institutvidreres.winhabit.ui.slideshow.LogrosFragment"
         android:label="LOGROS"
-        tools:layout="@layout/fragment_slideshow" />
+        tools:layout="@layout/fragment_logros" />
 </navigation>

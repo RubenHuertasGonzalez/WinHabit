@@ -7,11 +7,11 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.institutvidreres.winhabit.databinding.FragmentGalleryBinding
+import com.institutvidreres.winhabit.databinding.FragmentRecompensasBinding
 
 class RecompensasFragment : Fragment() {
 
-    private var _binding: FragmentGalleryBinding? = null
+    private var _binding: FragmentRecompensasBinding? = null
 
     private val binding get() = _binding!!
 
@@ -23,13 +23,9 @@ class RecompensasFragment : Fragment() {
         val galleryViewModel =
             ViewModelProvider(this).get(RecompenasViewModel::class.java)
 
-        _binding = FragmentGalleryBinding.inflate(inflater, container, false)
+        _binding = FragmentRecompensasBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val textView: TextView = binding.textGallery
-        galleryViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
-        }
         return root
     }
 

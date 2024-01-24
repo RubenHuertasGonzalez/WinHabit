@@ -6,8 +6,5 @@ import androidx.lifecycle.ViewModel
 
 class InicioViewModel : ViewModel() {
 
-    private val _text = MutableLiveData<String>().apply {
-        value = "INICIO"
-    }
-    val text: LiveData<String> = _text
+
 }

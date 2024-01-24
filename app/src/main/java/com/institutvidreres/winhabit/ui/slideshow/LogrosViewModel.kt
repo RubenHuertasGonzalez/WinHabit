@@ -5,9 +5,4 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
 class LogrosViewModel : ViewModel() {
-
-    private val _text = MutableLiveData<String>().apply {
-        value = "LOGROS"
-    }
-    val text: LiveData<String> = _text
 }
