@@ -1,17 +1,16 @@
-package com.institutvidreres.winhabit.ui.slideshow
+package com.institutvidreres.winhabit.ui.recompensas
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.institutvidreres.winhabit.databinding.FragmentLogrosBinding
+import com.institutvidreres.winhabit.databinding.FragmentRecompensasBinding
 
-class LogrosFragment : Fragment() {
+class RecompensasFragment : Fragment() {
 
-    private var _binding: FragmentLogrosBinding? = null
+    private var _binding: FragmentRecompensasBinding? = null
 
     private val binding get() = _binding!!
 
@@ -20,10 +19,10 @@ class LogrosFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val slideshowViewModel =
-            ViewModelProvider(this).get(LogrosViewModel::class.java)
+        val galleryViewModel =
+            ViewModelProvider(this).get(RecompenasViewModel::class.java)
 
-        _binding = FragmentLogrosBinding.inflate(inflater, container, false)
+        _binding = FragmentRecompensasBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
         return root

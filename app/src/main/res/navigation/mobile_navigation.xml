@@ -4,19 +4,28 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
     app:startDestination="@id/inicioFragment">
+
     <fragment
         android:id="@+id/inicioFragment"
-        android:name="com.institutvidreres.winhabit.ui.home.InicioFragment"
+        android:name="com.institutvidreres.winhabit.ui.inicio.InicioFragment"
         android:label="INICIO"
         tools:layout="@layout/fragment_inicio" />
+
     <fragment
         android:id="@+id/recompensasFragment"
-        android:name="com.institutvidreres.winhabit.ui.gallery.RecompensasFragment"
+        android:name="com.institutvidreres.winhabit.ui.recompensas.RecompensasFragment"
         android:label="RECOMPENSAS"
         tools:layout="@layout/fragment_recompensas" />
+
     <fragment
         android:id="@+id/logrosFragment"
-        android:name="com.institutvidreres.winhabit.ui.slideshow.LogrosFragment"
+        android:name="com.institutvidreres.winhabit.ui.logros.LogrosFragment"
         android:label="LOGROS"
         tools:layout="@layout/fragment_logros" />
+
+    <fragment
+        android:id="@+id/perfilFragment"
+        android:name="com.institutvidreres.winhabit.ui.perfil.PerfilFragment"
+        android:label="PERFIL"
+        tools:layout="@layout/fragment_perfil" />
 </navigation>

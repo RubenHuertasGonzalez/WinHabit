@@ -1,17 +1,16 @@
-package com.institutvidreres.winhabit.ui.home
+package com.institutvidreres.winhabit.ui.logros
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.institutvidreres.winhabit.databinding.FragmentInicioBinding
+import com.institutvidreres.winhabit.databinding.FragmentLogrosBinding
 
-class InicioFragment : Fragment() {
+class LogrosFragment : Fragment() {
 
-    private var _binding: FragmentInicioBinding? = null
+    private var _binding: FragmentLogrosBinding? = null
 
     private val binding get() = _binding!!
 
@@ -20,10 +19,10 @@ class InicioFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val homeViewModel =
-            ViewModelProvider(this).get(InicioViewModel::class.java)
+        val slideshowViewModel =
+            ViewModelProvider(this).get(LogrosViewModel::class.java)
 
-        _binding = FragmentInicioBinding.inflate(inflater, container, false)
+        _binding = FragmentLogrosBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
         return root
