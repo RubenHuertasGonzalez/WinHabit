@@ -3,23 +3,20 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/nav_home">
-
+    app:startDestination="@id/inicioFragment">
     <fragment
-        android:id="@+id/nav_home"
-        android:name="com.institutvidreres.winhabit.ui.home.HomeFragment"
-        android:label="@string/menu_home"
+        android:id="@+id/inicioFragment"
+        android:name="com.institutvidreres.winhabit.ui.home.InicioFragment"
+        android:label="INICIO"
         tools:layout="@layout/fragment_home" />
-
     <fragment
-        android:id="@+id/nav_gallery"
-        android:name="com.institutvidreres.winhabit.ui.gallery.GalleryFragment"
-        android:label="@string/menu_gallery"
+        android:id="@+id/recompensasFragment"
+        android:name="com.institutvidreres.winhabit.ui.gallery.RecompensasFragment"
+        android:label="RECOMPENSAS"
         tools:layout="@layout/fragment_gallery" />
-
     <fragment
-        android:id="@+id/nav_slideshow"
-        android:name="com.institutvidreres.winhabit.ui.slideshow.SlideshowFragment"
-        android:label="@string/menu_slideshow"
+        android:id="@+id/logrosFragment"
+        android:name="com.institutvidreres.winhabit.ui.slideshow.LogrosFragment"
+        android:label="LOGROS"
         tools:layout="@layout/fragment_slideshow" />
 </navigation>

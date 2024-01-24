@@ -1,13 +1,13 @@
-package com.institutvidreres.winhabit.ui.slideshow
+package com.institutvidreres.winhabit.ui.gallery
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
-class SlideshowViewModel : ViewModel() {
+class RecompenasViewModel : ViewModel() {
 
     private val _text = MutableLiveData<String>().apply {
-        value = "This is slideshow Fragment"
+        value = "RECOMPENSAS"
     }
     val text: LiveData<String> = _text
 }
