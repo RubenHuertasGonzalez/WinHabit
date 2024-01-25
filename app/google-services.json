@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "95637224574",
+    "project_id": "winhabit-ruben-eloy",
+    "storage_bucket": "winhabit-ruben-eloy.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:95637224574:android:7f2ac7689ea899b0cbec2f",
+        "android_client_info": {
+          "package_name": "com.institutvidreres.winhabit"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyADs3MCd6JZ8VbdknXJcntYY5Qy6RRQSwg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
