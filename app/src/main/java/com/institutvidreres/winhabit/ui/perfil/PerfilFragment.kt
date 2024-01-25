@@ -21,3 +21,4 @@ class PerfilFragment : Fragment() {
 //nav_header_main.xml
 //foto: @mipmap/ic_launcher_round
 //id: imageView
+//
