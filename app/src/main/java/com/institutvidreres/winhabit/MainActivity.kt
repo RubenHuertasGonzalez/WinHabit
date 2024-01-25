@@ -1,5 +1,6 @@
 package com.institutvidreres.winhabit
 
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
@@ -74,10 +75,19 @@ class MainActivity : AppCompatActivity() {
                 navController.navigate(R.id.perfilFragment)
                 binding.drawerLayout.closeDrawers()
             }
+
     }
 
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment_content_main)
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
+
+    // Cambia el tipo de retorno a Drawable
+    fun importImage(): Drawable? {
+        val profileImage: ImageView = binding.navView.getHeaderView(0).findViewById(R.id.imageView)
+        return profileImage.drawable
+    }
+
+
 }
