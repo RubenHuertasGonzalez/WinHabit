@@ -20,7 +20,6 @@ import com.google.firebase.Firebase
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.analytics
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.auth
 import com.institutvidreres.winhabit.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
