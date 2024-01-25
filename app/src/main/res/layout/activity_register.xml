@@ -20,15 +20,9 @@
         android:inputType="textPassword" />
 
     <Button
-        android:id="@+id/buttonSignIn"
+        android:id="@+id/buttonRegister"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Iniciar sesión" />
-
-    <Button
-        android:id="@+id/buttonGoToRegister"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="No tengo cuenta" />
+        android:text="Registrar" />
 
 </LinearLayout>
