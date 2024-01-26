@@ -82,7 +82,6 @@ class MainActivity : AppCompatActivity() {
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
 
-    // Cambia el tipo de retorno a Drawable
     fun importImage(): Drawable? {
         val profileImage: ImageView = binding.navView.getHeaderView(0).findViewById(R.id.imageView)
         return profileImage.drawable

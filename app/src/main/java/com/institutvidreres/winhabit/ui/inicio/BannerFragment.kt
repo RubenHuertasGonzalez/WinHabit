@@ -22,6 +22,8 @@ class BannerFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+        //TODO: Duplicado de fragments
         _binding = FragmentBannerBinding.inflate(inflater, container, false)
         val root: View = binding.root
 

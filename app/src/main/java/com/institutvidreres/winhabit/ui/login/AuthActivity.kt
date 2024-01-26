@@ -1,15 +1,12 @@
 package com.institutvidreres.winhabit.ui.login
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.widget.EditText
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
 import com.institutvidreres.winhabit.MainActivity
-import com.institutvidreres.winhabit.R
 import com.institutvidreres.winhabit.databinding.ActivityAuthBinding
 
 class AuthActivity : AppCompatActivity() {
@@ -18,6 +15,16 @@ class AuthActivity : AppCompatActivity() {
     private val TAG = "AuthActivity"
     private lateinit var binding: ActivityAuthBinding
 
+    override fun onStart() {
+        super.onStart()
+        val currentUser = auth.currentUser
+        if (currentUser != null) {
+            // Usuario ya autenticado, redirigir a la actividad principal
+            startActivity(Intent(this, MainActivity::class.java))
+            finish()  // Cerrar esta actividad para evitar que el usuario retroceda a la pantalla de inicio de sesión
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityAuthBinding.inflate(layoutInflater)
@@ -25,33 +32,37 @@ class AuthActivity : AppCompatActivity() {
 
         auth = FirebaseAuth.getInstance()
 
-        val buttonSignIn = binding.buttonSignIn
-        val buttonGoToRegister = binding.buttonGoToRegister
+        val buttonLogin = binding.buttonSignIn
 
-        buttonSignIn.setOnClickListener {
-            val emailField = findViewById<EditText>(R.id.editTextEmail)
-            val passwordField = findViewById<EditText>(R.id.editTextPassword)
+        val buttonGoRegister = binding.buttonGoToRegister
 
-            val email = emailField.text.toString()
-            val password = passwordField.text.toString()
-            val auth = FirebaseAuth.getInstance()
-            val db = FirebaseFirestore.getInstance()
+        buttonLogin.setOnClickListener {
+            val email = binding.editTextEmail.text.toString()
+            val password = binding.editTextPassword.text.toString()
 
             auth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this) { task ->
                     if (task.isSuccessful) {
-                        Toast.makeText(this, "CORRECTO INICIADO", Toast.LENGTH_SHORT).show()
-                        val intent = Intent(this, MainActivity::class.java)
+                        // Inicio de sesión exitoso, redirigir a la actividad principal
+                        val user = auth.currentUser
+                        if (user != null) {
+                            Toast.makeText(this, "Inicio de sesión correcto", Toast.LENGTH_SHORT).show()
+                            val intent = Intent(this, MainActivity::class.java)
+                            startActivity(intent)
+                            finish()  // Cerrar esta actividad
+                        }
                     } else {
+                        // Fallo en el inicio de sesión
                         Log.w(TAG, "signInWithEmailAndPassword:failure", task.exception)
+                        Toast.makeText(this, "Error en el inicio de sesión", Toast.LENGTH_SHORT).show()
                     }
                 }
         }
 
-        buttonGoToRegister.setOnClickListener {
+        buttonGoRegister.setOnClickListener {
             val intent = Intent(this, RegisterActivity::class.java)
             startActivity(intent)
+            finish()
         }
     }
 }
-

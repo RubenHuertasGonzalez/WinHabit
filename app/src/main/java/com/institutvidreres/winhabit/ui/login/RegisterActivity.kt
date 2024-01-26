@@ -1,5 +1,6 @@
 package com.institutvidreres.winhabit.ui.login
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -7,6 +8,7 @@ import android.widget.EditText
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.institutvidreres.winhabit.MainActivity
 import com.institutvidreres.winhabit.R
 import com.institutvidreres.winhabit.databinding.ActivityAuthBinding
 import com.institutvidreres.winhabit.databinding.ActivityRegisterBinding
@@ -16,9 +18,9 @@ class RegisterActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
     private val TAG = "AuthActivity"
     private lateinit var binding: ActivityRegisterBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //setContentView(R.layout.activity_register)
         binding = ActivityRegisterBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -27,11 +29,9 @@ class RegisterActivity : AppCompatActivity() {
         val buttonRegister = binding.buttonRegister
 
         buttonRegister.setOnClickListener {
-            val emailField = findViewById<EditText>(R.id.editTextEmail)
-            val passwordField = findViewById<EditText>(R.id.editTextPassword)
+            val email = binding.editTextEmail.text.toString()
+            val password = binding.editTextPassword.text.toString()
 
-            val email = emailField.text.toString()
-            val password = passwordField.text.toString()
             val auth = FirebaseAuth.getInstance()
             val db = FirebaseFirestore.getInstance()
 
@@ -49,6 +49,8 @@ class RegisterActivity : AppCompatActivity() {
                                 .addOnSuccessListener {
                                     Toast.makeText(this, "CORRECTO CREADO", Toast.LENGTH_SHORT).show()
                                     Log.d(TAG, "DocumentSnapshot successfully written!")
+                                    val intent = Intent(this, AuthActivity::class.java)
+                                    startActivity(intent)
                                 }
                                 .addOnFailureListener { e ->
                                     Log.w(TAG, "Error writing document", e)
@@ -59,6 +61,8 @@ class RegisterActivity : AppCompatActivity() {
                     }
                 }
         }
+
+
 
     }
 }
