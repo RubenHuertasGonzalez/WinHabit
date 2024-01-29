@@ -1,5 +1,6 @@
 package com.institutvidreres.winhabit
 
+import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.View
@@ -19,8 +20,8 @@ import androidx.navigation.ui.NavigationUI.setupWithNavController
 import com.google.firebase.Firebase
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.analytics
-import com.google.firebase.auth.FirebaseAuth
 import com.institutvidreres.winhabit.databinding.ActivityMainBinding
+import com.institutvidreres.winhabit.notificacion.NotificationService
 
 class MainActivity : AppCompatActivity() {
 
@@ -34,6 +35,10 @@ class MainActivity : AppCompatActivity() {
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        val notificationIntent = Intent(this, NotificationService::class.java)
+        notificationIntent.putExtra("isAppInForeground", true)
+        startService(notificationIntent)
 
         // Obtain the FirebaseAnalytics instance.
         analytics = Firebase.analytics
@@ -87,5 +92,11 @@ class MainActivity : AppCompatActivity() {
         return profileImage.drawable
     }
 
+    override fun onStop() {
+        super.onStop()
 
+        val notificationIntent = Intent(this, NotificationService::class.java)
+        notificationIntent.putExtra("isAppInForeground", false)
+        startService(notificationIntent)
+    }
 }
