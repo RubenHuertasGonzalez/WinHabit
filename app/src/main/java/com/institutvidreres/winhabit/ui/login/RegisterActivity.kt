@@ -8,7 +8,6 @@ import android.widget.EditText
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.institutvidreres.winhabit.MainActivity
 import com.institutvidreres.winhabit.R
 import com.institutvidreres.winhabit.databinding.ActivityAuthBinding
 import com.institutvidreres.winhabit.databinding.ActivityRegisterBinding
@@ -61,8 +60,5 @@ class RegisterActivity : AppCompatActivity() {
                     }
                 }
         }
-
-
-
     }
 }

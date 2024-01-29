@@ -32,4 +32,8 @@
         android:id="@+id/registerActivity"
         android:name="com.institutvidreres.winhabit.ui.login.RegisterActivity"
         android:label="RegisterActivity" />
+    <activity
+        android:id="@+id/authActivity"
+        android:name="com.institutvidreres.winhabit.ui.login.AuthActivity"
+        android:label="AuthActivity" />
 </navigation>
