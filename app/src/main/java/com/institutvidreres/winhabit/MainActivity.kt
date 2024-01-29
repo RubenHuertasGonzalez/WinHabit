@@ -3,10 +3,9 @@ package com.institutvidreres.winhabit
 import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
-import android.widget.Toast
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
@@ -17,7 +16,6 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.NavigationUI.setupWithNavController
 import androidx.navigation.ui.navigateUp
-import androidx.navigation.ui.onNavDestinationSelected
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -28,7 +26,6 @@ import com.google.firebase.analytics.analytics
 import com.google.firebase.auth.FirebaseAuth
 import com.institutvidreres.winhabit.databinding.ActivityMainBinding
 import com.institutvidreres.winhabit.ui.login.AuthActivity
-
 
 class MainActivity : AppCompatActivity()  {
 
@@ -105,13 +102,18 @@ class MainActivity : AppCompatActivity()  {
             handled || super.onOptionsItemSelected(menuItem)
         }
 
+        // Obtener el correo electrónico del intento y actualizar el perfil
+        val userEmail = intent.getStringExtra("user_email")
+        updateProfileEmail(userEmail)
 
-        binding.navView.getHeaderView(0).findViewById<ImageView>(R.id.imageView)
+        // Listener para el clic en la imagen del perfil
+        binding.navView.getHeaderView(0).findViewById<ImageView>(R.id.imageViewPersonajePerfil)
             .setOnClickListener {
                 navController.navigate(R.id.perfilFragment)
                 binding.drawerLayout.closeDrawers()
             }
     }
+
     private fun signOut() {
         // Aquí debes realizar el cierre de sesión en Firebase Auth
         FirebaseAuth.getInstance().signOut()
@@ -121,7 +123,6 @@ class MainActivity : AppCompatActivity()  {
         startActivity(intent)
         finish()
     }
-
 
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment_content_main)
@@ -135,8 +136,12 @@ class MainActivity : AppCompatActivity()  {
     }
 
     fun importImage(): Drawable? {
-        val profileImage: ImageView = binding.navView.getHeaderView(0).findViewById(R.id.imageView)
+        val profileImage: ImageView = binding.navView.getHeaderView(0).findViewById(R.id.imageViewPersonajePerfil)
         return profileImage.drawable
     }
 
+    fun updateProfileEmail(email: String?) {
+        val textViewCorreoPerfil = binding.navView.getHeaderView(0).findViewById<TextView>(R.id.textViewCorreoPerfil)
+        textViewCorreoPerfil.text = email
+    }
 }

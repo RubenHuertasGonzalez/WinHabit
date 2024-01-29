@@ -6,11 +6,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import com.institutvidreres.winhabit.MainActivity
-import com.institutvidreres.winhabit.R
 import com.institutvidreres.winhabit.databinding.FragmentBannerBinding
-import com.institutvidreres.winhabit.databinding.FragmentInicioBinding
 
 class BannerFragment : Fragment() {
 

@@ -1,28 +1,129 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:padding="16dp">
 
-    <EditText
-        android:id="@+id/editTextEmail"
+    <ImageView
+        android:id="@+id/imageViewLogoRegister"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/winhabitlogo"
+        android:contentDescription="Logo" />
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Correo electrónico"
-        android:inputType="textEmailAddress" />
+        android:orientation="vertical"
+        android:layout_below="@id/imageViewLogoRegister"
+        android:layout_marginTop="16dp">
 
-    <EditText
-        android:id="@+id/editTextPassword"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Contraseña"
-        android:inputType="textPassword" />
+        <EditText
+            android:id="@+id/editTextEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Correo electrónico"
+            android:inputType="textEmailAddress" />
 
-    <Button
-        android:id="@+id/buttonRegister"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Registrar" />
+        <EditText
+            android:id="@+id/editTextPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Contraseña"
+            android:inputType="textPassword" />
 
-</LinearLayout>
+        <!-- Título de elección de personajes -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Personajes:"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_marginTop="16dp"/>
+
+        <!-- Parejas de imágenes con separación y cuadro de selección -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="8dp">
+
+            <!-- Chicos a la izquierda -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/imageViewVaquero"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:src="@drawable/vaquero"
+                    android:contentDescription="Vaquero"
+                    android:layout_marginBottom="8dp"
+                    android:background="@drawable/image_border" />
+
+                <ImageView
+                    android:id="@+id/imageViewMago"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:src="@drawable/mago"
+                    android:contentDescription="Mago"
+                    android:layout_marginBottom="8dp"
+                    android:background="@drawable/image_border" />
+
+                <ImageView
+                    android:id="@+id/imageViewArquero"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:src="@drawable/arquero"
+                    android:contentDescription="Arquero"
+                    android:background="@drawable/image_border" />
+            </LinearLayout>
+
+            <!-- Chicas a la derecha -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/imageViewVaquera"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:src="@drawable/vaquera"
+                    android:contentDescription="Vaquera"
+                    android:layout_marginBottom="8dp"
+                    android:background="@drawable/image_border" />
+
+                <ImageView
+                    android:id="@+id/imageViewBruja"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:src="@drawable/bruja"
+                    android:contentDescription="Bruja"
+                    android:layout_marginBottom="8dp"
+                    android:background="@drawable/image_border" />
+
+                <ImageView
+                    android:id="@+id/imageViewArquera"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:src="@drawable/arquera"
+                    android:contentDescription="Arquera"
+                    android:background="@drawable/image_border" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Botón más abajo -->
+        <Button
+            android:id="@+id/buttonRegister"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Registrar"
+            android:layout_marginTop="16dp" />
+    </LinearLayout>
+</RelativeLayout>
