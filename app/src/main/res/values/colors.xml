@@ -12,5 +12,7 @@
     <color name="bottom_nav_item">#8C706D</color>
     <color name="bottom_nav_selected_item">#220006</color>
     <color name="fragment_bg_color">#FDF8F4</color>
+    <color name="selected_image_border">#FF7100</color>
+    <color name="image_border">#008EFF</color>
 
 </resources>
