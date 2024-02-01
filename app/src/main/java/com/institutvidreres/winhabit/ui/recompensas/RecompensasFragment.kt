@@ -19,8 +19,6 @@ class RecompensasFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val galleryViewModel =
-            ViewModelProvider(this).get(RecompenasViewModel::class.java)
 
         _binding = FragmentRecompensasBinding.inflate(inflater, container, false)
         val root: View = binding.root

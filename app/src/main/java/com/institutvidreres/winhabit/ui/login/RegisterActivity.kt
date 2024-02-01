@@ -1,6 +1,7 @@
 package com.institutvidreres.winhabit.ui.login
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.widget.ImageView
@@ -8,15 +9,20 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
+import com.institutvidreres.winhabit.MainActivity
 import com.institutvidreres.winhabit.R
 import com.institutvidreres.winhabit.databinding.ActivityRegisterBinding
 
 class RegisterActivity : AppCompatActivity() {
+    //TODO: Correo de confirmación de cuenta
 
     private lateinit var auth: FirebaseAuth
     private val TAG = "AuthActivity"
     private lateinit var binding: ActivityRegisterBinding
-    private var selectedCharacter: Int = -1 // Default: No character selected
+    private var selectedCharacter: Int = -1
+    private lateinit var storageReference: StorageReference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,6 +30,7 @@ class RegisterActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         auth = FirebaseAuth.getInstance()
+        storageReference = FirebaseStorage.getInstance().reference
 
         // Get references to image views
         val imageViewVaquero = binding.imageViewVaquero
@@ -72,7 +79,9 @@ class RegisterActivity : AppCompatActivity() {
                                 .addOnSuccessListener {
                                     Toast.makeText(this, "CORRECTO CREADO", Toast.LENGTH_SHORT).show()
                                     Log.d(TAG, "DocumentSnapshot successfully written!")
-                                    val intent = Intent(this, AuthActivity::class.java)
+                                    val intent = Intent(this, MainActivity::class.java)
+                                    intent.putExtra("user_email", email)
+                                    intent.putExtra("user_character", selectedCharacter)
                                     startActivity(intent)
                                 }
                                 .addOnFailureListener { e ->
@@ -82,6 +91,16 @@ class RegisterActivity : AppCompatActivity() {
                     } else {
                         Log.w(TAG, "createUserWithEmailAndPassword:failure", task.exception)
                     }
+                }
+
+            storageReference.child("${auth.currentUser?.uid}/profile_image.png")
+                .putFile(getImageResourceUri(selectedCharacter))
+                .addOnSuccessListener { _ ->
+                    // Imagen del personaje almacenada exitosamente
+                }
+                .addOnFailureListener { e ->
+                    // Maneja el error al almacenar la imagen del personaje
+                    Log.e(TAG, "Error al almacenar la imagen del personaje", e)
                 }
         }
     }
@@ -99,6 +118,20 @@ class RegisterActivity : AppCompatActivity() {
             // Cambiar la apariencia del personaje seleccionado
             imageView.setBackgroundResource(R.drawable.selected_image_border)
         }
+    }
+
+    private fun getImageResourceUri(characterIndex: Int): Uri {
+        val imageName = when (characterIndex) {
+            0 -> "vaquero.png"
+            1 -> "mago.png"
+            2 -> "arquero.png"
+            3 -> "vaquera.png"
+            4 -> "bruja.png"
+            5 -> "arquera.png"
+            else -> throw IllegalArgumentException("Índice de personaje no válido")
+        }
+
+        return Uri.parse("android.resource://${packageName}/drawable/${imageName}")
     }
 
     private fun getImageViewByCharacterIndex(characterIndex: Int): ImageView {
