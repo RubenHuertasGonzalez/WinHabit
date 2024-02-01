@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
@@ -142,6 +143,10 @@ class MainActivity : AppCompatActivity()  {
             Glide.with(this)
                 .load(uri)
                 .into(imageView)
+
+            // Actualizar la URL de la imagen en el ViewModel
+            val sharedViewModel = ViewModelProvider(this).get(SharedViewModel::class.java)
+            sharedViewModel.selectedImageUri.value = uri.toString()
             Log.d("URL de la imagen: ", "$uri")
         }.addOnFailureListener { exception ->
             // Manejar el error si la descarga falla
@@ -171,10 +176,10 @@ class MainActivity : AppCompatActivity()  {
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
 
-    fun importImage(): Drawable? {
-        val profileImage: ImageView = binding.navView.getHeaderView(0).findViewById(R.id.imageViewPersonajePerfil)
-        return profileImage.drawable
-    }
+//    fun importImage(): Drawable? {
+//        val profileImage: ImageView = binding.navView.getHeaderView(0).findViewById(R.id.imageViewPersonajePerfil)
+//        return profileImage.drawable
+//    }
 
     fun updateProfileEmail(email: String?) {
         val textViewCorreoPerfil = binding.navView.getHeaderView(0).findViewById<TextView>(R.id.textViewCorreoPerfil)

@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 
 class SharedViewModel : ViewModel() {
     private val _selectedCharacter = MutableLiveData<Int>()
+    val selectedImageUri = MutableLiveData<String>()
     val selectedCharacter: LiveData<Int> get() = _selectedCharacter
 
     // Nueva LiveData para la imagen seleccionada

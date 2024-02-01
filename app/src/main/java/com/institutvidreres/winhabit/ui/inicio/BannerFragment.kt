@@ -6,31 +6,33 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProvider
+import com.bumptech.glide.Glide
 import com.institutvidreres.winhabit.MainActivity
+import com.institutvidreres.winhabit.SharedViewModel
 import com.institutvidreres.winhabit.databinding.FragmentBannerBinding
 
 class BannerFragment : Fragment() {
 
     private var _binding: FragmentBannerBinding? = null
-
     private val binding get() = _binding!!
+    private lateinit var sharedViewModel: SharedViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
-        //TODO: Duplicado de fragments
         _binding = FragmentBannerBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        // Obtén la imagen de perfil de MainActivity
-        val mainActivity = activity as MainActivity
-        val profileDrawable: Drawable? = mainActivity.importImage()
+        sharedViewModel = ViewModelProvider(requireActivity()).get(SharedViewModel::class.java)
 
-        // Establece la imagen de perfil en la ImageView de tu fragmento
-        profileDrawable?.let {
-            binding.imageView2.setImageDrawable(it)
+        // Observa los cambios en la URL de la imagen
+        sharedViewModel.selectedImageUri.observe(viewLifecycleOwner) { imageUrl ->
+            // Cargar la imagen en el ImageView utilizando Glide
+            Glide.with(this)
+                .load(imageUrl)
+                .into(binding.imageView2)
         }
 
         return root
