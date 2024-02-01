@@ -60,6 +60,7 @@ class RegisterActivity : AppCompatActivity() {
             // Resto de tu código para registrar al usuario
             val email = binding.editTextEmail.text.toString()
             val password = binding.editTextPassword.text.toString()
+            val username = binding.editTextUsername.text.toString()
 
             val auth = FirebaseAuth.getInstance()
             val db = FirebaseFirestore.getInstance()
@@ -70,6 +71,7 @@ class RegisterActivity : AppCompatActivity() {
                         val user = auth.currentUser
                         val userInfo = hashMapOf(
                             "email" to email,
+                            "username" to username,
                             "password" to password,
                             "character" to selectedCharacter
                         )
