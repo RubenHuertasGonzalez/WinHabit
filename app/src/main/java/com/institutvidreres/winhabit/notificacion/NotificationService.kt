@@ -1,5 +1,6 @@
 package com.institutvidreres.winhabit.notificacion
 
+import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -11,6 +12,7 @@ import android.os.Handler
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
 import com.institutvidreres.winhabit.MainActivity
+import com.institutvidreres.winhabit.R
 
 class NotificationService : Service() {
 
@@ -30,6 +32,10 @@ class NotificationService : Service() {
         super.onCreate()
         createNotificationChannel()
         startTimer()
+        startForeground(
+            NOTIFICATION_ID,
+            createForegroundNotification()
+        ) // Iniciar el servicio en primer plano
     }
 
     private fun createNotificationChannel() {
@@ -83,6 +89,18 @@ class NotificationService : Service() {
         if (intent != null) {
             isAppInForeground = intent.getBooleanExtra("isAppInForeground", false)
         }
-        return super.onStartCommand(intent, flags, startId)
+        return Service.START_STICKY // Devolver este valor para reiniciar el servicio si se destruye
+    }
+
+    private fun createForegroundNotification(): Notification {
+        val intent = Intent(this, MainActivity::class.java)
+        val pendingIntent = PendingIntent.getActivity(this, 0, intent, 0)
+
+        return NotificationCompat.Builder(this, CHANNEL_ID)
+            .setContentTitle("Servicio en primer plano")
+            .setContentText("Este servicio muestra una notificación persistente")
+            .setSmallIcon(R.drawable.ic_launcher_foreground)
+            .setContentIntent(pendingIntent)
+            .build()
     }
 }
