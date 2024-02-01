@@ -9,7 +9,11 @@
         android:id="@+id/inicioFragment"
         android:name="com.institutvidreres.winhabit.ui.inicio.InicioFragment"
         android:label="INICIO"
-        tools:layout="@layout/fragment_inicio" />
+        tools:layout="@layout/fragment_inicio" >
+        <action
+            android:id="@+id/action_inicioFragment_to_crearTareaFragment"
+            app:destination="@id/crearTareaFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/recompensasFragment"
@@ -36,4 +40,9 @@
         android:id="@+id/authActivity"
         android:name="com.institutvidreres.winhabit.ui.login.AuthActivity"
         android:label="AuthActivity" />
+    <fragment
+        android:id="@+id/crearTareaFragment"
+        android:name="com.institutvidreres.winhabit.tareas.CrearTareaFragment"
+        android:label="fragment_crear_tarea"
+        tools:layout="@layout/fragment_crear_tarea" />
 </navigation>

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".tareas.CrearTareaFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <EditText
+            android:id="@+id/editTextNombreTarea"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Nombre tarea"
+            android:inputType="text" />
+
+        <EditText
+            android:id="@+id/editTextDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Descripción"
+            android:inputType="text" />
+
+        <RadioGroup
+            android:id="@+id/dificultad"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="8dp">
+
+            <RadioButton
+                android:id="@+id/radioButtonFacil"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Fácil" />
+
+            <RadioButton
+                android:id="@+id/radioButtonNormal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Normal" />
+
+            <RadioButton
+                android:id="@+id/radioButtonDificil"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Difícil" />
+
+        </RadioGroup>
+
+        <RadioGroup
+            android:id="@+id/duracion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="8dp">
+
+            <RadioButton
+                android:id="@+id/radioButtonDiario"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Diario" />
+
+            <RadioButton
+                android:id="@+id/radioButtonSemanal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Semanal" />
+
+            <RadioButton
+                android:id="@+id/radioButtonMensual"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Mensual" />
+
+        </RadioGroup>
+
+        <Button
+            android:id="@+id/buttonAcabarDeCrear"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="CREAR TAREA" />
+
+    </LinearLayout>
+
+</ScrollView>
+

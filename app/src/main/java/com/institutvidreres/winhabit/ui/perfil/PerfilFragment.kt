@@ -34,8 +34,6 @@ class PerfilFragment : Fragment() {
         // Establece el correo en el textViewCorreoPerfil de nav_header_main.xml
         navHeader.findViewById<TextView>(R.id.textViewCorreoPerfil).text = userEmail
 
-        val navView = requireActivity().findViewById<NavigationView>(R.id.nav_view)
-
 
         // Oculta el banner
         requireActivity().findViewById<View>(R.id.banner).visibility = View.GONE

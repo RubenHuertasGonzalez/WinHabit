@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_marginHorizontal="16dp"
+    android:layout_marginVertical="8dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="8dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <Button
+            android:id="@+id/btnIncrementar"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="32dp"
+            android:backgroundTint="@color/holo_green_light"
+            android:text="+"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tvNombreTarea"
+            android:layout_width="283dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="48dp"
+            android:layout_marginTop="6dp"
+            android:layout_marginBottom="74dp"
+            android:textAlignment="center"
+            android:textColor="@android:color/black"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:hint="Nombre tarea" />
+
+        <TextView
+            android:id="@+id/tvDescripcionTarea"
+            android:layout_width="235dp"
+            android:layout_height="49dp"
+            android:layout_marginTop="40dp"
+            android:layout_marginEnd="72dp"
+            android:textAlignment="center"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:hint="Descripcion tarea" />
+
+        <TextView
+            android:id="@+id/tvDificultadTarea"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="93dp"
+            android:textAlignment="viewStart"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Dificultad" />
+
+        <TextView
+            android:id="@+id/tvDuracionTarea"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="93dp"
+            android:layout_marginEnd="16dp"
+            android:textAlignment="viewEnd"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Duracion" />
+
+        <Button
+            android:id="@+id/btnDecrementar"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="16dp"
+            android:backgroundTint="@color/holo_red_light"
+            android:text="-"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>

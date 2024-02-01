@@ -26,12 +26,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="12dp"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="12dp"
                     android:text="0"
                     android:textSize="18sp"
                     android:textStyle="bold"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintHorizontal_bias="0.033"
                     app:layout_constraintStart_toEndOf="@+id/imageView2"
                     app:layout_constraintTop_toBottomOf="@+id/progressBar2" />
 
@@ -39,12 +39,12 @@
                     android:id="@+id/textViewLvl"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="12dp"
                     android:text="0"
                     android:textSize="18sp"
                     android:textStyle="bold"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.887"
+                    app:layout_constraintHorizontal_bias="0.935"
                     app:layout_constraintStart_toEndOf="@+id/textViewMonedas"
                     app:layout_constraintTop_toBottomOf="@+id/progressBar2" />
 
@@ -54,9 +54,9 @@
                     android:layout_width="175dp"
                     android:layout_height="12dp"
                     android:layout_marginStart="28dp"
-                    android:layout_marginTop="12dp"
+                    android:layout_marginTop="20dp"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintHorizontal_bias="0.376"
                     app:layout_constraintStart_toEndOf="@+id/imageView2"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -80,7 +80,7 @@
                     android:layout_marginTop="24dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintHorizontal_bias="0.406"
                     app:layout_constraintStart_toEndOf="@+id/imageView2"
                     app:layout_constraintTop_toBottomOf="@+id/progressBar"
                     app:layout_constraintVertical_bias="0.0" />
