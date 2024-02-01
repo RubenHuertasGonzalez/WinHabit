@@ -44,5 +44,9 @@
         android:id="@+id/crearTareaFragment"
         android:name="com.institutvidreres.winhabit.tareas.CrearTareaFragment"
         android:label="fragment_crear_tarea"
-        tools:layout="@layout/fragment_crear_tarea" />
+        tools:layout="@layout/fragment_crear_tarea" >
+        <action
+            android:id="@+id/action_crearTareaFragment_to_inicioFragment"
+            app:destination="@id/inicioFragment" />
+    </fragment>
 </navigation>
