@@ -6,11 +6,11 @@
 
     <ImageView
         android:id="@+id/imageViewLogoRegister"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
+        android:layout_width="156dp"
+        android:layout_height="119dp"
         android:layout_centerHorizontal="true"
-        android:src="@drawable/winhabitlogo"
-        android:contentDescription="Logo" />
+        android:contentDescription="Logo"
+        android:src="@drawable/winhabitlogo" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -25,6 +25,12 @@
             android:layout_height="wrap_content"
             android:hint="Correo electrónico"
             android:inputType="textEmailAddress" />
+
+        <EditText
+            android:id="@+id/editTextUsername"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Nombre de usuario" />
 
         <EditText
             android:id="@+id/editTextPassword"
