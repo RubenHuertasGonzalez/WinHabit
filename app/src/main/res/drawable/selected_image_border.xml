@@ -1,0 +1,14 @@
+<!-- res/drawable/selected_image_background.xml -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Fondo de la imagen del personaje -->
+    <item>
+        <shape android:shape="rectangle">
+            <!-- Fondo blanco (puedes ajustar el color según tus necesidades) -->
+            <solid android:color="#FFFFFF" />
+            <!-- Borde amarillo -->
+            <stroke
+                android:color="#FFFF00"
+            android:width="4dp" />
+        </shape>
+    </item>
+</layer-list>
