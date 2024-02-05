@@ -10,6 +10,7 @@ import android.widget.RadioButton
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
@@ -91,6 +92,8 @@ class CrearTareaFragment : Fragment() {
                 // Opcional: Deseleccionar los RadioButtons
                 binding.dificultad.clearCheck()
                 binding.duracion.clearCheck()
+
+                findNavController().navigate(R.id.action_crearTareaFragment_to_inicioFragment)
             } else {
                 Log.e(TAG, "Error: No se pudo obtener el ID de usuario actual.")
             }
