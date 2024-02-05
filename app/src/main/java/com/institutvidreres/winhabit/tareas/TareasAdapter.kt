@@ -6,7 +6,6 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.institutvidreres.winhabit.R
-import com.institutvidreres.winhabit.tareas.Tarea
 
 class TareasAdapter(private var tareas: List<Tarea>) :
     RecyclerView.Adapter<TareasAdapter.TareaViewHolder>() {
