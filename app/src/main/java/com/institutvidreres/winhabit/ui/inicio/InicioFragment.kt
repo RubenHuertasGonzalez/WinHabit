@@ -1,6 +1,5 @@
 package com.institutvidreres.winhabit.ui.inicio
 
-// InicioFragment.kt
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,8 +11,8 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.institutvidreres.winhabit.R
-import com.institutvidreres.winhabit.tareas.TareasAdapter
 import com.institutvidreres.winhabit.databinding.FragmentInicioBinding
+import com.institutvidreres.winhabit.tareas.TareasAdapter
 import com.institutvidreres.winhabit.tareas.TareasViewModel
 
 class InicioFragment : Fragment() {
@@ -29,15 +28,17 @@ class InicioFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val homeViewModel =
-            ViewModelProvider(this).get(InicioViewModel::class.java)
-
         _binding = FragmentInicioBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         tareasViewModel = ViewModelProvider(requireActivity()).get(TareasViewModel::class.java)
 
         tareasAdapter = TareasAdapter(tareasViewModel.tareasList.value ?: emptyList())
-        val recyclerView: RecyclerView = binding.RecyclerViewTareas  // Use binding to access views
+        val recyclerView: RecyclerView = binding.RecyclerViewTareas
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.adapter = tareasAdapter
 
@@ -51,11 +52,10 @@ class InicioFragment : Fragment() {
             navController.navigate(R.id.action_inicioFragment_to_crearTareaFragment)
         }
 
-        tareasViewModel.tareasList.observe(viewLifecycleOwner) { nuevasTareas ->
-            tareasAdapter.actualizarLista(nuevasTareas)
+        tareasViewModel.tareasList.observe(viewLifecycleOwner) { tareas ->
+            // Actualizar el adaptador con las nuevas tareas
+            tareasAdapter.actualizarLista(tareas)
         }
-
-        return binding.root
     }
 
     override fun onDestroyView() {
@@ -63,5 +63,4 @@ class InicioFragment : Fragment() {
         _binding = null
     }
 }
-
 
