@@ -16,7 +16,6 @@ import com.institutvidreres.winhabit.tareas.TareasAdapter
 import com.institutvidreres.winhabit.databinding.FragmentInicioBinding
 import com.institutvidreres.winhabit.tareas.TareasViewModel
 
-
 class InicioFragment : Fragment() {
 
     private var _binding: FragmentInicioBinding? = null
@@ -34,7 +33,6 @@ class InicioFragment : Fragment() {
             ViewModelProvider(this).get(InicioViewModel::class.java)
 
         _binding = FragmentInicioBinding.inflate(inflater, container, false)
-        val root: View = binding.root
 
         tareasViewModel = ViewModelProvider(requireActivity()).get(TareasViewModel::class.java)
 
@@ -65,3 +63,5 @@ class InicioFragment : Fragment() {
         _binding = null
     }
 }
+
+
