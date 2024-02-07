@@ -1,0 +1,29 @@
+<!-- item_recompensa.xml -->
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    android:padding="8dp"
+    android:layout_weight="0.5">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Imagen de la recompensa -->
+        <ImageView
+            android:id="@+id/imagen_recompensa"
+            android:layout_width="match_parent"
+            android:layout_height="60dp" />
+
+        <!-- Descripción de la recompensa -->
+        <TextView
+            android:id="@+id/descripcion_recompensa"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="16sp"/>
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>
