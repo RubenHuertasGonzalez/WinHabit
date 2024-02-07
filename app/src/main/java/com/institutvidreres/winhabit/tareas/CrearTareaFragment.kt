@@ -46,18 +46,11 @@ class CrearTareaFragment : Fragment() {
         tareasViewModel = ViewModelProvider(requireActivity()).get(TareasViewModel::class.java)
 
         tareasAdapter = TareasAdapter(emptyList())
-        val recyclerView: RecyclerView = binding.root.findViewById(R.id.RecyclerViewTareas)
-        recyclerView.layoutManager = LinearLayoutManager(context)
-        recyclerView.adapter = tareasAdapter
-
-        // Observar cambios en la lista de tareas
-        tareasViewModel.tareasList.observe(viewLifecycleOwner) { tareas ->
-            // Actualizar el adaptador con las nuevas tareas
-            tareasAdapter.actualizarLista(tareas)
+        val recyclerView: RecyclerView? = view.findViewById(R.id.RecyclerViewTareas)
+        recyclerView?.let {
+            it.layoutManager = LinearLayoutManager(context)
+            it.adapter = tareasAdapter
         }
-
-        // Llamar a esta función al iniciar sesión para cargar las tareas del usuario
-        obtenerTareasDeUsuario()
 
         val buttonCrearTarea: Button = binding.buttonAcabarDeCrear
         buttonCrearTarea.setOnClickListener {
@@ -131,36 +124,6 @@ class CrearTareaFragment : Fragment() {
             radioButton?.text.toString()
         } else {
             null
-        }
-    }
-
-    private fun obtenerTareasDeUsuario() {
-        // Obtener ID de usuario actual
-        val userId = auth.currentUser?.uid
-
-        if (userId != null) {
-            // Consultar Firestore para obtener las tareas del usuario
-            firestoreDB.collection("tasks")
-                .whereEqualTo("userId", userId)
-                .get()
-                .addOnSuccessListener { querySnapshot ->
-                    val tareas = mutableListOf<Tarea>()
-
-                    for (document in querySnapshot.documents) {
-                        val tarea = document.toObject(Tarea::class.java)
-                        tarea?.let {
-                            tareas.add(it)
-                        }
-                    }
-
-                    // Actualizar el ViewModel con las tareas recuperadas
-                    tareasViewModel.actualizarTareas(tareas)
-                }
-                .addOnFailureListener { e ->
-                    Log.w(TAG, "Error al obtener tareas del usuario", e)
-                }
-        } else {
-            Log.e(TAG, "Error: No se pudo obtener el ID de usuario actual.")
         }
     }
 

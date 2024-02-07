@@ -1,6 +1,7 @@
 package com.institutvidreres.winhabit.ui.inicio
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,14 +11,19 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import com.institutvidreres.winhabit.R
 import com.institutvidreres.winhabit.databinding.FragmentInicioBinding
+import com.institutvidreres.winhabit.tareas.Tarea
 import com.institutvidreres.winhabit.tareas.TareasAdapter
 import com.institutvidreres.winhabit.tareas.TareasViewModel
 
 class InicioFragment : Fragment() {
 
+    private val TAG = "InicioFragment"
     private var _binding: FragmentInicioBinding? = null
+
     private val binding get() = _binding!!
 
     private lateinit var tareasViewModel: TareasViewModel
@@ -56,6 +62,11 @@ class InicioFragment : Fragment() {
             // Actualizar el adaptador con las nuevas tareas
             tareasAdapter.actualizarLista(tareas)
         }
+
+        //TODO: Arreglar tareas para cada usuario
+
+        // Llamar a esta función al iniciar sesión para cargar las tareas del usuario
+        // obtenerTareasDeUsuario()
     }
 
     override fun onDestroyView() {
