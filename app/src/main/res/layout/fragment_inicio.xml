@@ -41,22 +41,39 @@
                     android:id="@+id/textViewNivel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="24dp"
+                    android:layout_marginTop="20dp"
                     android:text="Nivel 1"
                     android:textSize="18sp"
                     android:textStyle="bold"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <TextView
-                    android:id="@+id/textViewMonedas"
+                <LinearLayout
+                    android:id="@+id/monedasLayout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="0"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
+                    android:layout_marginTop="8dp"
+                    android:orientation="horizontal"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <ImageView
+                        android:id="@+id/imageViewMoneda"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/moneda"
+                        android:contentDescription="Imagen de moneda"
+                        android:layout_marginEnd="4dp" />
+
+                    <TextView
+                        android:id="@+id/textViewMonedas"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:layout_marginEnd="8dp" />
+                </LinearLayout>
 
                 <ImageView
                     android:id="@+id/imageView2"
@@ -65,7 +82,8 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    tools:src="@tools:sample/avatars" />
+                    tools:src="@tools:sample/avatars"
+                    android:layout_marginTop="8dp" />
 
                 <ImageView
                     android:id="@+id/healthbarBorder"

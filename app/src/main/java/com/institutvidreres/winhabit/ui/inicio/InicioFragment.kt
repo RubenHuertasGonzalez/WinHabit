@@ -40,6 +40,9 @@ class InicioFragment : Fragment(), TareasAdapter.OnClickListener {
     private var porcentajeNecesario = 20
     private val incrementoPorcentaje = 20
 
+    private var progresoActualMonedas = 0
+    private var monedas = 0
+
     private lateinit var healthBar: ImageView
     private var vidasPerdidas = 0
     override fun onCreateView(
@@ -130,11 +133,15 @@ class InicioFragment : Fragment(), TareasAdapter.OnClickListener {
     override fun onIncrementClick(position: Int) {
         // Verificar si se ha alcanzado el nivel máximo
         if (!nivelMaximoAlcanzado) {
-            // Generar un número aleatorio entre 1 y 5
-            val incremento = Random.nextInt(1, 6)  // Rango ajustado para que el incremento esté entre 40 y 60
+            // Generar un número aleatorio entre 1 y 5 para el progreso
+            val incrementoProgreso = Random.nextInt(1, 6)
 
-            // Sumar el número aleatorio al progreso actual
-            progresoActual += incremento
+            // Generar un número aleatorio entre 5 y 10 para las monedas
+            val incrementoMonedas = Random.nextInt(5, 11)
+
+            // Sumar los números aleatorios al progreso actual y a las monedas
+            progresoActual += incrementoProgreso
+            progresoActualMonedas += incrementoMonedas
 
             // Verificar si se alcanzó o superó el porcentaje necesario
             if (progresoActual >= porcentajeNecesario) {
@@ -175,9 +182,11 @@ class InicioFragment : Fragment(), TareasAdapter.OnClickListener {
 
             // Mostrar un mensaje de tarea completada
             Toast.makeText(context, "¡Tarea completada!", Toast.LENGTH_SHORT).show()
+
+            // Actualizar y mostrar las monedas
+            binding.textViewMonedas.text = progresoActualMonedas.toString()
         }
     }
-
     private fun actualizarAnchuraBarraVidaEnInterfaz(nuevaAnchura: Float) {
         // Actualiza la anchura de la barra de vida en la interfaz de usuario
         healthBar.scaleX = nuevaAnchura
