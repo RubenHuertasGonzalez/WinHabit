@@ -18,6 +18,7 @@ import com.institutvidreres.winhabit.SharedViewModel
 import com.institutvidreres.winhabit.databinding.FragmentInicioBinding
 import com.institutvidreres.winhabit.tareas.TareasAdapter
 import com.institutvidreres.winhabit.tareas.TareasViewModel
+import kotlin.random.Random
 
 class InicioFragment : Fragment(), TareasAdapter.OnClickListener {
 
@@ -29,6 +30,13 @@ class InicioFragment : Fragment(), TareasAdapter.OnClickListener {
     private lateinit var tareasViewModel: TareasViewModel
     private lateinit var tareasAdapter: TareasAdapter
     private lateinit var sharedViewModel: SharedViewModel
+
+    private var progresoActual = 0
+    private var nivel = 1
+    private val nivelMaximo = 20
+    private var nivelMaximoAlcanzado = false
+    private var porcentajeNecesario = 20
+    private val incrementoPorcentaje = 20
 
     private lateinit var healthBar: ImageView
     private var vidasPerdidas = 0
@@ -109,9 +117,56 @@ class InicioFragment : Fragment(), TareasAdapter.OnClickListener {
         healthBar.scaleX = escala
     }
 
+    //TODO: Restringir personajes premium asta llegar a X lvl
     override fun onIncrementClick(position: Int) {
-        Toast.makeText(context, "¡Tarea completada!", Toast.LENGTH_SHORT).show()
-    }
+        // Verificar si se ha alcanzado el nivel máximo
+        if (!nivelMaximoAlcanzado) {
+            // Generar un número aleatorio entre 1 y 5
+            val incremento = Random.nextInt(1, 6)  // Rango ajustado para que el incremento esté entre 40 y 60
 
+            // Sumar el número aleatorio al progreso actual
+            progresoActual += incremento
+
+            // Verificar si se alcanzó o superó el porcentaje necesario
+            if (progresoActual >= porcentajeNecesario) {
+                // Incrementar el nivel y reiniciar el progreso
+                nivel++
+                progresoActual = 0
+
+                // Aumentar la dificultad para el próximo nivel
+                porcentajeNecesario += incrementoPorcentaje
+
+                // Verificar si el nivel alcanzó el nivel máximo después de la actualización
+                if (nivel >= nivelMaximo) {
+                    // Establecer la bandera de nivel máximo alcanzado
+                    nivelMaximoAlcanzado = true
+                    // Establecer el nivel en el nivel máximo
+                    nivel = nivelMaximo
+
+                    // Actualizar el texto del nivel
+                    // Asegúrate de tener el TextView correspondiente en tu diseño con el id textViewNivel
+                    binding.textViewNivel.text = "Nivel 20"
+
+                    // Mostrar el mensaje de nivel máximo en el TextView correspondiente
+                    binding.textViewPorcentajeNivel.text = "¡NIVEL MAXIMO!"
+                } else {
+                    // Actualizar el texto del nivel
+                    // Asegúrate de tener el TextView correspondiente en tu diseño con el id textViewNivel
+                    binding.textViewNivel.text = "Nivel $nivel"
+
+                    // Actualizar el texto del progreso (textViewLvl)
+                    // Asegúrate de tener el TextView correspondiente en tu diseño con el id textViewLvl
+                    binding.textViewPorcentajeNivel.text = "$progresoActual / $porcentajeNecesario"
+                }
+            } else {
+                // Actualizar el texto del progreso (textViewLvl) si no se ha alcanzado el porcentaje necesario
+                // Asegúrate de tener el TextView correspondiente en tu diseño con el id textViewLvl
+                binding.textViewPorcentajeNivel.text = "$progresoActual / $porcentajeNecesario"
+            }
+
+            // Mostrar un mensaje de tarea completada
+            Toast.makeText(context, "¡Tarea completada!", Toast.LENGTH_SHORT).show()
+        }
+    }
 }
 

@@ -28,17 +28,28 @@
                 android:padding="8dp">
 
                 <TextView
-                    android:id="@+id/textViewMonedas"
+                    android:id="@+id/textViewPorcentajeNivel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="0"
+                    android:text="0 / 20"
                     android:textSize="18sp"
                     android:textStyle="bold"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
-                    android:id="@+id/textViewLvl"
+                    android:id="@+id/textViewNivel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:text="Nivel 1"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/textViewMonedas"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="0"
