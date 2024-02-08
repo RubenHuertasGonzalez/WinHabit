@@ -8,21 +8,37 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="horizontal">
 
         <!-- Imagen de la recompensa -->
         <ImageView
             android:id="@+id/imagen_recompensa"
-            android:layout_width="match_parent"
+            android:layout_width="80dp"
             android:layout_height="80dp"/>
 
         <!-- Descripción de la recompensa -->
         <TextView
             android:id="@+id/descripcion_recompensa"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:gravity="center"
             android:textSize="16sp"/>
+
+        <!-- Botón de la recompensa -->
+        <Button
+            android:id="@+id/boton_recompensa"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="COMPRAR" />
+
+        <!-- Imagen de la moneda -->
+        <ImageView
+            android:id="@+id/imagen_moneda"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/moneda" />
+
     </LinearLayout>
 
 </androidx.cardview.widget.CardView>

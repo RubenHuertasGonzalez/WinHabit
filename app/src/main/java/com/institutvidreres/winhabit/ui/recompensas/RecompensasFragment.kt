@@ -1,6 +1,6 @@
-// RecompensasFragment.kt
 package com.institutvidreres.winhabit.ui.recompensas
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -27,6 +27,7 @@ class RecompensasFragment : Fragment() {
 
         viewModel = ViewModelProvider(this).get(RecompenasViewModel::class.java)
 
+        // Paso el contexto al instanciar los adaptadores
         setupRecyclerView(binding.recyclerViewPersonajes, viewModel.personajesList)
         setupRecyclerView(binding.recyclerViewPersonajesPremium, viewModel.personajesPremiumList)
 
@@ -34,8 +35,8 @@ class RecompensasFragment : Fragment() {
     }
 
     private fun setupRecyclerView(recyclerView: RecyclerView, dataList: List<Recompensa>) {
-        recyclerView.layoutManager = LinearLayoutManager(context)
-        recyclerView.adapter = RecompensasAdapter(dataList)
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        recyclerView.adapter = RecompensasAdapter(dataList, requireContext())
     }
 
     override fun onDestroyView() {
