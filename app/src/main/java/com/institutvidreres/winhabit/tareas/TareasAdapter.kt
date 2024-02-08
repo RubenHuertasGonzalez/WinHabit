@@ -3,11 +3,14 @@ package com.institutvidreres.winhabit.tareas
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.institutvidreres.winhabit.R
 
-class TareasAdapter(private var tareas: List<Tarea>) :
+class TareasAdapter(private var tareas: List<Tarea>, private val listener: OnDecrementClickListener) :
     RecyclerView.Adapter<TareasAdapter.TareaViewHolder>() {
 
     inner class TareaViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -15,6 +18,13 @@ class TareasAdapter(private var tareas: List<Tarea>) :
         val descripcion: TextView = itemView.findViewById(R.id.tvDescripcionTarea)
         val dificultad: TextView = itemView.findViewById(R.id.tvDificultadTarea)
         val duracion: TextView = itemView.findViewById(R.id.tvDuracionTarea)
+        val btnDecrementar: Button = itemView.findViewById(R.id.btnDecrementar)
+
+        init {
+            btnDecrementar.setOnClickListener {
+                listener.onDecrementClick(adapterPosition)
+            }
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TareaViewHolder {
@@ -36,6 +46,10 @@ class TareasAdapter(private var tareas: List<Tarea>) :
     fun actualizarLista(nuevasTareas: List<Tarea>) {
         tareas = nuevasTareas
         notifyDataSetChanged()
+    }
+
+    interface OnDecrementClickListener {
+        fun onDecrementClick(position: Int)
     }
 }
 

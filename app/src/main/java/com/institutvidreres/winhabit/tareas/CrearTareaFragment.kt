@@ -45,7 +45,12 @@ class CrearTareaFragment : Fragment() {
 
         tareasViewModel = ViewModelProvider(requireActivity()).get(TareasViewModel::class.java)
 
-        tareasAdapter = TareasAdapter(emptyList())
+        tareasAdapter = TareasAdapter(emptyList(), object : TareasAdapter.OnDecrementClickListener {
+            override fun onDecrementClick(position: Int) {
+                // No hagas nada aquí, es una implementación vacía o dummy
+            }
+        })
+
         val recyclerView: RecyclerView? = view.findViewById(R.id.RecyclerViewTareas)
         recyclerView?.let {
             it.layoutManager = LinearLayoutManager(context)
