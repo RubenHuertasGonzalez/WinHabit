@@ -1,3 +1,4 @@
+// MainActivity.kt
 package com.institutvidreres.winhabit
 
 import android.content.Intent
@@ -31,25 +32,14 @@ import com.google.firebase.storage.ktx.storage
 import com.institutvidreres.winhabit.databinding.ActivityMainBinding
 import com.institutvidreres.winhabit.ui.login.AuthActivity
 
-class MainActivity : AppCompatActivity()  {
+class MainActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
     private lateinit var analytics: FirebaseAnalytics
 
-    // Reemplaza "arquera.png" con el nombre de tu archivo
-    private val arquera = "arquera.png"
-    private val arquero = "arquero.png"
-    private val mago = "mago.png"
-    private val bruja = "bruja.png"
-    private val vaquero = "vaquero.png"
-    private val vaquera = "vaquera.png"
-
-    private val imagenPerfil = arquera
-    private lateinit var imageView: ImageView
-    private val storage = com.google.firebase.ktx.Firebase.storage
-    private val storageReference = storage.reference.child(imagenPerfil)
+    private var userEmail: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -77,12 +67,10 @@ class MainActivity : AppCompatActivity()  {
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
-
-
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
         setupWithNavController(bottomNavigationView, navController)
 
-        // TODO: Optimizar parte de destinacion del menu drawer (mas adelante)
+        // TODO: Optimizar parte de destinacion del menu drawer (más adelante)
         navController.addOnDestinationChangedListener { _, destination, _ ->
 
             when (destination.id) {
@@ -94,6 +82,7 @@ class MainActivity : AppCompatActivity()  {
                 }
             }
         }
+
         // Accion para el Cerrar sesion
         navView.setNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
@@ -122,8 +111,8 @@ class MainActivity : AppCompatActivity()  {
         }
 
         // Obtener el correo electrónico del intento y actualizar el perfil
-        val userEmail = intent.getStringExtra("user_email")
-        updateProfileEmail(userEmail)
+        userEmail = intent.getStringExtra("user_email")
+        updateNavigationDrawerEmail()
 
         // Listener para el clic en la imagen del perfil
         binding.navView.getHeaderView(0).findViewById<ImageView>(R.id.imageViewPersonajePerfil)
@@ -133,9 +122,12 @@ class MainActivity : AppCompatActivity()  {
             }
 
         val headerMain = navView.getHeaderView(0)
-        imageView = headerMain.findViewById(R.id.imageViewPersonajePerfil)
+        val imageView: ImageView = headerMain.findViewById(R.id.imageViewPersonajePerfil)
 
         // Obtener la URL de la imagen en Storage
+        val storage = com.google.firebase.ktx.Firebase.storage
+        val storageReference = storage.reference.child("arquera.png")
+
         storageReference.downloadUrl.addOnSuccessListener { uri ->
             // Cargar la imagen en el ImageView utilizando Glide
             Glide.with(this)
@@ -174,13 +166,9 @@ class MainActivity : AppCompatActivity()  {
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
 
-//    fun importImage(): Drawable? {
-//        val profileImage: ImageView = binding.navView.getHeaderView(0).findViewById(R.id.imageViewPersonajePerfil)
-//        return profileImage.drawable
-//    }
-
-    fun updateProfileEmail(email: String?) {
+    fun updateNavigationDrawerEmail() {
+        // Actualizar la vista con el correo almacenado
         val textViewCorreoPerfil = binding.navView.getHeaderView(0).findViewById<TextView>(R.id.textViewCorreoPerfil)
-        textViewCorreoPerfil.text = email
+        textViewCorreoPerfil.text = userEmail
     }
 }

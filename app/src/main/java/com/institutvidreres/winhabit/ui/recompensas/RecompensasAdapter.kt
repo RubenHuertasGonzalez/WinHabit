@@ -2,6 +2,7 @@ package com.institutvidreres.winhabit.ui.recompensas
 
 import android.app.AlertDialog
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -36,7 +37,7 @@ class RecompensasAdapter(
         holder.descripcionTextView.text = "${recompensa.descripcion}"
 
         // Configurar el botón y la moneda
-        holder.botonRecompensa.text = "${recompensa.precio * recompensa.cantidad} monedas"
+        holder.botonRecompensa.text = "${recompensa.precio} monedas"
         holder.botonRecompensa.setOnClickListener {
             mostrarDialogoCompra(recompensa)
         }
@@ -44,10 +45,8 @@ class RecompensasAdapter(
 
         // Actualizar la cantidad al hacer clic en el botón
         holder.botonRecompensa.setOnLongClickListener {
-            // Incrementar la cantidad al mantener presionado el botón
-            recompensa.cantidad++
             // Actualizar la descripción con la nueva cantidad
-            holder.descripcionTextView.text = "${recompensa.descripcion} (x${recompensa.cantidad})"
+            holder.descripcionTextView.text = "${recompensa.descripcion}"
             true
         }
     }
@@ -57,16 +56,19 @@ class RecompensasAdapter(
     }
 
     private fun mostrarDialogoCompra(recompensa: Recompensa) {
+        Log.d("RecompensasAdapter", "mostrarDialogoCompra ejecutado")  // Agregar este log
         val builder = AlertDialog.Builder(context)
         builder.setTitle("Confirmar Compra")
-        builder.setMessage("¿Te gustaría comprar ${recompensa.cantidad} '${recompensa.descripcion}' por ${recompensa.precio * recompensa.cantidad} monedas?")
+        builder.setMessage("¿Te gustaría comprar '${recompensa.descripcion}' por ${recompensa.precio} monedas?")
         builder.setPositiveButton("CONFIRMAR") { _, _ ->
-            // Lógica para procesar la compra
-            val mensajeCompra = "¡${recompensa.cantidad} '${recompensa.descripcion}' comprado por ${recompensa.precio * recompensa.cantidad} monedas!"
-            Toast.makeText(context, mensajeCompra, Toast.LENGTH_SHORT).show()
+            // Añadir un Toast cuando se confirme la compra
+            val mensaje = "${recompensa.descripcion} comprado por ${recompensa.precio} monedas!"
+            Toast.makeText(context, mensaje, Toast.LENGTH_SHORT).show()
         }
         builder.setNegativeButton("CANCELAR") { _, _ ->
-            Toast.makeText(context, "COMPRA CANCELADA", Toast.LENGTH_SHORT).show()
+            // Añadir un Toast cuando se cancele la compra
+            val mensaje = "Compra de ${recompensa.descripcion} cancelada!"
+            Toast.makeText(context, mensaje, Toast.LENGTH_SHORT).show()
         }
         builder.show()
     }

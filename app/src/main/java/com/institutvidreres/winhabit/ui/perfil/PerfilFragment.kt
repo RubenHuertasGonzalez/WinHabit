@@ -1,13 +1,13 @@
+// PerfilFragment.kt
 package com.institutvidreres.winhabit.ui.perfil
 
 import android.content.Context.MODE_PRIVATE
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import com.google.android.material.navigation.NavigationView
+import androidx.fragment.app.Fragment
+import com.institutvidreres.winhabit.MainActivity
 import com.institutvidreres.winhabit.R
 import com.institutvidreres.winhabit.databinding.FragmentPerfilBinding
 
@@ -23,20 +23,11 @@ class PerfilFragment : Fragment() {
         _binding = FragmentPerfilBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        // Recupera el correo desde SharedPreferences
-        val sharedPreferences = requireActivity().getSharedPreferences("user_info", MODE_PRIVATE)
-        val userEmail = sharedPreferences.getString("email", "")
-
-        // Obtén el header del NavigationView
-        val navHeader =
-            requireActivity().findViewById<NavigationView>(R.id.nav_view).getHeaderView(0)
-
-        // Establece el correo en el textViewCorreoPerfil de nav_header_main.xml
-        navHeader.findViewById<TextView>(R.id.textViewCorreoPerfil).text = userEmail
-
-
         // Oculta el banner
         requireActivity().findViewById<View>(R.id.banner).visibility = View.GONE
+
+        // Llama al método de actualización en MainActivity
+        (requireActivity() as MainActivity).updateNavigationDrawerEmail()
 
         return root
     }

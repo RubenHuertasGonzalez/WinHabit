@@ -5,5 +5,4 @@ data class Recompensa(
     val imagenResId: Int,
     val descripcion: String,
     val precio: Int,
-    var cantidad: Int = 1
 )
