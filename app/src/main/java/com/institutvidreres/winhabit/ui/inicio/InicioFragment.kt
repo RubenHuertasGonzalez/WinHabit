@@ -1,7 +1,6 @@
 package com.institutvidreres.winhabit.ui.inicio
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,16 +13,13 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
 import com.institutvidreres.winhabit.R
 import com.institutvidreres.winhabit.SharedViewModel
 import com.institutvidreres.winhabit.databinding.FragmentInicioBinding
-import com.institutvidreres.winhabit.tareas.Tarea
 import com.institutvidreres.winhabit.tareas.TareasAdapter
 import com.institutvidreres.winhabit.tareas.TareasViewModel
 
-class InicioFragment : Fragment(), TareasAdapter.OnDecrementClickListener {
+class InicioFragment : Fragment(), TareasAdapter.OnClickListener {
 
     private val TAG = "InicioFragment"
     private var _binding: FragmentInicioBinding? = null
@@ -111,6 +107,10 @@ class InicioFragment : Fragment(), TareasAdapter.OnDecrementClickListener {
         val porcentajeVidasRestantes = vidasRestantes.toFloat() / totalVidas.toFloat()
         val escala = porcentajeVidasRestantes
         healthBar.scaleX = escala
+    }
+
+    override fun onIncrementClick(position: Int) {
+        Toast.makeText(context, "¡Tarea completada!", Toast.LENGTH_SHORT).show()
     }
 
 }

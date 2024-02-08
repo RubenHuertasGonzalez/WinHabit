@@ -17,9 +17,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.institutvidreres.winhabit.R
 import com.institutvidreres.winhabit.databinding.FragmentCrearTareaBinding
-import com.institutvidreres.winhabit.tareas.Tarea
-import com.institutvidreres.winhabit.tareas.TareasAdapter
-import com.institutvidreres.winhabit.tareas.TareasViewModel
 
 class CrearTareaFragment : Fragment() {
 
@@ -45,8 +42,12 @@ class CrearTareaFragment : Fragment() {
 
         tareasViewModel = ViewModelProvider(requireActivity()).get(TareasViewModel::class.java)
 
-        tareasAdapter = TareasAdapter(emptyList(), object : TareasAdapter.OnDecrementClickListener {
+        tareasAdapter = TareasAdapter(emptyList(), object : TareasAdapter.OnClickListener {
             override fun onDecrementClick(position: Int) {
+                // No hagas nada aquí, es una implementación vacía o dummy
+            }
+
+            override fun onIncrementClick(position: Int) {
                 // No hagas nada aquí, es una implementación vacía o dummy
             }
         })
