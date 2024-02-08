@@ -21,9 +21,6 @@
             android:exported="true"></service>
 
         <activity
-            android:name=".notificacion.NotificacionActivity"
-            android:exported="false" />
-        <activity
             android:name=".ui.login.RegisterActivity"
             android:exported="false" />
         <activity

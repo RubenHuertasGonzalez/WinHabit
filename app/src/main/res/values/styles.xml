@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Define el estilo para la barra de navegación inferior -->
+    <style name="BottomNavigationView" parent="Widget.Design.BottomNavigationView">
+        <!-- Fondo de la barra de navegación -->
+        <item name="android:background">@color/bottom_nav_background</item>
+
+        <!-- Color del texto de los elementos no seleccionados -->
+        <item name="android:textColor">@color/black</item>
+
+        <!-- Color del texto de los elementos seleccionados -->
+        <item name="itemTextAppearanceActive">@style/BottomNavigation.Active</item>
+
+        <!-- Agrega elevación para una apariencia más tridimensional -->
+        <item name="android:elevation">8dp</item>
+    </style>
+
+    <!-- Define el estilo para el texto de los elementos seleccionados -->
+    <style name="BottomNavigation.Active" parent="TextAppearance.Design.CollapsingToolbar.Expanded">
+        <!-- Cambia el color del texto de los elementos seleccionados -->
+        <item name="android:textColor">@color/image_border</item>
+    </style>
+</resources>
