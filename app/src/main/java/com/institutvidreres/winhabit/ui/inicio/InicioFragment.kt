@@ -6,6 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -21,7 +23,7 @@ import com.institutvidreres.winhabit.tareas.Tarea
 import com.institutvidreres.winhabit.tareas.TareasAdapter
 import com.institutvidreres.winhabit.tareas.TareasViewModel
 
-class InicioFragment : Fragment() {
+class InicioFragment : Fragment(), TareasAdapter.OnDecrementClickListener {
 
     private val TAG = "InicioFragment"
     private var _binding: FragmentInicioBinding? = null
@@ -32,6 +34,8 @@ class InicioFragment : Fragment() {
     private lateinit var tareasAdapter: TareasAdapter
     private lateinit var sharedViewModel: SharedViewModel
 
+    private lateinit var healthBar: ImageView
+    private var vidasPerdidas = 0
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -55,7 +59,8 @@ class InicioFragment : Fragment() {
                 .into(binding.imageView2)
         }
 
-        tareasAdapter = TareasAdapter(tareasViewModel.tareasList.value ?: emptyList())
+        healthBar = binding.healthbar
+        tareasAdapter = TareasAdapter(tareasViewModel.tareasList.value ?: emptyList(), this)
         val recyclerView: RecyclerView = binding.RecyclerViewTareas
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.adapter = tareasAdapter
@@ -85,5 +90,28 @@ class InicioFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
+
+    override fun onDecrementClick(position: Int) {
+        val totalVidas = 5 // Total de vidas
+        vidasPerdidas++
+
+        val vidasRestantes = totalVidas - vidasPerdidas
+        if (vidasRestantes >= 0) {
+            actualizarBarraDeVida(vidasRestantes, totalVidas)
+            Toast.makeText(context, "Vidas restantes: $vidasRestantes", Toast.LENGTH_SHORT).show()
+            if (vidasRestantes == 0) {
+                Toast.makeText(context, "¡Te has quedado sin vidas!", Toast.LENGTH_SHORT).show()
+            }
+        } else {
+            Toast.makeText(context, "Ya no quedan más vidas", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun actualizarBarraDeVida(vidasRestantes: Int, totalVidas: Int) {
+        val porcentajeVidasRestantes = vidasRestantes.toFloat() / totalVidas.toFloat()
+        val escala = porcentajeVidasRestantes
+        healthBar.scaleX = escala
+    }
+
 }
 
