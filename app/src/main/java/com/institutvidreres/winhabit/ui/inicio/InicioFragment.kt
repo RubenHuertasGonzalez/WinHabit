@@ -8,6 +8,7 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -29,6 +30,7 @@ class InicioFragment : Fragment(), TareasAdapter.OnClickListener {
 
     private lateinit var tareasViewModel: TareasViewModel
     private lateinit var tareasAdapter: TareasAdapter
+    private lateinit var inicioViewModel: InicioViewModel
     private lateinit var sharedViewModel: SharedViewModel
 
     private var progresoActual = 0
@@ -54,6 +56,7 @@ class InicioFragment : Fragment(), TareasAdapter.OnClickListener {
 
         tareasViewModel = ViewModelProvider(requireActivity()).get(TareasViewModel::class.java)
         sharedViewModel = ViewModelProvider(requireActivity()).get(SharedViewModel::class.java)
+        inicioViewModel = ViewModelProvider(requireActivity()).get(InicioViewModel::class.java)
 
         // Observa los cambios en la URL de la imagen
         sharedViewModel.selectedImageUri.observe(viewLifecycleOwner) { imageUrl ->
@@ -64,7 +67,7 @@ class InicioFragment : Fragment(), TareasAdapter.OnClickListener {
         }
 
         healthBar = binding.healthbar
-        tareasAdapter = TareasAdapter(tareasViewModel.tareasList.value ?: emptyList(), this)
+        tareasAdapter = TareasAdapter(sharedViewModel.tareasList.value ?: emptyList(), this)
         val recyclerView: RecyclerView = binding.RecyclerViewTareas
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.adapter = tareasAdapter
@@ -79,10 +82,15 @@ class InicioFragment : Fragment(), TareasAdapter.OnClickListener {
             navController.navigate(R.id.action_inicioFragment_to_crearTareaFragment)
         }
 
-        tareasViewModel.tareasList.observe(viewLifecycleOwner) { tareas ->
+        sharedViewModel.tareasList.observe(viewLifecycleOwner) { tareas ->
             // Actualizar el adaptador con las nuevas tareas
             tareasAdapter.actualizarLista(tareas)
         }
+
+        inicioViewModel.healthBarWidth.observe(viewLifecycleOwner, Observer { nuevaAnchura ->
+            // Actualiza la anchura de la barra de vida en la interfaz de usuario
+            actualizarAnchuraBarraVidaEnInterfaz(nuevaAnchura)
+        })
 
         //TODO: Arreglar tareas para cada usuario
 
@@ -110,11 +118,12 @@ class InicioFragment : Fragment(), TareasAdapter.OnClickListener {
             Toast.makeText(context, "Ya no quedan más vidas", Toast.LENGTH_SHORT).show()
         }
     }
-
+    // TODO: Al subir de nivel se reiniciara por completo la vida del jugador y se le subira la vida maxima, tambien se pueden comprar vidas o subir la vida maxima en la sección de recompensas
     private fun actualizarBarraDeVida(vidasRestantes: Int, totalVidas: Int) {
         val porcentajeVidasRestantes = vidasRestantes.toFloat() / totalVidas.toFloat()
         val escala = porcentajeVidasRestantes
         healthBar.scaleX = escala
+        inicioViewModel.actualizarAnchuraBarraVida(escala)
     }
 
     //TODO: Restringir personajes premium asta llegar a X lvl
@@ -168,5 +177,11 @@ class InicioFragment : Fragment(), TareasAdapter.OnClickListener {
             Toast.makeText(context, "¡Tarea completada!", Toast.LENGTH_SHORT).show()
         }
     }
+
+    private fun actualizarAnchuraBarraVidaEnInterfaz(nuevaAnchura: Float) {
+        // Actualiza la anchura de la barra de vida en la interfaz de usuario
+        healthBar.scaleX = nuevaAnchura
+    }
+
 }
 

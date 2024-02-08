@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.institutvidreres.winhabit.R
+import com.institutvidreres.winhabit.SharedViewModel
 import com.institutvidreres.winhabit.databinding.FragmentCrearTareaBinding
 
 class CrearTareaFragment : Fragment() {
@@ -24,7 +25,7 @@ class CrearTareaFragment : Fragment() {
     private var _binding: FragmentCrearTareaBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var tareasViewModel: TareasViewModel
+    private lateinit var sharedViewModel: SharedViewModel
     private lateinit var tareasAdapter: TareasAdapter
     private val firestoreDB = FirebaseFirestore.getInstance()
     private val auth = FirebaseAuth.getInstance()
@@ -40,7 +41,7 @@ class CrearTareaFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        tareasViewModel = ViewModelProvider(requireActivity()).get(TareasViewModel::class.java)
+        sharedViewModel = ViewModelProvider(requireActivity()).get(SharedViewModel::class.java)
 
         tareasAdapter = TareasAdapter(emptyList(), object : TareasAdapter.OnClickListener {
             override fun onDecrementClick(position: Int) {
@@ -79,7 +80,7 @@ class CrearTareaFragment : Fragment() {
                 val nuevaTarea = Tarea(nombre, descripcion, dificultad, duracion, userId)
 
                 // Agregar tarea al ViewModel compartido
-                tareasViewModel.agregarTarea(nuevaTarea)
+                sharedViewModel.agregarTarea(nuevaTarea)
 
                 // Guardar en Firestore
                 guardarEnFirestore(nuevaTarea)
