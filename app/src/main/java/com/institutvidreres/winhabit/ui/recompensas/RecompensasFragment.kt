@@ -30,6 +30,8 @@ class RecompensasFragment : Fragment() {
         // Paso el contexto al instanciar los adaptadores
         setupRecyclerView(binding.recyclerViewPersonajes, viewModel.personajesList)
         setupRecyclerView(binding.recyclerViewPersonajesPremium, viewModel.personajesPremiumList)
+        setupRecyclerView(binding.recyclerViewBannersPerfil, viewModel.bannersPerfil)
+        setupRecyclerView(binding.recyclerViewBannersMulticolorPerfil, viewModel.bannersMulticolorPerfil)
 
         return root
     }

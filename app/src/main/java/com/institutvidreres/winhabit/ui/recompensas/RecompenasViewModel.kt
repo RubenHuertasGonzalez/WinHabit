@@ -18,4 +18,18 @@ class RecompenasViewModel : ViewModel() {
         Recompensa("Princesa", R.drawable.princesa, "Princesa", 180),
         Recompensa("Caballero", R.drawable.caballero, "Caballero", 250)
     )
+
+    val bannersPerfil = listOf(
+        Recompensa("Azulado", R.drawable.gradiante_azul, "Azulado", 120),
+        Recompensa("Gradiante Púrpura", R.drawable.gradiante_purpura, "Gradiante Púrpura", 200),
+        Recompensa("Gradiante Carmesí", R.drawable.gradiante_rojo, "Gradiante Carmesí", 300)
+    )
+
+    val bannersMulticolorPerfil = listOf(
+        Recompensa("Pureza Verde", R.drawable.gradiante_verde_blanco, "Pureza Verde", 300),
+        Recompensa("Noche Neón", R.drawable.gradiante_azul_purpura, "Noche Neón", 300),
+        Recompensa("Carmesí Azulado", R.drawable.gradiante_azul_rojo, "Carmesí Azulado", 400),
+        Recompensa("Fuego Violeta", R.drawable.gradiante_azul_purpura_rojo, "Fuego Violeta ¡TRICOLOR!", 500),
+        Recompensa("Sombra Dorada", R.drawable.gradiante_dorado_negro, "Sombra Dorada", 1000)
+    )
 }
