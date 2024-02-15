@@ -28,17 +28,17 @@ class RecompensasFragment : Fragment() {
         viewModel = ViewModelProvider(this).get(RecompenasViewModel::class.java)
 
         // Paso el contexto al instanciar los adaptadores
-        setupRecyclerView(binding.recyclerViewPersonajes, viewModel.personajesList)
-        setupRecyclerView(binding.recyclerViewPersonajesPremium, viewModel.personajesPremiumList)
-        setupRecyclerView(binding.recyclerViewBannersPerfil, viewModel.bannersPerfil)
-        setupRecyclerView(binding.recyclerViewBannersMulticolorPerfil, viewModel.bannersMulticolorPerfil)
+        setupRecyclerView(binding.recyclerViewPersonajes, viewModel.personajesList, viewModel)
+        setupRecyclerView(binding.recyclerViewPersonajesPremium, viewModel.personajesPremiumList, viewModel)
+        setupRecyclerView(binding.recyclerViewBannersPerfil, viewModel.bannersPerfil, viewModel)
+        setupRecyclerView(binding.recyclerViewBannersMulticolorPerfil, viewModel.bannersMulticolorPerfil, viewModel)
 
         return root
     }
 
-    private fun setupRecyclerView(recyclerView: RecyclerView, dataList: List<Recompensa>) {
+    private fun setupRecyclerView(recyclerView: RecyclerView, dataList: List<Recompensa>, viewModel: RecompenasViewModel) {
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        recyclerView.adapter = RecompensasAdapter(dataList, requireContext())
+        recyclerView.adapter = RecompensasAdapter(dataList, requireContext(), viewModel)
     }
 
     override fun onDestroyView() {

@@ -1,8 +1,21 @@
 package com.institutvidreres.winhabit.ui.recompensas
 
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+@Entity(tableName = "RecompensaData")
 data class Recompensa(
-    val nombre: String,
-    val imagenResId: Int,
-    val descripcion: String,
-    val precio: Int,
-)
+
+    @ColumnInfo(name = "nombre")
+    var nombre: String,
+    @ColumnInfo(name = "imagenResId")
+    var imagenResId: Int,
+    @ColumnInfo(name = "descripcion")
+    var descripcion: String,
+    @ColumnInfo(name = "precio")
+    var precio: Int
+) {
+    @PrimaryKey(autoGenerate = true)
+    var Id: Int? = null
+}

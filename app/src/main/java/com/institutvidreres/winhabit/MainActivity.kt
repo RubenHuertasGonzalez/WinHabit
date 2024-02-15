@@ -10,6 +10,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
@@ -38,6 +39,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
     private lateinit var analytics: FirebaseAnalytics
+    private lateinit var sharedViewModel: SharedViewModel
 
     private var userEmail: String? = null
 
@@ -46,6 +48,8 @@ class MainActivity : AppCompatActivity() {
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        sharedViewModel = ViewModelProvider(this).get(SharedViewModel::class.java)
 
         // Obtain the FirebaseAnalytics instance.
         analytics = Firebase.analytics
@@ -143,6 +147,12 @@ class MainActivity : AppCompatActivity() {
             // Puedes agregar un Log, Toast o cualquier otra acción de manejo de errores aquí
             println("Error al descargar la imagen: ${exception.message}")
         }
+
+        // Observa los cambios en la imagen seleccionada en el SharedViewModel
+        sharedViewModel.selectedImageResId.observe(this, Observer { imageResId ->
+            // Actualiza la ImageView con la imagen seleccionada
+            imageView.setImageResource(imageResId)
+        })
     }
 
     private fun signOut() {

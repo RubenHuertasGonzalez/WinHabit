@@ -1,20 +1,31 @@
 // PerfilFragment.kt
 package com.institutvidreres.winhabit.ui.perfil
 
-import android.content.Context.MODE_PRIVATE
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.institutvidreres.winhabit.MainActivity
-import com.institutvidreres.winhabit.R
+import com.institutvidreres.winhabit.SharedViewModel
+import com.institutvidreres.winhabit.adapter.PerfilAdapter
 import com.institutvidreres.winhabit.databinding.FragmentPerfilBinding
 
 class PerfilFragment : Fragment() {
 
     private var _binding: FragmentPerfilBinding? = null
     private val binding get() = _binding!!
+
+    private lateinit var perfilViewModel: PerfilViewModel
+    private lateinit var sharedViewModel: SharedViewModel
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var viewAdapter: RecyclerView.Adapter<*>
+    private lateinit var viewManager: RecyclerView.LayoutManager
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -23,19 +34,34 @@ class PerfilFragment : Fragment() {
         _binding = FragmentPerfilBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        // Oculta el banner
-        requireActivity().findViewById<View>(R.id.banner).visibility = View.GONE
-
         // Llama al método de actualización en MainActivity
         (requireActivity() as MainActivity).updateNavigationDrawerEmail()
+
+        perfilViewModel = ViewModelProvider(this).get(PerfilViewModel::class.java)
+        sharedViewModel = ViewModelProvider(this).get(SharedViewModel::class.java)
+
+        viewManager = LinearLayoutManager(context)
+
+        recyclerView = binding.recyclerViewPerfilPersonajes.apply {
+            setHasFixedSize(true)
+            layoutManager = viewManager
+        }
+
+        perfilViewModel.getPersonajes(requireContext())?.observe(viewLifecycleOwner, Observer { personajesList ->
+            personajesList?.let {
+                viewAdapter = PerfilAdapter(it, sharedViewModel) { selectedItem ->
+                    perfilViewModel.setSelectedItem(selectedItem)
+                    Toast.makeText(requireContext(), "$selectedItem", Toast.LENGTH_SHORT).show()
+                }
+                recyclerView.adapter = viewAdapter
+            }
+        })
 
         return root
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        // Muestra el banner cuando el fragmento se destruye
-        requireActivity().findViewById<View>(R.id.banner).visibility = View.VISIBLE
         _binding = null
     }
 }

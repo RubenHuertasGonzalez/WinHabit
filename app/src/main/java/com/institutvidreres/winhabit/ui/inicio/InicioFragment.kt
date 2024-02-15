@@ -187,6 +187,7 @@ class InicioFragment : Fragment(), TareasAdapter.OnClickListener {
             binding.textViewMonedas.text = progresoActualMonedas.toString()
         }
     }
+    // TODO: Arreglar Vista barra de vida
     private fun actualizarAnchuraBarraVidaEnInterfaz(nuevaAnchura: Float) {
         // Actualiza la anchura de la barra de vida en la interfaz de usuario
         healthBar.scaleX = nuevaAnchura

@@ -15,7 +15,8 @@ import com.institutvidreres.winhabit.R
 
 class RecompensasAdapter(
     private val recompensasList: List<Recompensa>,
-    private val context: Context
+    private val context: Context,
+    private val viewModel: RecompenasViewModel
 ) : RecyclerView.Adapter<RecompensasAdapter.RecompensaViewHolder>() {
 
     class RecompensaViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -61,6 +62,7 @@ class RecompensasAdapter(
         builder.setTitle("Confirmar Compra")
         builder.setMessage("¿Te gustaría comprar '${recompensa.descripcion}' por ${recompensa.precio} monedas?")
         builder.setPositiveButton("CONFIRMAR") { _, _ ->
+            viewModel.newRecompensa(context, recompensa.nombre, recompensa.imagenResId, recompensa.descripcion, recompensa.precio)
             // Añadir un Toast cuando se confirme la compra
             val mensaje = "${recompensa.descripcion} comprado por ${recompensa.precio} monedas!"
             Toast.makeText(context, mensaje, Toast.LENGTH_SHORT).show()
