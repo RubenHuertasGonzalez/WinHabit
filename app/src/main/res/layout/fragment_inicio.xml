@@ -19,8 +19,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:background="@drawable/gradiante_azul_purpura_rojo">
+            android:background="@drawable/gradiante_azul_purpura_rojo"
+            android:orientation="horizontal">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="0dp"
@@ -63,29 +63,29 @@
                         android:id="@+id/imageViewMoneda"
                         android:layout_width="24dp"
                         android:layout_height="24dp"
-                        android:src="@drawable/moneda"
+                        android:layout_marginEnd="4dp"
                         android:contentDescription="Imagen de moneda"
-                        android:layout_marginEnd="4dp" />
+                        android:src="@drawable/moneda" />
 
                     <TextView
                         android:id="@+id/textViewMonedas"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
                         android:text="0"
                         android:textSize="18sp"
-                        android:textStyle="bold"
-                        android:layout_marginEnd="8dp" />
+                        android:textStyle="bold" />
                 </LinearLayout>
 
                 <ImageView
                     android:id="@+id/imageView2"
                     android:layout_width="91dp"
                     android:layout_height="88dp"
+                    android:layout_marginTop="8dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    tools:src="@tools:sample/avatars"
-                    android:layout_marginTop="8dp" />
+                    tools:src="@tools:sample/avatars" />
 
                 <ImageView
                     android:id="@+id/healthbarBorder"
