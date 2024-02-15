@@ -31,7 +31,7 @@
             android:id="@+id/tvNombreTarea"
             android:layout_width="283dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="48dp"
+            android:layout_marginStart="36dp"
             android:layout_marginTop="6dp"
             android:layout_marginBottom="74dp"
             android:textAlignment="center"
@@ -41,11 +41,12 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="1.0"
             tools:hint="Nombre tarea" />
 
         <TextView
             android:id="@+id/tvDescripcionTarea"
-            android:layout_width="235dp"
+            android:layout_width="220dp"
             android:layout_height="49dp"
             android:layout_marginTop="40dp"
             android:layout_marginEnd="72dp"

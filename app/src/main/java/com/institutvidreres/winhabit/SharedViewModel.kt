@@ -16,10 +16,6 @@ class SharedViewModel : ViewModel() {
         _tareasList.value = newList
     }
 
-    fun actualizarTareas(tareas: List<Tarea>) {
-        _tareasList.value = tareas
-    }
-
     val selectedImageUri = MutableLiveData<String>()
 
     val selectedImageResId = MutableLiveData<Int>()
