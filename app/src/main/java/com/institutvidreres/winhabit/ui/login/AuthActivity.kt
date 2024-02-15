@@ -6,6 +6,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import com.institutvidreres.winhabit.MainActivity
 import com.institutvidreres.winhabit.databinding.ActivityAuthBinding
 
@@ -47,10 +48,26 @@ class AuthActivity : AppCompatActivity() {
                         // Inicio de sesión exitoso, redirigir a la actividad principal
                         val user = auth.currentUser
                         if (user != null) {
-                            Toast.makeText(this, "Inicio de sesión correcto", Toast.LENGTH_SHORT).show()
-                            startActivity(Intent(this, MainActivity::class.java)
-                                .putExtra("user_email", user.email))
-                            finish()  // Cerrar esta actividad
+                            // Obtener el ID del personaje del usuario desde Firestore
+                            val db = FirebaseFirestore.getInstance()
+                            db.collection("users").document(user.uid)
+                                .get()
+                                .addOnSuccessListener { document ->
+                                    val characterId = document.getLong("character")
+                                    if (characterId != null) {
+                                        val sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE)
+                                        sharedPreferences.edit().putInt("user_character", characterId.toInt()).apply()
+                                        startActivity(Intent(this, MainActivity::class.java)
+                                            .putExtra("user_email", user.email)
+                                            .putExtra("user_character", characterId.toInt()))
+                                        finish()  // Cerrar esta actividad
+                                    } else {
+                                        Log.e(TAG, "Error: No se encontró el ID del personaje para el usuario")
+                                    }
+                                }
+                                .addOnFailureListener { e ->
+                                    Log.e(TAG, "Error al obtener el ID del personaje del usuario", e)
+                                }
                         }
                     } else {
                         // Fallo en el inicio de sesión
@@ -58,6 +75,7 @@ class AuthActivity : AppCompatActivity() {
                         Toast.makeText(this, "Error en el inicio de sesión", Toast.LENGTH_SHORT).show()
                     }
                 }
+
         }
 
         buttonGoRegister.setOnClickListener {

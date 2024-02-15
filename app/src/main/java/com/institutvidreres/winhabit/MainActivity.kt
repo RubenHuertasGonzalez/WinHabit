@@ -29,6 +29,7 @@ import com.google.firebase.Firebase
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.analytics
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.ktx.storage
 import com.institutvidreres.winhabit.databinding.ActivityMainBinding
 import com.institutvidreres.winhabit.ui.login.AuthActivity
@@ -125,12 +126,31 @@ class MainActivity : AppCompatActivity() {
                 binding.drawerLayout.closeDrawers()
             }
 
+        // Obtén el valor del personaje seleccionado del Intent
+        val sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE)
+        val character = sharedPreferences.getInt("user_character", -1)
+        if (character != -1) {
+            Log.d("MainActivity", "Personaje seleccionado: $character")
+        } else {
+            Log.e("MainActivity", "No se pudo obtener el personaje seleccionado")
+        }
+
+        val imageName = when (character) {
+            0 -> "vaquero.png"
+            1 -> "mago.png"
+            2 -> "arquero.png"
+            3 -> "vaquera.png"
+            4 -> "bruja.png"
+            5 -> "arquera.png"
+            else -> throw IllegalArgumentException("Valor de personaje no válido")
+        }
+
         val headerMain = navView.getHeaderView(0)
         val imageView: ImageView = headerMain.findViewById(R.id.imageViewPersonajePerfil)
 
         // Obtener la URL de la imagen en Storage
         val storage = com.google.firebase.ktx.Firebase.storage
-        val storageReference = storage.reference.child("arquera.png")
+        val storageReference = storage.reference.child(imageName)
 
         storageReference.downloadUrl.addOnSuccessListener { uri ->
             // Cargar la imagen en el ImageView utilizando Glide
@@ -147,12 +167,6 @@ class MainActivity : AppCompatActivity() {
             // Puedes agregar un Log, Toast o cualquier otra acción de manejo de errores aquí
             println("Error al descargar la imagen: ${exception.message}")
         }
-
-        // Observa los cambios en la imagen seleccionada en el SharedViewModel
-        sharedViewModel.selectedImageResId.observe(this, Observer { imageResId ->
-            // Actualiza la ImageView con la imagen seleccionada
-            imageView.setImageResource(imageResId)
-        })
     }
 
     private fun signOut() {
