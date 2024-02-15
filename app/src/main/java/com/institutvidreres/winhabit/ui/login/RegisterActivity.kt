@@ -7,12 +7,14 @@ import android.util.Log
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.institutvidreres.winhabit.MainActivity
 import com.institutvidreres.winhabit.R
+import com.institutvidreres.winhabit.SharedViewModel
 import com.institutvidreres.winhabit.databinding.ActivityRegisterBinding
 
 class RegisterActivity : AppCompatActivity() {
@@ -23,11 +25,15 @@ class RegisterActivity : AppCompatActivity() {
     private lateinit var binding: ActivityRegisterBinding
     private var selectedCharacter: Int = -1
     private lateinit var storageReference: StorageReference
+    private lateinit var sharedViewModel: SharedViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityRegisterBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        val sharedViewModel = ViewModelProvider(this).get(SharedViewModel::class.java)
+
 
         auth = FirebaseAuth.getInstance()
         storageReference = FirebaseStorage.getInstance().reference
@@ -69,6 +75,7 @@ class RegisterActivity : AppCompatActivity() {
                 .addOnCompleteListener(this) { task ->
                     if (task.isSuccessful) {
                         val user = auth.currentUser
+                        val userId = user?.uid
                         val userInfo = hashMapOf(
                             "email" to email,
                             "username" to username,
@@ -81,6 +88,8 @@ class RegisterActivity : AppCompatActivity() {
                                 .addOnSuccessListener {
                                     Toast.makeText(this, "CORRECTO CREADO", Toast.LENGTH_SHORT).show()
                                     Log.d(TAG, "DocumentSnapshot successfully written!")
+                                    val sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE)
+                                    sharedPreferences.edit().putInt("user_character", selectedCharacter).apply()
                                     val intent = Intent(this, MainActivity::class.java)
                                     intent.putExtra("user_email", email)
                                     intent.putExtra("user_character", selectedCharacter)
@@ -95,15 +104,16 @@ class RegisterActivity : AppCompatActivity() {
                     }
                 }
 
-            storageReference.child("${auth.currentUser?.uid}/profile_image.png")
-                .putFile(getImageResourceUri(selectedCharacter))
-                .addOnSuccessListener { _ ->
-                    // Imagen del personaje almacenada exitosamente
-                }
-                .addOnFailureListener { e ->
-                    // Maneja el error al almacenar la imagen del personaje
-                    Log.e(TAG, "Error al almacenar la imagen del personaje", e)
-                }
+
+            // storageReference.child("${auth.currentUser?.uid}/profile_image.png")
+            //                .putFile(getImageResourceUri(selectedCharacter))
+            //                .addOnSuccessListener { _ ->
+            //                    // Imagen del personaje almacenada exitosamente
+            //                }
+            //                .addOnFailureListener { e ->
+            //                    // Maneja el error al almacenar la imagen del personaje
+            //                    Log.e(TAG, "Error al almacenar la imagen del personaje", e)
+            //                }
         }
     }
 
