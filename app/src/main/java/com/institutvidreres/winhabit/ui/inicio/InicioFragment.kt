@@ -8,6 +8,7 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -23,21 +24,18 @@ import kotlin.random.Random
 
 class InicioFragment : Fragment(), TareasAdapter.OnClickListener {
 
-    private val TAG = "InicioFragment"
-    private var _binding: FragmentInicioBinding? = null
-
-    private val binding get() = _binding!!
-
     private lateinit var tareasViewModel: TareasViewModel
     private lateinit var tareasAdapter: TareasAdapter
     private lateinit var inicioViewModel: InicioViewModel
     private lateinit var sharedViewModel: SharedViewModel
 
+    private lateinit var binding: FragmentInicioBinding
+
     private var progresoActual = 0
     private var nivel = 1
     private val nivelMaximo = 20
     private var nivelMaximoAlcanzado = false
-    private var porcentajeNecesario = 20
+    private var porcentajeNecesario = MutableLiveData(20)
     private val incrementoPorcentaje = 20
 
     private var progresoActualMonedas = 0
@@ -45,12 +43,13 @@ class InicioFragment : Fragment(), TareasAdapter.OnClickListener {
 
     private lateinit var healthBar: ImageView
     private var vidasPerdidas = 0
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentInicioBinding.inflate(inflater, container, false)
+        binding = FragmentInicioBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -95,15 +94,31 @@ class InicioFragment : Fragment(), TareasAdapter.OnClickListener {
             actualizarAnchuraBarraVidaEnInterfaz(nuevaAnchura)
         })
 
-        //TODO: Arreglar tareas para cada usuario
+        inicioViewModel.coinsUser.observe(viewLifecycleOwner) { coins ->
+            // Actualizar las monedas en la interfaz de usuario
+            binding.textViewMonedas.text = coins.toString()
+        }
 
-        // Llamar a esta función al iniciar sesión para cargar las tareas del usuario
-        // obtenerTareasDeUsuario()
+        inicioViewModel.levelUser.observe(viewLifecycleOwner) { level ->
+            // Actualizar el nivel en la interfaz de usuario
+            binding.textViewNivel.text = "Nivel $level"
+        }
+
+        inicioViewModel.expUser.observe(viewLifecycleOwner) { exp ->
+            // Puedes realizar acciones adicionales aquí si es necesario
+        }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        _binding = null
+
+        // Guardar el estado actual de las monedas, la experiencia y el nivel
+        inicioViewModel.actualizarMonedas(binding.textViewMonedas.text.toString().toInt())
+        inicioViewModel.actualizarNivel(binding.textViewNivel.text.toString().split(" ")[1].toInt())
+
+        // Obtener la experiencia actual del ViewModel y guardarla
+        val experienciaActual = inicioViewModel.expUser.value ?: 0
+        inicioViewModel.actualizarExperiencia(experienciaActual)
     }
 
     override fun onDecrementClick(position: Int) {
@@ -121,18 +136,16 @@ class InicioFragment : Fragment(), TareasAdapter.OnClickListener {
             Toast.makeText(context, "Ya no quedan más vidas", Toast.LENGTH_SHORT).show()
         }
     }
-    // TODO: Al subir de nivel se reiniciara por completo la vida del jugador y se le subira la vida maxima, tambien se pueden comprar vidas o subir la vida maxima en la sección de recompensas
-    private fun actualizarBarraDeVida(vidasRestantes: Int, totalVidas: Int) {
-        val porcentajeVidasRestantes = vidasRestantes.toFloat() / totalVidas.toFloat()
-        val escala = porcentajeVidasRestantes
-        healthBar.scaleX = escala
-        inicioViewModel.actualizarAnchuraBarraVida(escala)
-    }
 
-    //TODO: Restringir personajes premium asta llegar a X lvl
     override fun onIncrementClick(position: Int) {
         // Verificar si se ha alcanzado el nivel máximo
         if (!nivelMaximoAlcanzado) {
+            // Incrementar la experiencia
+            val nuevaExperiencia = (inicioViewModel.expUser.value ?: 0) + 1 // Incremento de experiencia
+
+            // Actualizar la experiencia en el ViewModel
+            inicioViewModel.actualizarExperiencia(nuevaExperiencia)
+
             // Generar un número aleatorio entre 1 y 5 para el progreso
             val incrementoProgreso = Random.nextInt(1, 6)
 
@@ -144,13 +157,13 @@ class InicioFragment : Fragment(), TareasAdapter.OnClickListener {
             progresoActualMonedas += incrementoMonedas
 
             // Verificar si se alcanzó o superó el porcentaje necesario
-            if (progresoActual >= porcentajeNecesario) {
+            if (progresoActual >= porcentajeNecesario.value!!) {
                 // Incrementar el nivel y reiniciar el progreso
                 nivel++
                 progresoActual = 0
 
                 // Aumentar la dificultad para el próximo nivel
-                porcentajeNecesario += incrementoPorcentaje
+                porcentajeNecesario.value = porcentajeNecesario.value!! + incrementoPorcentaje
 
                 // Verificar si el nivel alcanzó el nivel máximo después de la actualización
                 if (nivel >= nivelMaximo) {
@@ -159,25 +172,17 @@ class InicioFragment : Fragment(), TareasAdapter.OnClickListener {
                     // Establecer el nivel en el nivel máximo
                     nivel = nivelMaximo
 
-                    // Actualizar el texto del nivel
-                    // Asegúrate de tener el TextView correspondiente en tu diseño con el id textViewNivel
-                    binding.textViewNivel.text = "Nivel 20"
-
                     // Mostrar el mensaje de nivel máximo en el TextView correspondiente
                     binding.textViewPorcentajeNivel.text = "¡NIVEL MAXIMO!"
                 } else {
                     // Actualizar el texto del nivel
-                    // Asegúrate de tener el TextView correspondiente en tu diseño con el id textViewNivel
                     binding.textViewNivel.text = "Nivel $nivel"
-
                     // Actualizar el texto del progreso (textViewLvl)
-                    // Asegúrate de tener el TextView correspondiente en tu diseño con el id textViewLvl
-                    binding.textViewPorcentajeNivel.text = "$progresoActual / $porcentajeNecesario"
+                    binding.textViewPorcentajeNivel.text = "$progresoActual / ${porcentajeNecesario.value}"
                 }
             } else {
                 // Actualizar el texto del progreso (textViewLvl) si no se ha alcanzado el porcentaje necesario
-                // Asegúrate de tener el TextView correspondiente en tu diseño con el id textViewLvl
-                binding.textViewPorcentajeNivel.text = "$progresoActual / $porcentajeNecesario"
+                binding.textViewPorcentajeNivel.text = "$progresoActual / ${porcentajeNecesario.value}"
             }
 
             // Mostrar un mensaje de tarea completada
@@ -187,11 +192,16 @@ class InicioFragment : Fragment(), TareasAdapter.OnClickListener {
             binding.textViewMonedas.text = progresoActualMonedas.toString()
         }
     }
-    // TODO: Arreglar Vista barra de vida
-    private fun actualizarAnchuraBarraVidaEnInterfaz(nuevaAnchura: Float) {
-        // Actualiza la anchura de la barra de vida en la interfaz de usuario
-        healthBar.scaleX = nuevaAnchura
+
+
+    private fun actualizarBarraDeVida(vidasRestantes: Int, totalVidas: Int) {
+        val porcentajeVidasRestantes = vidasRestantes.toFloat() / totalVidas.toFloat()
+        val escala = porcentajeVidasRestantes
+        healthBar.scaleX = escala
+        inicioViewModel.actualizarAnchuraBarraVida(escala)
     }
 
+    private fun actualizarAnchuraBarraVidaEnInterfaz(nuevaAnchura: Float) {
+        healthBar.scaleX = nuevaAnchura
+    }
 }
-

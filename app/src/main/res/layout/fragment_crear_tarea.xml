@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -20,14 +19,29 @@
             android:hint="Nombre tarea"
             android:inputType="text" />
 
-        <EditText
+        <MultiAutoCompleteTextView
             android:id="@+id/editTextDescription"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="Descripción"
-            android:inputType="text" />
+            android:inputType="textMultiLine"
+            android:gravity="start|top"
+            android:minLines="5"
+            android:maxLines="10"
+            android:scrollbars="vertical"
+            android:overScrollMode="always"
+            android:layout_marginTop="8dp" />
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="DIFICULTAD"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:layout_marginTop="16dp"/>
+
+        <!-- Radio Buttons de Dificultad -->
         <RadioGroup
             android:id="@+id/dificultad"
             android:layout_width="match_parent"
@@ -39,21 +53,43 @@
                 android:id="@+id/radioButtonFacil"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Fácil" />
+                android:text="★"
+                android:button="@null"
+                android:background="@drawable/selector_checkbox_background"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:layout_marginEnd="8dp" /> <!-- Añadir margen al final del botón -->
 
             <RadioButton
                 android:id="@+id/radioButtonNormal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Normal" />
+                android:text="★★"
+                android:button="@null"
+                android:background="@drawable/selector_checkbox_background"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:layout_marginEnd="8dp" /> <!-- Añadir margen al final del botón -->
 
             <RadioButton
                 android:id="@+id/radioButtonDificil"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Difícil" />
+                android:text="★★★"
+                android:button="@null"
+                android:background="@drawable/selector_checkbox_background"
+                android:layout_weight="1"
+                android:gravity="center" /> <!-- No añadir margen al final del último botón -->
 
         </RadioGroup>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="DURACIÓN"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:layout_marginTop="16dp"/>
 
         <RadioGroup
             android:id="@+id/duracion"
@@ -66,29 +102,45 @@
                 android:id="@+id/radioButtonDiario"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Diario" />
+                android:text="Diario"
+                android:button="@null"
+                android:background="@drawable/selector_checkbox_background"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:layout_marginEnd="8dp" /> <!-- Añadir margen al final del botón -->
 
             <RadioButton
                 android:id="@+id/radioButtonSemanal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Semanal" />
+                android:text="Semanal"
+                android:button="@null"
+                android:background="@drawable/selector_checkbox_background"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:layout_marginEnd="8dp" /> <!-- Añadir margen al final del botón -->
 
             <RadioButton
                 android:id="@+id/radioButtonMensual"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Mensual" />
+                android:text="Mensual"
+                android:button="@null"
+                android:background="@drawable/selector_checkbox_background"
+                android:layout_weight="1"
+                android:gravity="center" /> <!-- No añadir margen al final del último botón -->
 
         </RadioGroup>
+
 
         <Button
             android:id="@+id/buttonAcabarDeCrear"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="CREAR TAREA" />
+            android:text="CREAR TAREA"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="50dp"/>
 
     </LinearLayout>
 
 </ScrollView>
-
