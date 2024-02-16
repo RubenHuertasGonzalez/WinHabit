@@ -9,6 +9,8 @@ data class Recompensa(
 
     @ColumnInfo(name = "nombre")
     var nombre: String,
+    @ColumnInfo(name = "firebaseId")
+    var firebaseId: Int,
     @ColumnInfo(name = "imagenResId")
     var imagenResId: Int,
     @ColumnInfo(name = "descripcion")

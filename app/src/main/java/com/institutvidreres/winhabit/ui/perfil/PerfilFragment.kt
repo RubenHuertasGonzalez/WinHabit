@@ -1,6 +1,8 @@
 // PerfilFragment.kt
 package com.institutvidreres.winhabit.ui.perfil
 
+import android.content.Context.MODE_PRIVATE
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -52,6 +54,12 @@ class PerfilFragment : Fragment() {
                 viewAdapter = PerfilAdapter(it, sharedViewModel) { selectedItem ->
                     perfilViewModel.setSelectedItem(selectedItem)
                     Toast.makeText(requireContext(), "$selectedItem", Toast.LENGTH_SHORT).show()
+
+                    // Guardar el valor en las preferencias compartidas
+                    val sharedPreferences = requireActivity().getSharedPreferences("MyPrefs", MODE_PRIVATE)
+                    sharedPreferences.edit().putInt("user_character", selectedItem.firebaseId).apply()
+
+                    (requireActivity() as MainActivity).updateFirebaseIdRecompensas(selectedItem.firebaseId)
                 }
                 recyclerView.adapter = viewAdapter
             }

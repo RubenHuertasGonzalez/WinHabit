@@ -130,43 +130,13 @@ class MainActivity : AppCompatActivity() {
         val sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE)
         val character = sharedPreferences.getInt("user_character", -1)
         if (character != -1) {
+            updateFirebaseIdRecompensas(character)
             Log.d("MainActivity", "Personaje seleccionado: $character")
         } else {
             Log.e("MainActivity", "No se pudo obtener el personaje seleccionado")
         }
 
-        val imageName = when (character) {
-            0 -> "vaquero.png"
-            1 -> "mago.png"
-            2 -> "arquero.png"
-            3 -> "vaquera.png"
-            4 -> "bruja.png"
-            5 -> "arquera.png"
-            else -> throw IllegalArgumentException("Valor de personaje no válido")
-        }
 
-        val headerMain = navView.getHeaderView(0)
-        val imageView: ImageView = headerMain.findViewById(R.id.imageViewPersonajePerfil)
-
-        // Obtener la URL de la imagen en Storage
-        val storage = com.google.firebase.ktx.Firebase.storage
-        val storageReference = storage.reference.child(imageName)
-
-        storageReference.downloadUrl.addOnSuccessListener { uri ->
-            // Cargar la imagen en el ImageView utilizando Glide
-            Glide.with(this)
-                .load(uri)
-                .into(imageView)
-
-            // Actualizar la URL de la imagen en el ViewModel
-            val sharedViewModel = ViewModelProvider(this).get(SharedViewModel::class.java)
-            sharedViewModel.selectedImageUri.value = uri.toString()
-            Log.d("URL de la imagen: ", "$uri")
-        }.addOnFailureListener { exception ->
-            // Manejar el error si la descarga falla
-            // Puedes agregar un Log, Toast o cualquier otra acción de manejo de errores aquí
-            println("Error al descargar la imagen: ${exception.message}")
-        }
     }
 
     private fun signOut() {
@@ -194,5 +164,41 @@ class MainActivity : AppCompatActivity() {
         // Actualizar la vista con el correo almacenado
         val textViewCorreoPerfil = binding.navView.getHeaderView(0).findViewById<TextView>(R.id.textViewCorreoPerfil)
         textViewCorreoPerfil.text = userEmail
+    }
+
+    fun updateFirebaseIdRecompensas(firebaseId: Int) {
+        val imageName = when (firebaseId) {
+            0 -> "vaquero.png"
+            1 -> "mago.png"
+            2 -> "arquero.png"
+            3 -> "vaquera.png"
+            4 -> "bruja.png"
+            5 -> "arquera.png"
+            6 -> "payaso.png"
+            else -> throw IllegalArgumentException("Valor de personaje no válido")
+        }
+
+        val headerMain = binding.navView.getHeaderView(0)
+        val imageView: ImageView = headerMain.findViewById(R.id.imageViewPersonajePerfil)
+
+        // Obtener la URL de la imagen en Storage
+        val storage = com.google.firebase.ktx.Firebase.storage
+        val storageReference = storage.reference.child(imageName)
+
+        storageReference.downloadUrl.addOnSuccessListener { uri ->
+            // Cargar la imagen en el ImageView utilizando Glide
+            Glide.with(this)
+                .load(uri)
+                .into(imageView)
+
+            // Actualizar la URL de la imagen en el ViewModel
+            val sharedViewModel = ViewModelProvider(this).get(SharedViewModel::class.java)
+            sharedViewModel.selectedImageUri.value = uri.toString()
+            Log.d("URL de la imagen: ", "$uri")
+        }.addOnFailureListener { exception ->
+            // Manejar el error si la descarga falla
+            // Puedes agregar un Log, Toast o cualquier otra acción de manejo de errores aquí
+            println("Error al descargar la imagen: ${exception.message}")
+        }
     }
 }
