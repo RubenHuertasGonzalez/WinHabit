@@ -55,7 +55,7 @@ class PerfilFragment : Fragment() {
         // Observa los cambios en la lista de personajes y actualiza el RecyclerView
         perfilViewModel.getPersonajes(requireContext())?.observe(viewLifecycleOwner, Observer { personajesList ->
             personajesList?.let {
-                personajesAdapter = PerfilAdapter(it, sharedViewModel) { selectedItem ->
+                personajesAdapter = PerfilAdapter(it, requireContext(), sharedViewModel) { selectedItem ->
                     perfilViewModel.setSelectedItem(selectedItem)
                     // Toast.makeText(requireContext(), "$selectedItem", Toast.LENGTH_SHORT).show()
 
@@ -79,7 +79,7 @@ class PerfilFragment : Fragment() {
         // Observa los cambios en la lista de banners y actualiza el RecyclerView
         perfilViewModel.getBanners(requireContext())?.observe(viewLifecycleOwner, Observer { bannersList ->
             bannersList?.let {
-                bannersAdapter = PerfilAdapter(it, sharedViewModel) { selectedItem ->
+                bannersAdapter = PerfilAdapter(it, requireContext(), sharedViewModel) { selectedItem ->
                     perfilViewModel.setSelectedItem(selectedItem)
                     // Toast.makeText(requireContext(), "$selectedItem", Toast.LENGTH_SHORT).show()
 
