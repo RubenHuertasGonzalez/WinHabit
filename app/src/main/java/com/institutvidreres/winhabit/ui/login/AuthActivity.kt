@@ -24,6 +24,11 @@ class AuthActivity : AppCompatActivity() {
             startActivity(Intent(this, MainActivity::class.java)
                 .putExtra("user_email", currentUser.email))
             finish()  // Cerrar esta actividad para evitar que el usuario retroceda a la pantalla de inicio de sesión
+        } else {
+            // Si el usuario no está autenticado, inicia sesión con el banner por defecto
+            val sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE)
+            sharedPreferences.edit().putInt("user_banner", 0).apply()
+
         }
     }
 

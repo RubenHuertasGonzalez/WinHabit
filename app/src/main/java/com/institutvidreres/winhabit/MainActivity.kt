@@ -6,11 +6,11 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
@@ -29,7 +29,6 @@ import com.google.firebase.Firebase
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.analytics
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.ktx.storage
 import com.institutvidreres.winhabit.databinding.ActivityMainBinding
 import com.institutvidreres.winhabit.ui.login.AuthActivity
@@ -130,43 +129,20 @@ class MainActivity : AppCompatActivity() {
         val sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE)
         val character = sharedPreferences.getInt("user_character", -1)
         if (character != -1) {
+            updateFirebaseIdCharacter(character)
             Log.d("MainActivity", "Personaje seleccionado: $character")
         } else {
             Log.e("MainActivity", "No se pudo obtener el personaje seleccionado")
         }
 
-        val imageName = when (character) {
-            0 -> "vaquero.png"
-            1 -> "mago.png"
-            2 -> "arquero.png"
-            3 -> "vaquera.png"
-            4 -> "bruja.png"
-            5 -> "arquera.png"
-            else -> throw IllegalArgumentException("Valor de personaje no válido")
+        val banner = sharedPreferences.getInt("user_banner", -1)
+        if (banner != -1) {
+            updateFirebaseIdBanner(banner)
+            Log.d("MainActivity", "Personaje seleccionado: $banner")
+        } else {
+            Log.e("MainActivity", "No se pudo obtener el personaje seleccionado")
         }
 
-        val headerMain = navView.getHeaderView(0)
-        val imageView: ImageView = headerMain.findViewById(R.id.imageViewPersonajePerfil)
-
-        // Obtener la URL de la imagen en Storage
-        val storage = com.google.firebase.ktx.Firebase.storage
-        val storageReference = storage.reference.child(imageName)
-
-        storageReference.downloadUrl.addOnSuccessListener { uri ->
-            // Cargar la imagen en el ImageView utilizando Glide
-            Glide.with(this)
-                .load(uri)
-                .into(imageView)
-
-            // Actualizar la URL de la imagen en el ViewModel
-            val sharedViewModel = ViewModelProvider(this).get(SharedViewModel::class.java)
-            sharedViewModel.selectedImageUri.value = uri.toString()
-            Log.d("URL de la imagen: ", "$uri")
-        }.addOnFailureListener { exception ->
-            // Manejar el error si la descarga falla
-            // Puedes agregar un Log, Toast o cualquier otra acción de manejo de errores aquí
-            println("Error al descargar la imagen: ${exception.message}")
-        }
     }
 
     private fun signOut() {
@@ -194,5 +170,70 @@ class MainActivity : AppCompatActivity() {
         // Actualizar la vista con el correo almacenado
         val textViewCorreoPerfil = binding.navView.getHeaderView(0).findViewById<TextView>(R.id.textViewCorreoPerfil)
         textViewCorreoPerfil.text = userEmail
+    }
+
+    fun updateFirebaseIdCharacter(firebaseId: Int) {
+        val imageName = when (firebaseId) {
+            0 -> "vaquero.png"
+            1 -> "mago.png"
+            2 -> "arquero.png"
+            3 -> "vaquera.png"
+            4 -> "bruja.png"
+            5 -> "arquera.png"
+            6 -> "payaso.png"
+            7 -> "dracula.png"
+            8 -> "genio.png"
+            9 -> "momia.png"
+            10 -> "orco.png"
+            11 -> "zombi.png"
+            else -> throw IllegalArgumentException("Valor de personaje no válido")
+        }
+
+        val headerMain = binding.navView.getHeaderView(0)
+        val imageView: ImageView = headerMain.findViewById(R.id.imageViewPersonajePerfil)
+
+        // Obtener la URL de la imagen en Storage
+        val storage = com.google.firebase.ktx.Firebase.storage
+        val storageReference = storage.reference.child(imageName)
+
+        storageReference.downloadUrl.addOnSuccessListener { uri ->
+            // Cargar la imagen en el ImageView utilizando Glide
+            Glide.with(this)
+                .load(uri)
+                .into(imageView)
+
+            // Actualizar la URL de la imagen en el ViewModel
+            val sharedViewModel = ViewModelProvider(this).get(SharedViewModel::class.java)
+            sharedViewModel.selectedImageUri.value = uri.toString()
+            Log.d("URL de la imagen: ", "$uri")
+        }.addOnFailureListener { exception ->
+            // Manejar el error si la descarga falla
+            // Puedes agregar un Log, Toast o cualquier otra acción de manejo de errores aquí
+            println("Error al descargar la imagen: ${exception.message}")
+        }
+    }
+
+    // TODO: Mirar si en un futuro se puede implementar los banners en firebase igual que los eprsonajes
+    //TODO: Al Cerrar session y volver a entrar el personaje o banner que el usuario tennia se reiniciar, se puede dejar asi o canviarlo en un futuro
+    fun updateFirebaseIdBanner(firebaseId: Int) {
+        val backgroundDrawable = when (firebaseId) {
+            0 -> R.drawable.side_nav_bar
+            1 -> R.drawable.gradiante_azul
+            2 -> R.drawable.gradiante_purpura
+            3 -> R.drawable.gradiante_rojo
+            4 -> R.drawable.gradiante_verde_blanco
+            5 -> R.drawable.gradiante_azul_purpura
+            6 -> R.drawable.gradiante_azul_rojo
+            7 -> R.drawable.gradiante_azul_purpura_rojo
+            8 -> R.drawable.gradiante_dorado_negro
+
+            else -> throw IllegalArgumentException("Valor de banner no válido")
+        }
+
+        val headerMain = binding.navView.getHeaderView(0)
+        val navHeaderLayout = headerMain.findViewById<LinearLayout>(R.id.navHeader)
+
+        // Setear el fondo XML al LinearLayout
+        navHeaderLayout.setBackgroundResource(backgroundDrawable)
     }
 }

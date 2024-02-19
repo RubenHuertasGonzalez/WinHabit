@@ -1,11 +1,10 @@
-// PerfilFragment.kt
 package com.institutvidreres.winhabit.ui.perfil
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -23,9 +22,13 @@ class PerfilFragment : Fragment() {
 
     private lateinit var perfilViewModel: PerfilViewModel
     private lateinit var sharedViewModel: SharedViewModel
-    private lateinit var recyclerView: RecyclerView
-    private lateinit var viewAdapter: RecyclerView.Adapter<*>
-    private lateinit var viewManager: RecyclerView.LayoutManager
+    private lateinit var recyclerViewPersonajes: RecyclerView
+    private lateinit var recyclerViewBanners: RecyclerView
+    private lateinit var personajesAdapter: RecyclerView.Adapter<*>
+    private lateinit var bannersAdapter: RecyclerView.Adapter<*>
+    private lateinit var viewManagerPersonajes: RecyclerView.LayoutManager
+    private lateinit var viewManagerBanner: RecyclerView.LayoutManager
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -40,20 +43,54 @@ class PerfilFragment : Fragment() {
         perfilViewModel = ViewModelProvider(this).get(PerfilViewModel::class.java)
         sharedViewModel = ViewModelProvider(this).get(SharedViewModel::class.java)
 
-        viewManager = LinearLayoutManager(context)
+        viewManagerPersonajes = LinearLayoutManager(context)
+        viewManagerBanner = LinearLayoutManager(context)
 
-        recyclerView = binding.recyclerViewPerfilPersonajes.apply {
+        // RecyclerView para mostrar la lista de personajes
+        recyclerViewPersonajes = binding.recyclerViewPerfilPersonajes.apply {
             setHasFixedSize(true)
-            layoutManager = viewManager
+            layoutManager = viewManagerPersonajes
         }
 
+        // Observa los cambios en la lista de personajes y actualiza el RecyclerView
         perfilViewModel.getPersonajes(requireContext())?.observe(viewLifecycleOwner, Observer { personajesList ->
             personajesList?.let {
-                viewAdapter = PerfilAdapter(it, sharedViewModel) { selectedItem ->
+                personajesAdapter = PerfilAdapter(it, sharedViewModel) { selectedItem ->
                     perfilViewModel.setSelectedItem(selectedItem)
-                    Toast.makeText(requireContext(), "$selectedItem", Toast.LENGTH_SHORT).show()
+                    // Toast.makeText(requireContext(), "$selectedItem", Toast.LENGTH_SHORT).show()
+
+                    // Guardar el valor en las preferencias compartidas
+                    val sharedPreferences = requireActivity().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
+                    sharedPreferences.edit().putInt("user_character", selectedItem.firebaseId).apply()
+
+                    // Actualizar la ID del personaje en MainActivity
+                    (requireActivity() as MainActivity).updateFirebaseIdCharacter(selectedItem.firebaseId)
                 }
-                recyclerView.adapter = viewAdapter
+                recyclerViewPersonajes.adapter = personajesAdapter
+            }
+        })
+
+        // RecyclerView para mostrar la lista de banners
+        recyclerViewBanners = binding.recyclerViewPerfilBanners.apply {
+            setHasFixedSize(true)
+            layoutManager = viewManagerBanner
+        }
+
+        // Observa los cambios en la lista de banners y actualiza el RecyclerView
+        perfilViewModel.getBanners(requireContext())?.observe(viewLifecycleOwner, Observer { bannersList ->
+            bannersList?.let {
+                bannersAdapter = PerfilAdapter(it, sharedViewModel) { selectedItem ->
+                    perfilViewModel.setSelectedItem(selectedItem)
+                    // Toast.makeText(requireContext(), "$selectedItem", Toast.LENGTH_SHORT).show()
+
+                    // Guardar el valor en las preferencias compartidas
+                    val sharedPreferences = requireActivity().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
+                    sharedPreferences.edit().putInt("user_banner", selectedItem.firebaseId).apply()
+
+                    // Actualizar la ID del banner en MainActivity
+                    (requireActivity() as MainActivity).updateFirebaseIdBanner(selectedItem.firebaseId)
+                }
+                recyclerViewBanners.adapter = bannersAdapter
             }
         })
 

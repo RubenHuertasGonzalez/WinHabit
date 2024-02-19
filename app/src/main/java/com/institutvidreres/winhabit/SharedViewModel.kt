@@ -20,6 +20,8 @@ class SharedViewModel : ViewModel() {
 
     val selectedImageResId = MutableLiveData<Int>()
 
+    val selectedBannerId = MutableLiveData<Int>()
+
     fun setSelectedImage(imageResId: Int) {
         selectedImageResId.value = imageResId
     }
