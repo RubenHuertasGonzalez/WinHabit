@@ -15,6 +15,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.institutvidreres.winhabit.MainActivity
 import com.institutvidreres.winhabit.R
 import com.institutvidreres.winhabit.SharedViewModel
 import com.institutvidreres.winhabit.databinding.FragmentInicioBinding
@@ -66,6 +67,10 @@ class InicioFragment : Fragment(), TareasAdapter.OnClickListener {
             Glide.with(this)
                 .load(imageUrl)
                 .into(binding.imageView2)
+        }
+
+        sharedViewModel.selectedBannerId.observe(viewLifecycleOwner) { bannerId ->
+            (requireActivity() as MainActivity).updateFirebaseIdBanner(bannerId)
         }
 
         healthBar = binding.healthbar

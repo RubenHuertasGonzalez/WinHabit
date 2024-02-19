@@ -14,4 +14,7 @@ interface RecompensaDao {
 
     @Query("SELECT * FROM RecompensaData WHERE nombre = 'Personaje'")
     fun getPersonajes(): LiveData<List<Recompensa>>
+
+    @Query("SELECT * FROM RecompensaData WHERE nombre = 'Banner'")
+    fun getBanners(): LiveData<List<Recompensa>>
 }

@@ -18,4 +18,8 @@ class PerfilViewModel : ViewModel() {
     fun getPersonajes(context: Context) : LiveData<List<Recompensa>>? {
         return RoomRepository.getPersonajes(context)
     }
+
+    fun getBanners(context: Context) : LiveData<List<Recompensa>>? {
+        return RoomRepository.getBanners(context)
+    }
 }

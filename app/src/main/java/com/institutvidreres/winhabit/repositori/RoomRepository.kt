@@ -37,5 +37,15 @@ class RoomRepository {
 
             return recompensa
         }
+
+        // Obtener los banenrs de recompensas
+        fun getBanners(context: Context): LiveData<List<Recompensa>>? {
+
+            recompensasDatabase = initializeDB(context)
+
+            recompensa = recompensasDatabase!!.recompensaDao().getBanners()
+
+            return recompensa
+        }
     }
 }

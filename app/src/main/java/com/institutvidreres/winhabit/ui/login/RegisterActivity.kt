@@ -80,7 +80,7 @@ class RegisterActivity : AppCompatActivity() {
                             "email" to email,
                             "username" to username,
                             "password" to password,
-                            "character" to selectedCharacter
+                            "character" to selectedCharacter,
                         )
                         if (user != null) {
                             db.collection("users").document(user.uid)
