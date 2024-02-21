@@ -25,8 +25,6 @@ class PerfilAdapter(private val recompensas: List<Recompensa>, private val conte
         val botonRecompensa: Button = itemView.findViewById(R.id.boton_perfil_recompensa)
     }
 
-    private var ultimoBotonClicado: Button? = null
-
     // Crea una nova vista (invocada per el layout manager)
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PerfilViewHolder {
         val view = LayoutInflater.from(parent.context)
