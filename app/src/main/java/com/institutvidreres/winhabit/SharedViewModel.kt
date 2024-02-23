@@ -1,6 +1,5 @@
 package com.institutvidreres.winhabit
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.institutvidreres.winhabit.tareas.Tarea
@@ -16,11 +15,11 @@ class SharedViewModel : ViewModel() {
         _tareasList.value = newList
     }
 
-    val selectedImageUri = MutableLiveData<String>()
+    val selectedImageUri = MutableLiveData<String>() // Uri imatge
 
-    val selectedImageResId = MutableLiveData<Int>()
+    val selectedImageResId = MutableLiveData<Int>() // Id imatge
 
-    val selectedBannerId = MutableLiveData<Int>()
+    val selectedBannerId = MutableLiveData<Int>() // Id del banner
 
     fun setSelectedImage(imageResId: Int) {
         selectedImageResId.value = imageResId

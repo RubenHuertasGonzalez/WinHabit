@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
@@ -42,7 +43,7 @@ class InicioFragment : Fragment(), TareasAdapter.OnClickListener {
     private var progresoActualMonedas = 0
     private var monedas = 0
 
-    private lateinit var healthBar: ImageView
+    private lateinit var healthBar: ProgressBar
     private var vidasPerdidas = 0
 
     override fun onCreateView(
@@ -127,7 +128,7 @@ class InicioFragment : Fragment(), TareasAdapter.OnClickListener {
     }
 
     override fun onDecrementClick(position: Int) {
-        val totalVidas = 5 // Total de vidas
+        val totalVidas = 11 // Total de vidas
         vidasPerdidas++
 
         val vidasRestantes = totalVidas - vidasPerdidas
@@ -200,10 +201,8 @@ class InicioFragment : Fragment(), TareasAdapter.OnClickListener {
 
 
     private fun actualizarBarraDeVida(vidasRestantes: Int, totalVidas: Int) {
-        val porcentajeVidasRestantes = vidasRestantes.toFloat() / totalVidas.toFloat()
-        val escala = porcentajeVidasRestantes
-        healthBar.scaleX = escala
-        inicioViewModel.actualizarAnchuraBarraVida(escala)
+        val porcentajeVidasRestantes = vidasRestantes.toFloat() / totalVidas.toFloat() * 100 // Calcular porcentaje
+        healthBar.progress = porcentajeVidasRestantes.toInt() // Actualizar el progreso de la ProgressBar
     }
 
     private fun actualizarAnchuraBarraVidaEnInterfaz(nuevaAnchura: Float) {
