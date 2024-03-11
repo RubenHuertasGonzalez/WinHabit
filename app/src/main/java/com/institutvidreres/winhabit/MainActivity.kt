@@ -94,7 +94,11 @@ class MainActivity : AppCompatActivity() {
                     // Desmarcar el elemento del menú después de cerrar sesión
                     menuItem.isChecked = false
                     // Cerrar sesión solo cuando se hace clic en "Cerrar Sesión"
-                    signOut()
+                    sharedViewModel.signOut()
+                    // Puedes redirigir a la pantalla de inicio de sesión o realizar otras acciones según tu lógica de la aplicación
+                    val intent = Intent(this, AuthActivity::class.java)
+                    startActivity(intent)
+                    finish()
                     true
                 }
                 else -> {
@@ -143,16 +147,6 @@ class MainActivity : AppCompatActivity() {
             Log.e("MainActivity", "No se pudo obtener el personaje seleccionado")
         }
 
-    }
-
-    private fun signOut() {
-        // Aquí debes realizar el cierre de sesión en Firebase Auth
-        FirebaseAuth.getInstance().signOut()
-
-        // Puedes redirigir a la pantalla de inicio de sesión o realizar otras acciones según tu lógica de la aplicación
-        val intent = Intent(this, AuthActivity::class.java)
-        startActivity(intent)
-        finish()
     }
 
     override fun onSupportNavigateUp(): Boolean {

@@ -49,4 +49,9 @@
             android:id="@+id/action_crearTareaFragment_to_inicioFragment"
             app:destination="@id/inicioFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/confFragment"
+        android:name="com.institutvidreres.winhabit.ui.config.ConfFragment"
+        android:label="fragment_conf"
+        tools:layout="@layout/fragment_conf" />
 </navigation>
