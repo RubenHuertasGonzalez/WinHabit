@@ -29,10 +29,6 @@ class InicioViewModel : ViewModel() {
         _expUser.value = 0 // Puedes inicializarlo con el valor que corresponda
     }
 
-    fun actualizarAnchuraBarraVida(anchura: Float) {
-        _healthBarWidth.value = anchura
-    }
-
     // Métodos para actualizar las monedas, la experiencia y el nivel
     fun actualizarMonedas(nuevasMonedas: Int) {
         _coinsUser.value = nuevasMonedas

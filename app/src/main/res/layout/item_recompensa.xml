@@ -17,15 +17,16 @@
             android:layout_height="80dp"/>
 
         <!-- Descripción de la recompensa -->
+
+        <!-- Botón de la recompensa -->
         <TextView
             android:id="@+id/descripcion_recompensa"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:textSize="16sp"/>
+            android:textSize="16sp" />
 
-        <!-- Botón de la recompensa -->
         <Button
             android:id="@+id/boton_recompensa"
             android:layout_width="wrap_content"

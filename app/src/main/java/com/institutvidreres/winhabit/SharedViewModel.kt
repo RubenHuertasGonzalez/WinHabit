@@ -1,9 +1,11 @@
 package com.institutvidreres.winhabit
 
-import androidx.lifecycle.LiveData
+import android.content.Intent
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.google.firebase.auth.FirebaseAuth
 import com.institutvidreres.winhabit.tareas.Tarea
+import com.institutvidreres.winhabit.ui.login.AuthActivity
 
 class SharedViewModel : ViewModel() {
 
@@ -16,13 +18,18 @@ class SharedViewModel : ViewModel() {
         _tareasList.value = newList
     }
 
-    val selectedImageUri = MutableLiveData<String>()
+    val selectedImageUri = MutableLiveData<String>() // Uri imatge
 
-    val selectedImageResId = MutableLiveData<Int>()
+    val selectedImageResId = MutableLiveData<Int>() // Id imatge
 
-    val selectedBannerId = MutableLiveData<Int>()
+    val selectedBannerId = MutableLiveData<Int>() // Id del banner
 
     fun setSelectedImage(imageResId: Int) {
         selectedImageResId.value = imageResId
+    }
+
+    fun signOut() {
+        // Aquí debes realizar el cierre de sesión en Firebase Auth
+        FirebaseAuth.getInstance().signOut()
     }
 }
