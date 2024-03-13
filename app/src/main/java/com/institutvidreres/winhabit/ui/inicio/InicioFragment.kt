@@ -16,20 +16,23 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import com.institutvidreres.winhabit.MainActivity
 import com.institutvidreres.winhabit.R
 import com.institutvidreres.winhabit.SharedViewModel
 import com.institutvidreres.winhabit.databinding.FragmentInicioBinding
+import com.institutvidreres.winhabit.tareas.Tarea
 import com.institutvidreres.winhabit.tareas.TareasAdapter
-import com.institutvidreres.winhabit.tareas.TareasViewModel
 import kotlin.random.Random
 
 class InicioFragment : Fragment(), TareasAdapter.OnClickListener {
 
-    private lateinit var tareasViewModel: TareasViewModel
     private lateinit var tareasAdapter: TareasAdapter
     private lateinit var inicioViewModel: InicioViewModel
     private lateinit var sharedViewModel: SharedViewModel
+    private val auth: FirebaseAuth = FirebaseAuth.getInstance()
+    private lateinit var firestoreDB: FirebaseFirestore
 
     private lateinit var binding: FragmentInicioBinding
 
@@ -58,9 +61,13 @@ class InicioFragment : Fragment(), TareasAdapter.OnClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        tareasViewModel = ViewModelProvider(requireActivity()).get(TareasViewModel::class.java)
         sharedViewModel = ViewModelProvider(requireActivity()).get(SharedViewModel::class.java)
         inicioViewModel = ViewModelProvider(requireActivity()).get(InicioViewModel::class.java)
+
+        firestoreDB = FirebaseFirestore.getInstance()
+
+        // Obtiene las tareas de Firestore
+        obtenerTareasDesdeFirestore()
 
         // Observa los cambios en la URL de la imagen
         sharedViewModel.selectedImageUri.observe(viewLifecycleOwner) { imageUrl ->
@@ -88,11 +95,6 @@ class InicioFragment : Fragment(), TareasAdapter.OnClickListener {
 
             // Navega al fragmento CrearTareaFragment
             navController.navigate(R.id.action_inicioFragment_to_crearTareaFragment)
-        }
-
-        sharedViewModel.tareasList.observe(viewLifecycleOwner) { tareas ->
-            // Actualizar el adaptador con las nuevas tareas
-            tareasAdapter.actualizarLista(tareas)
         }
 
         inicioViewModel.healthBarWidth.observe(viewLifecycleOwner, Observer { nuevaAnchura ->
@@ -126,6 +128,35 @@ class InicioFragment : Fragment(), TareasAdapter.OnClickListener {
         val experienciaActual = inicioViewModel.expUser.value ?: 0
         inicioViewModel.actualizarExperiencia(experienciaActual)
     }
+
+    private fun obtenerTareasDesdeFirestore() {
+        val userId = auth.currentUser?.uid // Obtener el ID del usuario actual
+
+        userId?.let { uid ->
+            firestoreDB.collection("tasks")
+                .whereEqualTo("userId", uid) // Filtrar por userId igual al ID del usuario actual
+                .get()
+                .addOnSuccessListener { querySnapshot ->
+                    val tareas = mutableListOf<Tarea>()
+                    for (document in querySnapshot.documents) {
+                        val tarea = document.toObject(Tarea::class.java)
+                        tarea?.let { tareas.add(it) }
+                    }
+                    // Verificar si la lista de tareas está vacía antes de actualizar el adaptador
+                    if (tareas.isEmpty()) {
+                        Toast.makeText(context, "No hay tareas disponibles", Toast.LENGTH_SHORT).show()
+                    } else {
+                        // Actualiza el adaptador con las nuevas tareas obtenidas de Firestore
+                        tareasAdapter.actualizarLista(tareas)
+                    }
+                }
+                .addOnFailureListener { e ->
+                    // Manejar la excepción mostrando un mensaje de error
+                    Toast.makeText(context, "Error al obtener tareas: ${e.message}", Toast.LENGTH_SHORT).show()
+                }
+        }
+    }
+
 
     override fun onDecrementClick(position: Int) {
         val totalVidas = 11 // Total de vidas
@@ -208,4 +239,5 @@ class InicioFragment : Fragment(), TareasAdapter.OnClickListener {
     private fun actualizarAnchuraBarraVidaEnInterfaz(nuevaAnchura: Float) {
         healthBar.scaleX = nuevaAnchura
     }
+
 }

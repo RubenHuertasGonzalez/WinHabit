@@ -25,15 +25,11 @@ class RegisterActivity : AppCompatActivity() {
     private lateinit var binding: ActivityRegisterBinding
     private var selectedCharacter: Int = -1
     private lateinit var storageReference: StorageReference
-    private lateinit var sharedViewModel: SharedViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityRegisterBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        val sharedViewModel = ViewModelProvider(this).get(SharedViewModel::class.java)
-
 
         auth = FirebaseAuth.getInstance()
         storageReference = FirebaseStorage.getInstance().reference
