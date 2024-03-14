@@ -32,14 +32,12 @@ class ConfFragment : Fragment() {
         viewModel = ViewModelProvider(this).get(ConfViewModel::class.java)
         sharedViewModel = ViewModelProvider(this).get(SharedViewModel::class.java)
 
-        // Configura los listeners para tus botones de cambio de contraseña y eliminación de cuenta
         binding.changePasswordButton.setOnClickListener {
             val newPassword = binding.newPasswordEditText.text.toString()
             viewModel.changePassword(newPassword)
         }
 
         binding.deleteAccountButton.setOnClickListener {
-            // Muestra un diálogo de confirmación antes de eliminar la cuenta
             AlertDialog.Builder(context)
                 .setTitle("Confirmar eliminación de cuenta")
                 .setMessage("¿Estás seguro de que quieres eliminar tu cuenta?")

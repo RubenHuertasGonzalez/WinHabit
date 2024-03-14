@@ -2,24 +2,39 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="16dp">
 
     <EditText
         android:id="@+id/newPasswordEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Nueva contraseña" />
+        android:hint="Nueva contraseña"
+        android:padding="12dp"
+        android:textColorHint="@color/hintColor"
+        android:textSize="16sp"
+        android:background="@drawable/edit_text_background"
+        android:inputType="textPassword" />
 
     <Button
         android:id="@+id/changePasswordButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Cambiar contraseña" />
+        android:text="Cambiar contraseña"
+        android:textColor="@android:color/white"
+        android:textSize="16sp"
+        android:background="@drawable/button_background"
+        android:layout_marginTop="16dp" />
 
     <Button
         android:id="@+id/deleteAccountButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Eliminar cuenta" />
+        android:layout_marginTop="8dp"
+        android:background="@drawable/button_background"
+        android:text="Eliminar cuenta"
+        android:textColor="@android:color/white"
+        android:textSize="16sp" />
 
 </LinearLayout>
+
