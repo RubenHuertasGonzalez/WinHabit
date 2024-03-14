@@ -1,6 +1,7 @@
 package com.institutvidreres.winhabit.ui.recompensas
 
 import android.app.AlertDialog
+import android.content.ContentValues.TAG
 import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
@@ -8,15 +9,24 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.FirebaseFirestore
 import com.institutvidreres.winhabit.R
+import com.institutvidreres.winhabit.utils.AppUtils
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class RecompensasAdapter(
-    private val recompensasList: List<Recompensa>,
+    private var recompensasList: List<Recompensa>,
     private val context: Context,
-    private val viewModel: RecompenasViewModel
+    private val viewModel: RecompenasViewModel,
+    private var db: FirebaseFirestore = FirebaseFirestore.getInstance()
 ) : RecyclerView.Adapter<RecompensasAdapter.RecompensaViewHolder>() {
 
     class RecompensaViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -24,6 +34,7 @@ class RecompensasAdapter(
         val descripcionTextView: TextView = itemView.findViewById(R.id.descripcion_recompensa)
         val botonRecompensa: Button = itemView.findViewById(R.id.boton_recompensa)
         val imagenMoneda: ImageView = itemView.findViewById(R.id.imagen_moneda)
+        val progressBar: ProgressBar = itemView.findViewById(R.id.progress_bar)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecompensaViewHolder {
@@ -35,21 +46,33 @@ class RecompensasAdapter(
     override fun onBindViewHolder(holder: RecompensaViewHolder, position: Int) {
         val recompensa = recompensasList[position]
         holder.imagenImageView.setImageResource(recompensa.imagenResId)
-        holder.descripcionTextView.text = "${recompensa.descripcion}"
+        holder.descripcionTextView.text = recompensa.descripcion
 
-        // Configurar el botón y la moneda
-        holder.botonRecompensa.text = "${recompensa.precio} monedas"
-        holder.botonRecompensa.setOnClickListener {
-            mostrarDialogoCompra(recompensa)
-        }
-        holder.imagenMoneda.setImageResource(R.drawable.moneda)
+        val isConnectedToFirebase = AppUtils.isInternetConnected(context)
 
-        // Actualizar la cantidad al hacer clic en el botón
-        holder.botonRecompensa.setOnLongClickListener {
-            // Actualizar la descripción con la nueva cantidad
-            holder.descripcionTextView.text = "${recompensa.descripcion}"
-            true
-        }
+            if (isConnectedToFirebase) {
+                holder.botonRecompensa.visibility = View.VISIBLE
+                holder.progressBar.visibility = View.GONE
+
+                val currentUserID = FirebaseAuth.getInstance().currentUser?.uid
+                if (currentUserID != null) {
+                    CoroutineScope(Dispatchers.Main).launch {
+                        val objetoComprado = viewModel.verificarObjetoComprado(currentUserID, recompensa.firebaseId)
+                        if (objetoComprado) {
+                            holder.botonRecompensa.visibility = View.GONE
+                        } else {
+                            holder.botonRecompensa.text = "${recompensa.precio} monedas"
+                            holder.botonRecompensa.visibility = View.VISIBLE
+                            holder.botonRecompensa.setOnClickListener {
+                                mostrarDialogoCompra(recompensa)
+                            }
+                        }
+                    }
+                }
+            } else {
+                holder.botonRecompensa.visibility = View.GONE
+                holder.progressBar.visibility = View.VISIBLE
+            }
     }
 
     override fun getItemCount(): Int {
@@ -57,21 +80,32 @@ class RecompensasAdapter(
     }
 
     private fun mostrarDialogoCompra(recompensa: Recompensa) {
-        Log.d("RecompensasAdapter", "mostrarDialogoCompra ejecutado")  // Agregar este log
-        val builder = AlertDialog.Builder(context)
-        builder.setTitle("Confirmar Compra")
-        builder.setMessage("¿Te gustaría comprar '${recompensa.descripcion}' por ${recompensa.precio} monedas?")
-        builder.setPositiveButton("CONFIRMAR") { _, _ ->
-            viewModel.newRecompensa(context, recompensa.nombre, recompensa.firebaseId, recompensa.imagenResId, recompensa.descripcion, recompensa.precio)
-            // Añadir un Toast cuando se confirme la compra
-            val mensaje = "${recompensa.descripcion} comprado por ${recompensa.precio} monedas!"
-            Toast.makeText(context, mensaje, Toast.LENGTH_SHORT).show()
+        val currentUserID = FirebaseAuth.getInstance().currentUser?.uid
+        if (currentUserID != null) {
+            CoroutineScope(Dispatchers.Main).launch {
+                val objetoComprado = viewModel.verificarObjetoComprado(currentUserID, recompensa.firebaseId)
+                if (objetoComprado) {
+                    Toast.makeText(context, "¡Recompensa ya comprada!", Toast.LENGTH_SHORT).show()
+                } else {
+                    val builder = AlertDialog.Builder(context)
+                    builder.setTitle("Confirmar Compra")
+                    builder.setMessage("¿Te gustaría comprar '${recompensa.descripcion}' por ${recompensa.precio} monedas?")
+                    builder.setPositiveButton("CONFIRMAR") { _, _ ->
+                        db.collection("users").document(currentUserID)
+                            .update("objetosComprados", FieldValue.arrayUnion(recompensa.firebaseId))
+                            .addOnSuccessListener {
+                                Toast.makeText(context, "¡Recompensa comprada!", Toast.LENGTH_SHORT).show()
+                                notifyDataSetChanged()
+                            }
+                            .addOnFailureListener { e ->
+                                Log.w(TAG, "Error adding document", e)
+                            }
+                        viewModel.newRecompensa(context, recompensa.nombre, recompensa.firebaseId, recompensa.imagenResId, recompensa.descripcion, recompensa.precio)
+                    }
+                    builder.setNegativeButton("CANCELAR") { _, _ -> }
+                    builder.show()
+                }
+            }
         }
-        builder.setNegativeButton("CANCELAR") { _, _ ->
-            // Añadir un Toast cuando se cancele la compra
-            val mensaje = "Compra de ${recompensa.descripcion} cancelada!"
-            Toast.makeText(context, mensaje, Toast.LENGTH_SHORT).show()
-        }
-        builder.show()
     }
 }

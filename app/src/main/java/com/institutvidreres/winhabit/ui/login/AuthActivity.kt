@@ -27,7 +27,7 @@ class AuthActivity : AppCompatActivity() {
         } else {
             // Si el usuario no está autenticado, inicia sesión con el banner por defecto
             val sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE)
-            sharedPreferences.edit().putInt("user_banner", 0).apply()
+            sharedPreferences.edit().putInt("user_banner", 19).apply()
 
         }
     }
