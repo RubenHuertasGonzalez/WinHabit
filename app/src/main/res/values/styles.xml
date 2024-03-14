@@ -20,4 +20,24 @@
         <!-- Cambia el color del texto de los elementos seleccionados -->
         <item name="android:textColor">@color/image_border</item>
     </style>
+
+    <!-- Modo oscuro -->
+    <style name="AppTheme.Dark" parent="Theme.AppCompat">
+        <item name="android:windowBackground">@color/background_dark</item>
+        <item name="android:id">@color/text_color_dark</item>
+        <item name="android:textColor">@color/text_color_dark</item>
+    </style>
+
+
+    <!-- Modo claro -->
+    <style name="AppTheme.Light" parent="Theme.AppCompat">
+        <item name="android:windowBackground">@color/background_light</item>
+
+        <item name="android:textColor">@color/text_color_light</item>
+    </style>
+
+    <style name="AppTheme.DefaultMode" parent="Theme.WinHabit">
+        <!-- No se especifica el modo, seguirá el modo del sistema -->
+    </style>
+
 </resources>

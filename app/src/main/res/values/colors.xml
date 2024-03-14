@@ -18,6 +18,13 @@
     <color name="holo_green_light">#ff99cc00</color>
     <color name="colorAccent">#FF4081</color>
     <color name="hintColor">#A0A0A0</color>
+    <!-- Colores para el modo oscuro -->
+    <color name="background_dark">#121212</color>
+    <color name="text_color_dark">#FFFFFF</color>
+
+    <!-- Colores para el modo claro -->
+    <color name="background_light">#FFFFFF</color>
+    <color name="text_color_light">#000000</color>
 
 
 </resources>

@@ -18,15 +18,18 @@
         <service
             android:name=".notificacion.NotificationService"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true">
+        </service>
 
         <activity
             android:name=".ui.login.RegisterActivity"
             android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.DefaultMode"
             android:exported="false" />
         <activity
             android:name=".ui.login.AuthActivity"
             android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.DefaultMode"
             android:exported="false" />
         <activity
             android:name=".SplashActivity"

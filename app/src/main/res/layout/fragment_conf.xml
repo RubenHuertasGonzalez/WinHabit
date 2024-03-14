@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="16dp">
 
@@ -9,32 +9,48 @@
         android:id="@+id/newPasswordEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/edit_text_background"
         android:hint="Nueva contraseña"
+        android:inputType="textPassword"
         android:padding="12dp"
         android:textColorHint="@color/hintColor"
-        android:textSize="16sp"
-        android:background="@drawable/edit_text_background"
-        android:inputType="textPassword" />
+        android:textSize="16sp" />
 
     <Button
         android:id="@+id/changePasswordButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="12dp"
+        android:background="@drawable/button_background"
         android:text="Cambiar contraseña"
         android:textColor="@android:color/white"
-        android:textSize="16sp"
-        android:background="@drawable/button_background"
-        android:layout_marginTop="16dp" />
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/titleTemaApp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp"
+        android:text="TEMA DE LA APP: "
+        android:textColor="@android:color/black"
+        android:textSize="16sp" />
+
+    <Spinner
+        android:id="@+id/modeSpinner"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_marginBottom="12dp"
+        android:background="@drawable/spinner_background"
+        android:spinnerMode="dropdown" />
 
     <Button
         android:id="@+id/deleteAccountButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
         android:background="@drawable/button_background"
         android:text="Eliminar cuenta"
         android:textColor="@android:color/white"
         android:textSize="16sp" />
 
 </LinearLayout>
-
