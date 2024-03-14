@@ -1,4 +1,3 @@
-<!-- item_recompensa.xml -->
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -17,8 +16,6 @@
             android:layout_height="80dp"/>
 
         <!-- Descripción de la recompensa -->
-
-        <!-- Botón de la recompensa -->
         <TextView
             android:id="@+id/descripcion_recompensa"
             android:layout_width="0dp"
@@ -27,11 +24,19 @@
             android:gravity="center"
             android:textSize="16sp" />
 
+        <!-- Botón de la recompensa -->
         <Button
             android:id="@+id/boton_recompensa"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="COMPRAR" />
+
+        <!-- Indicador de carga -->
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
 
         <!-- Imagen de la moneda -->
         <ImageView

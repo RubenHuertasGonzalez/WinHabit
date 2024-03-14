@@ -180,6 +180,9 @@ class MainActivity : AppCompatActivity() {
             9 -> "momia.png"
             10 -> "orco.png"
             11 -> "zombi.png"
+            12 -> "caballero.png"
+            13 -> "rey.png"
+            14 -> "princesa.png"
             else -> throw IllegalArgumentException("Valor de personaje no válido")
         }
 
@@ -211,15 +214,15 @@ class MainActivity : AppCompatActivity() {
     //TODO: Al Cerrar session y volver a entrar el personaje o banner que el usuario tennia se reiniciar, se puede dejar asi o canviarlo en un futuro
     fun updateFirebaseIdBanner(firebaseId: Int) {
         val backgroundDrawable = when (firebaseId) {
-            0 -> R.drawable.side_nav_bar
-            1 -> R.drawable.gradiante_azul
-            2 -> R.drawable.gradiante_purpura
-            3 -> R.drawable.gradiante_rojo
-            4 -> R.drawable.gradiante_verde_blanco
-            5 -> R.drawable.gradiante_azul_purpura
-            6 -> R.drawable.gradiante_azul_rojo
-            7 -> R.drawable.gradiante_azul_purpura_rojo
-            8 -> R.drawable.gradiante_dorado_negro
+            19 -> R.drawable.side_nav_bar
+            20 -> R.drawable.gradiante_azul
+            21 -> R.drawable.gradiante_purpura
+            22-> R.drawable.gradiante_rojo
+            23 -> R.drawable.gradiante_verde_blanco
+            24 -> R.drawable.gradiante_azul_purpura
+            25 -> R.drawable.gradiante_azul_rojo
+            26 -> R.drawable.gradiante_azul_purpura_rojo
+            27 -> R.drawable.gradiante_dorado_negro
 
             else -> throw IllegalArgumentException("Valor de banner no válido")
         }
