@@ -79,9 +79,6 @@ class CrearTareaFragment : Fragment() {
                 // Crear objeto Tarea con información de usuario
                 val nuevaTarea = Tarea(nombre, descripcion, dificultad, duracion, userId)
 
-                // Agregar tarea al ViewModel compartido
-                sharedViewModel.agregarTarea(nuevaTarea)
-
                 // Guardar en Firestore
                 guardarEnFirestore(nuevaTarea)
 
