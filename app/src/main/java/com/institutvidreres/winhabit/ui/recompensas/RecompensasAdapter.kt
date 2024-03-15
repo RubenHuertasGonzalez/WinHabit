@@ -1,5 +1,6 @@
 package com.institutvidreres.winhabit.ui.recompensas
 
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.ContentValues.TAG
 import android.content.Context
@@ -43,6 +44,7 @@ class RecompensasAdapter(
         return RecompensaViewHolder(itemView)
     }
 
+    @SuppressLint("SuspiciousIndentation")
     override fun onBindViewHolder(holder: RecompensaViewHolder, position: Int) {
         val recompensa = recompensasList[position]
         holder.imagenImageView.setImageResource(recompensa.imagenResId)
@@ -52,6 +54,7 @@ class RecompensasAdapter(
 
             if (isConnectedToFirebase) {
                 holder.botonRecompensa.visibility = View.VISIBLE
+                holder.imagenMoneda.visibility = View.VISIBLE
                 holder.progressBar.visibility = View.GONE
 
                 val currentUserID = FirebaseAuth.getInstance().currentUser?.uid
@@ -60,9 +63,11 @@ class RecompensasAdapter(
                         val objetoComprado = viewModel.verificarObjetoComprado(currentUserID, recompensa.firebaseId)
                         if (objetoComprado) {
                             holder.botonRecompensa.visibility = View.GONE
+                            holder.imagenMoneda.visibility = View.GONE
                         } else {
-                            holder.botonRecompensa.text = "${recompensa.precio} monedas"
+                            holder.botonRecompensa.text = "${recompensa.precio}"
                             holder.botonRecompensa.visibility = View.VISIBLE
+                            holder.imagenMoneda.visibility = View.VISIBLE
                             holder.botonRecompensa.setOnClickListener {
                                 mostrarDialogoCompra(recompensa)
                             }
@@ -71,6 +76,7 @@ class RecompensasAdapter(
                 }
             } else {
                 holder.botonRecompensa.visibility = View.GONE
+                holder.imagenMoneda.visibility = View.GONE
                 holder.progressBar.visibility = View.VISIBLE
             }
     }

@@ -1,21 +1,23 @@
 package com.institutvidreres.winhabit.ui.login
 
 import android.content.Intent
-import android.net.Uri
+import android.content.IntentFilter
+import android.net.ConnectivityManager
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.institutvidreres.winhabit.MainActivity
 import com.institutvidreres.winhabit.R
-import com.institutvidreres.winhabit.SharedViewModel
 import com.institutvidreres.winhabit.databinding.ActivityRegisterBinding
+import com.institutvidreres.winhabit.utils.AppUtils
+import com.institutvidreres.winhabit.utils.ConnectivityReceiverRegister
 
 class RegisterActivity : AppCompatActivity() {
     //TODO: Correo de confirmación de cuenta
@@ -25,6 +27,8 @@ class RegisterActivity : AppCompatActivity() {
     private lateinit var binding: ActivityRegisterBinding
     private var selectedCharacter: Int = -1
     private lateinit var storageReference: StorageReference
+    private lateinit var progressBar: View
+    private lateinit var connectivityReceiverRegister: ConnectivityReceiverRegister
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,65 +55,71 @@ class RegisterActivity : AppCompatActivity() {
         setCharacterClickListener(imageViewArquera, 5)
 
         val buttonRegister = binding.buttonRegister
+        val buttonGoLogin = binding.buttonGoToLogin
+        progressBar = binding.progressBar
+
+        // Inicializar el receptor de conectividad
+        connectivityReceiverRegister = ConnectivityReceiverRegister(this)
+
+        // Verificar la conectividad al inicio
+        checkConnectivity()
 
         buttonRegister.setOnClickListener {
-            // Check if a character is selected
-            if (selectedCharacter == -1) {
-                Toast.makeText(this, "Por favor, selecciona un personaje", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-
-            // Resto de tu código para registrar al usuario
-            val email = binding.editTextEmail.text.toString()
-            val password = binding.editTextPassword.text.toString()
-            val username = binding.editTextUsername.text.toString()
-
-            val auth = FirebaseAuth.getInstance()
-            val db = FirebaseFirestore.getInstance()
-
-            auth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this) { task ->
-                    if (task.isSuccessful) {
-                        val user = auth.currentUser
-                        val userId = user?.uid
-                        val userInfo = hashMapOf(
-                            "email" to email,
-                            "username" to username,
-                            "password" to password,
-                            "character" to selectedCharacter,
-                        )
-                        if (user != null) {
-                            db.collection("users").document(user.uid)
-                                .set(userInfo)
-                                .addOnSuccessListener {
-                                    Toast.makeText(this, "CORRECTO CREADO", Toast.LENGTH_SHORT).show()
-                                    Log.d(TAG, "DocumentSnapshot successfully written!")
-                                    val sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE)
-                                    sharedPreferences.edit().putInt("user_character", selectedCharacter).apply()
-                                    val intent = Intent(this, MainActivity::class.java)
-                                    intent.putExtra("user_email", email)
-                                    intent.putExtra("user_character", selectedCharacter)
-                                    startActivity(intent)
-                                }
-                                .addOnFailureListener { e ->
-                                    Log.w(TAG, "Error writing document", e)
-                                }
-                        }
-                    } else {
-                        Log.w(TAG, "createUserWithEmailAndPassword:failure", task.exception)
-                    }
+            if (AppUtils.isInternetConnected(this)) {
+                // Check if a character is selected
+                if (selectedCharacter == -1) {
+                    Toast.makeText(this, "Por favor, selecciona un personaje", Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
                 }
 
+                // Resto de tu código para registrar al usuario
+                val email = binding.editTextEmail.text.toString()
+                val password = binding.editTextPassword.text.toString()
+                val username = binding.editTextUsername.text.toString()
 
-            // storageReference.child("${auth.currentUser?.uid}/profile_image.png")
-            //                .putFile(getImageResourceUri(selectedCharacter))
-            //                .addOnSuccessListener { _ ->
-            //                    // Imagen del personaje almacenada exitosamente
-            //                }
-            //                .addOnFailureListener { e ->
-            //                    // Maneja el error al almacenar la imagen del personaje
-            //                    Log.e(TAG, "Error al almacenar la imagen del personaje", e)
-            //                }
+                val auth = FirebaseAuth.getInstance()
+                val db = FirebaseFirestore.getInstance()
+
+                auth.createUserWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(this) { task ->
+                        if (task.isSuccessful) {
+                            val user = auth.currentUser
+                            val userId = user?.uid
+                            val userInfo = hashMapOf(
+                                "email" to email,
+                                "username" to username,
+                                "password" to password,
+                                "character" to selectedCharacter,
+                            )
+                            if (user != null) {
+                                db.collection("users").document(user.uid)
+                                    .set(userInfo)
+                                    .addOnSuccessListener {
+                                        Toast.makeText(this, "CORRECTO CREADO", Toast.LENGTH_SHORT).show()
+                                        Log.d(TAG, "DocumentSnapshot successfully written!")
+                                        val sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE)
+                                        sharedPreferences.edit().putInt("user_character", selectedCharacter).apply()
+                                        val intent = Intent(this, MainActivity::class.java)
+                                        intent.putExtra("user_email", email)
+                                        intent.putExtra("user_character", selectedCharacter)
+                                        startActivity(intent)
+                                    }
+                                    .addOnFailureListener { e ->
+                                        Log.w(TAG, "Error writing document", e)
+                                    }
+                            }
+                        } else {
+                            Log.w(TAG, "createUserWithEmailAndPassword:failure", task.exception)
+                        }
+                    }
+            } else {
+                Toast.makeText(this, "No hay conexión a Internet", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        buttonGoLogin.setOnClickListener{
+            val intent = Intent(this, AuthActivity::class.java)
+            startActivity(intent)
         }
     }
 
@@ -128,20 +138,6 @@ class RegisterActivity : AppCompatActivity() {
         }
     }
 
-    private fun getImageResourceUri(characterIndex: Int): Uri {
-        val imageName = when (characterIndex) {
-            0 -> "vaquero.png"
-            1 -> "mago.png"
-            2 -> "arquero.png"
-            3 -> "vaquera.png"
-            4 -> "bruja.png"
-            5 -> "arquera.png"
-            else -> throw IllegalArgumentException("Índice de personaje no válido")
-        }
-
-        return Uri.parse("android.resource://${packageName}/drawable/${imageName}")
-    }
-
     private fun getImageViewByCharacterIndex(characterIndex: Int): ImageView {
         return when (characterIndex) {
             0 -> binding.imageViewVaquero
@@ -151,6 +147,36 @@ class RegisterActivity : AppCompatActivity() {
             4 -> binding.imageViewBruja
             5 -> binding.imageViewArquera
             else -> throw IllegalArgumentException("Índice de personaje no válido")
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // Registrar el receptor de conectividad
+        registerReceiver(connectivityReceiverRegister, IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION))
+    }
+
+    override fun onPause() {
+        super.onPause()
+        // Desregistrar el receptor de conectividad
+        unregisterReceiver(connectivityReceiverRegister)
+    }
+
+    // Método para verificar la conectividad
+    private fun checkConnectivity() {
+        val isConnected = AppUtils.isInternetConnected(this)
+        updateUI(isConnected)
+    }
+
+    // Método para actualizar la interfaz de usuario según el estado de la conectividad
+    fun updateUI(isConnected: Boolean) {
+        if (!isConnected) {
+            // No hay conexión a Internet
+            Toast.makeText(this, "Error de Conexión", Toast.LENGTH_SHORT).show()
+            progressBar.visibility = View.VISIBLE
+        } else {
+            // Hay conexión a Internet
+            progressBar.visibility = View.GONE
         }
     }
 }

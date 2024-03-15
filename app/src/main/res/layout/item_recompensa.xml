@@ -1,10 +1,12 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
     android:padding="8dp">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
@@ -13,38 +15,59 @@
         <ImageView
             android:id="@+id/imagen_recompensa"
             android:layout_width="80dp"
-            android:layout_height="80dp"/>
+            android:layout_height="80dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <!-- Descripción de la recompensa -->
         <TextView
             android:id="@+id/descripcion_recompensa"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_width="132dp"
+            android:layout_height="19dp"
             android:gravity="center"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/boton_recompensa"
+            app:layout_constraintStart_toEndOf="@+id/imagen_recompensa"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="nombre" />
 
-        <!-- Botón de la recompensa -->
-        <Button
-            android:id="@+id/boton_recompensa"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="COMPRAR" />
 
         <!-- Indicador de carga -->
         <ProgressBar
             android:id="@+id/progress_bar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="gone" />
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/imagen_recompensa"
+            app:layout_constraintEnd_toStartOf="@+id/imagen_moneda"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!-- Botón de la recompensa -->
 
         <!-- Imagen de la moneda -->
+
+        <Button
+            android:id="@+id/boton_recompensa"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:text="Cargando..."
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/imagen_moneda"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <ImageView
             android:id="@+id/imagen_moneda"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@drawable/moneda" />
+            android:layout_width="31dp"
+            android:layout_height="30dp"
+            android:layout_marginEnd="4dp"
+            android:src="@drawable/moneda"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.cardview.widget.CardView>
