@@ -13,8 +13,10 @@ import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.Spinner
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.switchmaterial.SwitchMaterial
 import com.institutvidreres.winhabit.R
@@ -46,8 +48,10 @@ class ConfFragment : Fragment() {
         sharedViewModel = ViewModelProvider(this).get(SharedViewModel::class.java)
 
         binding.changePasswordButton.setOnClickListener {
+            val currentPassword = binding.currentPasswordEditText.text.toString()
             val newPassword = binding.newPasswordEditText.text.toString()
-            viewModel.changePassword(newPassword)
+            val confirmPassword = binding.confirmPasswordEditText.text.toString()
+            viewModel.changePassword(currentPassword, newPassword, confirmPassword)
         }
 
         binding.deleteAccountButton.setOnClickListener {
@@ -67,6 +71,11 @@ class ConfFragment : Fragment() {
                 .setNegativeButton("No", null)
                 .show()
         }
+
+        // Observa el LiveData del ViewModel para mostrar mensajes
+        viewModel.messageLiveData.observe(viewLifecycleOwner, Observer { message ->
+            Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+        })
 
         ArrayAdapter.createFromResource(
             requireContext(),
