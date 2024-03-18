@@ -5,16 +5,23 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.Button
+import android.widget.LinearLayout
 import android.widget.Spinner
 import androidx.fragment.app.Fragment
+import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.google.android.material.switchmaterial.SwitchMaterial
 import com.institutvidreres.winhabit.R
 import com.institutvidreres.winhabit.SharedViewModel
 import com.institutvidreres.winhabit.databinding.FragmentConfBinding
@@ -23,6 +30,7 @@ import com.institutvidreres.winhabit.ui.login.AuthActivity
 class ConfFragment : Fragment() {
 
     private var _binding: FragmentConfBinding? = null
+    // Esta propiedad solo es válida entre onCreateView y onDestroyView.
     private val binding get() = _binding!!
 
     private lateinit var viewModel: ConfViewModel
@@ -44,8 +52,10 @@ class ConfFragment : Fragment() {
         sharedViewModel = ViewModelProvider(this).get(SharedViewModel::class.java)
 
         binding.changePasswordButton.setOnClickListener {
+            val currentPassword = binding.currentPasswordEditText.text.toString()
             val newPassword = binding.newPasswordEditText.text.toString()
-            viewModel.changePassword(newPassword)
+            val confirmPassword = binding.confirmPasswordEditText.text.toString()
+            viewModel.changePassword(currentPassword, newPassword, confirmPassword)
         }
 
         binding.deleteAccountButton.setOnClickListener {
@@ -63,6 +73,12 @@ class ConfFragment : Fragment() {
                 .show()
         }
 
+        // Observa el LiveData del ViewModel para mostrar mensajes
+        viewModel.messageLiveData.observe(viewLifecycleOwner, Observer { message ->
+            Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+        })
+
+        ArrayAdapter.createFromResource(
         val sharedPreferences = requireContext().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
         lastSelectedMode = sharedPreferences.getInt("LastSelectedMode", AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
 
