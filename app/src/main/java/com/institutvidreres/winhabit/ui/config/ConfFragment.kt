@@ -3,25 +3,20 @@ package com.institutvidreres.winhabit.ui.config
 import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.content.SharedPreferences
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.Button
-import android.widget.LinearLayout
 import android.widget.Spinner
 import androidx.fragment.app.Fragment
-import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.google.android.material.switchmaterial.SwitchMaterial
 import com.institutvidreres.winhabit.R
 import com.institutvidreres.winhabit.SharedViewModel
 import com.institutvidreres.winhabit.databinding.FragmentConfBinding
@@ -78,7 +73,6 @@ class ConfFragment : Fragment() {
             Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
         })
 
-        ArrayAdapter.createFromResource(
         val sharedPreferences = requireContext().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
         lastSelectedMode = sharedPreferences.getInt("LastSelectedMode", AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
 
@@ -123,10 +117,10 @@ class ConfFragment : Fragment() {
         // Aplicar colores basados en el último modo seleccionado
         if (lastSelectedMode == AppCompatDelegate.MODE_NIGHT_YES) {
             binding.newPasswordEditText.setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
+            binding.currentPasswordEditText.setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
+            binding.confirmPasswordEditText.setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
             binding.titleTemaApp.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
-        } else {
-            binding.newPasswordEditText.setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
-            binding.titleTemaApp.setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
+            binding.titleConfSeguridad.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
         }
 
         return view

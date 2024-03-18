@@ -2,6 +2,7 @@ package com.institutvidreres.winhabit.ui.config
 
 import android.content.ContentValues.TAG
 import android.util.Log
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
