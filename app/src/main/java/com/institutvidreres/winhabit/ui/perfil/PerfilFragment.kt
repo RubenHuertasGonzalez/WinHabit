@@ -39,6 +39,7 @@ class PerfilFragment : Fragment() {
 
         // Llama al método de actualización en MainActivity
         (requireActivity() as MainActivity).updateNavigationDrawerEmail()
+        (requireActivity() as MainActivity).updateNavigationDrawerUsername()
 
         perfilViewModel = ViewModelProvider(this).get(PerfilViewModel::class.java)
         sharedViewModel = ViewModelProvider(this).get(SharedViewModel::class.java)

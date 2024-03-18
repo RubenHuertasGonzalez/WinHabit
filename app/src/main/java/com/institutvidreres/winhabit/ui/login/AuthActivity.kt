@@ -8,7 +8,6 @@ import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.gms.auth.api.Auth
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.firebase.auth.FirebaseAuth
@@ -27,6 +26,7 @@ class AuthActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAuthBinding
     private lateinit var progressBar: View
     private lateinit var connectivityReceiverAuth: ConnectivityReceiverAuth
+    private var username: String? = "hola"
 
     override fun onStart() {
         super.onStart()
@@ -34,7 +34,8 @@ class AuthActivity : AppCompatActivity() {
         if (currentUser != null) {
             // Usuario ya autenticado, redirigir a la actividad principal
             startActivity(Intent(this, MainActivity::class.java)
-                .putExtra("user_email", currentUser.email))
+                .putExtra("user_email", currentUser.email)
+                .putExtra("user_name", username))
             finish()  // Cerrar esta actividad para evitar que el usuario retroceda a la pantalla de inicio de sesión
         } else {
             // Si el usuario no está autenticado, inicia sesión con el banner por defecto
@@ -50,6 +51,8 @@ class AuthActivity : AppCompatActivity() {
 
         auth = FirebaseAuth.getInstance()
         progressBar = binding.progressBar
+
+        username = intent.getStringExtra("user_name")
 
         val buttonLogin = binding.buttonSignIn
         val buttonGoRegister = binding.buttonGoToRegister
@@ -83,10 +86,12 @@ class AuthActivity : AppCompatActivity() {
                                             progressBar.visibility = View.GONE // Ocultar progressBar
                                             val sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE)
                                             sharedPreferences.edit().putInt("user_character", characterId.toInt()).apply()
-                                            startActivity(Intent(this, MainActivity::class.java)
-                                                .putExtra("user_email", user.email)
-                                                .putExtra("user_character", characterId.toInt()))
-                                            finish()  // Cerrar esta actividad
+                                            val intent = Intent(this, MainActivity::class.java).apply {
+                                                putExtra("user_email", user.email)
+                                                putExtra("user_name", username)
+                                            }
+                                            startActivity(intent)
+                                            finish()
                                         } else {
                                             Log.e(TAG, "Error: No se encontró el ID del personaje para el usuario")
                                         }

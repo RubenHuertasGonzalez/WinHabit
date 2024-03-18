@@ -44,6 +44,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var sharedViewModel: SharedViewModel
 
     private var userEmail: String? = null
+    private var username: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -98,7 +99,9 @@ class MainActivity : AppCompatActivity() {
                     // Cerrar sesión solo cuando se hace clic en "Cerrar Sesión"
                     sharedViewModel.signOut()
                     // Puedes redirigir a la pantalla de inicio de sesión o realizar otras acciones según tu lógica de la aplicación
-                    val intent = Intent(this, AuthActivity::class.java)
+                    val intent = Intent(this, AuthActivity::class.java).apply {
+                        putExtra("user_name", username)
+                    }
                     startActivity(intent)
                     finish()
                     true
@@ -120,10 +123,6 @@ class MainActivity : AppCompatActivity() {
             handled || super.onOptionsItemSelected(menuItem)
         }
 
-        // Obtener el correo electrónico del intento y actualizar el perfil
-        userEmail = intent.getStringExtra("user_email")
-        updateNavigationDrawerEmail()
-
         // Listener para el clic en la imagen del perfil
         binding.navView.getHeaderView(0).findViewById<ImageView>(R.id.imageViewPersonajePerfil)
             .setOnClickListener {
@@ -141,13 +140,22 @@ class MainActivity : AppCompatActivity() {
             Log.e("MainActivity", "No se pudo obtener el personaje seleccionado")
         }
 
-        val banner = sharedPreferences.getInt("user_banner", -1)
-        if (banner != -1) {
-            updateFirebaseIdBanner(banner)
-            Log.d("MainActivity", "Personaje seleccionado: $banner")
+        username = sharedPreferences.getString("user_name", null)
+        if (username != null) {
+            // El username no es nulo, puedes usarlo
+            Log.d("MainActivity", "Username: $username")
         } else {
-            Log.e("MainActivity", "No se pudo obtener el personaje seleccionado")
+            // El username es nulo, hacer algo en consecuencia
+            Log.e("MainActivity", "El username es nulo")
         }
+
+        // Obtener el correo electrónico del intento y actualizar el perfil
+        userEmail = intent.getStringExtra("user_email")
+        updateNavigationDrawerEmail()
+
+        username = intent.getStringExtra("user_name")
+        Log.d("MainActivity", "Username123: $username")
+        updateNavigationDrawerUsername()
 
     }
 
@@ -166,6 +174,12 @@ class MainActivity : AppCompatActivity() {
         // Actualizar la vista con el correo almacenado
         val textViewCorreoPerfil = binding.navView.getHeaderView(0).findViewById<TextView>(R.id.textViewCorreoPerfil)
         textViewCorreoPerfil.text = userEmail
+    }
+
+    fun updateNavigationDrawerUsername() {
+        // Actualizar la vista con el nombre de usuario almacenado
+        val textViewUsername = binding.navView.getHeaderView(0).findViewById<TextView>(R.id.textViewUsername)
+        textViewUsername.text = username
     }
 
     fun updateFirebaseIdCharacter(firebaseId: Int) {

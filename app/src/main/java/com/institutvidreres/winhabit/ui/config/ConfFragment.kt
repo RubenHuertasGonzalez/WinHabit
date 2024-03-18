@@ -86,11 +86,11 @@ class ConfFragment : Fragment() {
 
         // Establecer el texto del spinner según el último modo seleccionado
         val defaultText = if (lastSelectedMode == AppCompatDelegate.MODE_NIGHT_YES) {
-            "LIGHT"
-        } else {
             "DARK"
+        } else {
+            "LIGHT"
         }
-        modeSpinner.setSelection(if (defaultText == "DARK") 0 else 1)
+        modeSpinner.setSelection(if (defaultText == "LIGHT") 0 else 1)
 
         modeSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(

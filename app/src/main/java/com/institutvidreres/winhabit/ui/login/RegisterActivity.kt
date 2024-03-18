@@ -99,8 +99,10 @@ class RegisterActivity : AppCompatActivity() {
                                         Log.d(TAG, "DocumentSnapshot successfully written!")
                                         val sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE)
                                         sharedPreferences.edit().putInt("user_character", selectedCharacter).apply()
+                                        sharedPreferences.edit().putString("user_name", username).apply()
                                         val intent = Intent(this, MainActivity::class.java)
                                         intent.putExtra("user_email", email)
+                                        intent.putExtra("user_name", username)
                                         intent.putExtra("user_character", selectedCharacter)
                                         startActivity(intent)
                                     }
