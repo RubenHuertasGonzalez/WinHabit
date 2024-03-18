@@ -99,7 +99,6 @@ class ConfFragment : Fragment() {
                     "DARK" -> {
                         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
                         binding.newPasswordEditText.setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
-                        binding.titleTemaApp.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
                     }
 
                     "LIGHT" -> {

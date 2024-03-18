@@ -8,9 +8,13 @@ import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.gms.auth.api.Auth
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.GoogleApiClient
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.institutvidreres.winhabit.MainActivity
+import com.institutvidreres.winhabit.R
 import com.institutvidreres.winhabit.databinding.ActivityAuthBinding
 import com.institutvidreres.winhabit.utils.AppUtils
 import com.institutvidreres.winhabit.utils.ConnectivityReceiverAuth
@@ -18,6 +22,7 @@ import com.institutvidreres.winhabit.utils.ConnectivityReceiverAuth
 class AuthActivity : AppCompatActivity() {
 
     private lateinit var auth: FirebaseAuth
+    private lateinit var googleApiClient: GoogleApiClient
     private val TAG = "AuthActivity"
     private lateinit var binding: ActivityAuthBinding
     private lateinit var progressBar: View
@@ -91,8 +96,7 @@ class AuthActivity : AppCompatActivity() {
                                         progressBar.visibility = View.GONE // Ocultar progressBar
                                     }
                             }
-                        } else {
-                            // Fallo en el inicio de sesión
+                        } else { // Fallo en el inicio de sesión
                             Log.w(TAG, "signInWithEmailAndPassword:failure", task.exception)
                             Toast.makeText(this, "Correo o contraseña incorrecto", Toast.LENGTH_SHORT).show()
                             progressBar.visibility = View.GONE // Ocultar progressBar
