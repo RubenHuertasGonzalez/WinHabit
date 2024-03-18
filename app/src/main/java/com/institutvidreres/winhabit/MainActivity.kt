@@ -212,7 +212,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    // TODO: Mirar si en un futuro se puede implementar los banners en firebase igual que los eprsonajes
+    // TODO: Mirar si en un futuro se puede implementar los banners en firebase igual que los personajes
     //TODO: Al Cerrar session y volver a entrar el personaje o banner que el usuario tennia se reiniciar, se puede dejar asi o canviarlo en un futuro
     fun updateFirebaseIdBanner(firebaseId: Int) {
         val backgroundDrawable = when (firebaseId) {

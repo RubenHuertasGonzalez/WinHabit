@@ -37,7 +37,7 @@
     </style>
 
     <style name="AppTheme.DefaultMode" parent="Theme.WinHabit">
-        <!-- No se especifica el modo, seguirá el modo del sistema -->
+
     </style>
 
 </resources>

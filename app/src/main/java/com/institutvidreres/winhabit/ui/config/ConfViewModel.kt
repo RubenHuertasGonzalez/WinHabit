@@ -60,4 +60,12 @@ class ConfViewModel : ViewModel() {
             .addOnSuccessListener { Log.d(TAG, "User successfully deleted from Firestore!") }
             .addOnFailureListener { e -> Log.w(TAG, "Error deleting user in Firestore", e) }
     }
+
+    fun changeThemeToDark() {
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+    }
+
+    fun changeThemeToLight() {
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+    }
 }

@@ -14,8 +14,8 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
     <string-array name="modes_array">
-        <item>DARK</item>
         <item>LIGHT</item>
+        <item>DARK</item>
     </string-array>
 
 
