@@ -9,9 +9,13 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.auth.api.Auth
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.auth.api.signin.GoogleSignInResult
+import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.firestore.FirebaseFirestore
 import com.institutvidreres.winhabit.MainActivity
 import com.institutvidreres.winhabit.R
@@ -19,14 +23,15 @@ import com.institutvidreres.winhabit.databinding.ActivityAuthBinding
 import com.institutvidreres.winhabit.utils.AppUtils
 import com.institutvidreres.winhabit.utils.ConnectivityReceiverAuth
 
-class AuthActivity : AppCompatActivity() {
+class AuthActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedListener {
 
     private lateinit var auth: FirebaseAuth
     private lateinit var googleApiClient: GoogleApiClient
-    private val TAG = "AuthActivity"
+    private val TAG = "AuthActivityLogs"
     private lateinit var binding: ActivityAuthBinding
     private lateinit var progressBar: View
     private lateinit var connectivityReceiverAuth: ConnectivityReceiverAuth
+    private var selectedCharacter: Int = 0
 
     override fun onStart() {
         super.onStart()
@@ -53,6 +58,17 @@ class AuthActivity : AppCompatActivity() {
 
         val buttonLogin = binding.buttonSignIn
         val buttonGoRegister = binding.buttonGoToRegister
+
+        // Configurar opciones de inicio de sesión con Google
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(getString(R.string.default_web_client_id))
+            .requestEmail()
+            .build()
+
+        googleApiClient = GoogleApiClient.Builder(this)
+            .enableAutoManage(this, this)
+            .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+            .build()
 
         // Inicializar el receptor de conectividad
         connectivityReceiverAuth = ConnectivityReceiverAuth(this)
@@ -113,6 +129,73 @@ class AuthActivity : AppCompatActivity() {
             startActivity(intent)
             finish()
         }
+
+        // Configurar el clic del botón de inicio de sesión con Google
+        binding.btnSignInGoogle.setOnClickListener {
+            val signInIntent = Auth.GoogleSignInApi.getSignInIntent(googleApiClient)
+            startActivityForResult(signInIntent, RC_SIGN_IN)
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == RC_SIGN_IN) {
+            val result = data?.let { Auth.GoogleSignInApi.getSignInResultFromIntent(it) }
+            if (result != null) {
+                if (result.isSuccess) {
+                    val account = result?.signInAccount
+                    firebaseAuthWithGoogle(account)
+                } else {
+                    // Fallo en el inicio de sesión con Google
+                    Log.e(TAG, "Google Sign-In failed.")
+                }
+            }
+        }
+    }
+
+    private fun firebaseAuthWithGoogle(account: GoogleSignInAccount?) {
+        val credential = GoogleAuthProvider.getCredential(account?.idToken, null)
+        auth.signInWithCredential(credential)
+            .addOnCompleteListener(this) { task ->
+                if (task.isSuccessful) {
+                    val user = auth.currentUser
+                    val db = FirebaseFirestore.getInstance()
+                    val userInfo = hashMapOf(
+                        "email" to account?.email,
+                        "username" to account?.displayName,
+                        "character" to selectedCharacter,
+                    )
+                    if (user != null) {
+                        db.collection("users").document(user.uid)
+                            .set(userInfo)
+                            .addOnSuccessListener {
+                                Toast.makeText(this, "CORRECTO CREADO", Toast.LENGTH_SHORT).show()
+                                Log.d(TAG, "DocumentSnapshot successfully written!")
+                                val sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE)
+                                sharedPreferences.edit().putInt("user_character", selectedCharacter).apply()
+                                val intent = Intent(this, MainActivity::class.java)
+                                if (account != null) {
+                                    intent.putExtra("user_email", account.email)
+                                }
+                                intent.putExtra("user_character", selectedCharacter)
+                                startActivity(intent)
+                            }
+                            .addOnFailureListener { e ->
+                                Log.w(TAG, "Error writing document", e)
+                            }
+                    }
+                } else {
+                    Log.w(TAG, "signInWithCredential:failure", task.exception)
+                }
+            }
+    }
+
+
+
+    override fun onConnectionFailed(connectionResult: ConnectionResult) {
+        Log.d(TAG, "onConnectionFailed: ${connectionResult.errorMessage}")
+        Toast.makeText(this@AuthActivity, "Google Play Services error.", Toast.LENGTH_SHORT).show()
     }
 
     override fun onResume() {
@@ -143,5 +226,9 @@ class AuthActivity : AppCompatActivity() {
             // Hay conexión a Internet
             progressBar.visibility = View.GONE
         }
+    }
+
+    companion object {
+        private const val RC_SIGN_IN = 9001
     }
 }

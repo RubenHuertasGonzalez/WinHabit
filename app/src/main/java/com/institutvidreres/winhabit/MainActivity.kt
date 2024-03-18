@@ -1,6 +1,7 @@
 // MainActivity.kt
 package com.institutvidreres.winhabit
 
+import android.content.ContentValues.TAG
 import android.content.Intent
 import android.os.Bundle
 import android.os.Looper
@@ -25,6 +26,9 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.bumptech.glide.Glide
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.Firebase
@@ -42,6 +46,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var navController: NavController
     private lateinit var analytics: FirebaseAnalytics
     private lateinit var sharedViewModel: SharedViewModel
+    private lateinit var googleSignInClient: GoogleSignInClient
 
     private var userEmail: String? = null
 
@@ -57,6 +62,12 @@ class MainActivity : AppCompatActivity() {
         analytics = Firebase.analytics
 
         setSupportActionBar(binding.appBarMain.toolbar)
+
+        // Inicializar googleSignInClient con la configuración de inicio de sesión de Google
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestEmail()
+            .build()
+        googleSignInClient = GoogleSignIn.getClient(this, gso)
 
         val drawerLayout: DrawerLayout = binding.drawerLayout
         val navView: NavigationView = binding.navView
@@ -97,6 +108,7 @@ class MainActivity : AppCompatActivity() {
                     menuItem.isChecked = false
                     // Cerrar sesión solo cuando se hace clic en "Cerrar Sesión"
                     sharedViewModel.signOut()
+                    signOutGoogle()
                     // Puedes redirigir a la pantalla de inicio de sesión o realizar otras acciones según tu lógica de la aplicación
                     val intent = Intent(this, AuthActivity::class.java)
                     startActivity(intent)
@@ -234,5 +246,18 @@ class MainActivity : AppCompatActivity() {
 
         // Setear el fondo XML al LinearLayout
         navHeaderLayout.setBackgroundResource(backgroundDrawable)
+    }
+
+    private fun signOutGoogle() {
+        googleSignInClient.signOut()
+            .addOnCompleteListener(this) { task ->
+                if (task.isSuccessful) {
+                    // La sesión se cerró correctamente
+                    Log.d(TAG, "Google Sign-Out successful.")
+                } else {
+                    // Hubo un error al cerrar la sesión
+                    Log.w(TAG, "Google Sign-Out failed.")
+                }
+            }
     }
 }
