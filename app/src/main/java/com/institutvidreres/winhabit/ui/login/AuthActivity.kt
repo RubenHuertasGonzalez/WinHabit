@@ -176,7 +176,9 @@ class AuthActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
                         db.collection("users").document(user.uid)
                             .set(userInfo)
                             .addOnSuccessListener {
-                                Toast.makeText(this, "CORRECTO CREADO", Toast.LENGTH_SHORT).show()
+                                val userEmail = account?.email ?: ""
+                                val successMessage = "Inicio de sesión exitoso con Google.\nCorreo electrónico: $userEmail"
+                                Toast.makeText(this, successMessage, Toast.LENGTH_SHORT).show()
                                 Log.d(TAG, "DocumentSnapshot successfully written!")
                                 val sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE)
                                 sharedPreferences.edit().putInt("user_character", selectedCharacter).apply()

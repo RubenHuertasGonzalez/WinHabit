@@ -1,6 +1,8 @@
 package com.institutvidreres.winhabit.ui.inicio
 
+import android.content.ContentValues.TAG
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,6 +24,7 @@ import com.institutvidreres.winhabit.MainActivity
 import com.institutvidreres.winhabit.R
 import com.institutvidreres.winhabit.SharedViewModel
 import com.institutvidreres.winhabit.databinding.FragmentInicioBinding
+import com.institutvidreres.winhabit.model.Perfil
 import com.institutvidreres.winhabit.tareas.Tarea
 import com.institutvidreres.winhabit.tareas.TareasAdapter
 import kotlin.random.Random
@@ -33,6 +36,9 @@ class InicioFragment : Fragment(), TareasAdapter.OnClickListener {
     private lateinit var sharedViewModel: SharedViewModel
     private val auth: FirebaseAuth = FirebaseAuth.getInstance()
     private lateinit var firestoreDB: FirebaseFirestore
+
+    private lateinit var userId: String // ID del usuario actual
+    private lateinit var perfil: Perfil // Perfil del usuario
 
     private lateinit var binding: FragmentInicioBinding
 
@@ -48,6 +54,7 @@ class InicioFragment : Fragment(), TareasAdapter.OnClickListener {
 
     private lateinit var healthBar: ProgressBar
     private var vidasPerdidas = 0
+    val totalVidas = 11
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -65,6 +72,13 @@ class InicioFragment : Fragment(), TareasAdapter.OnClickListener {
         inicioViewModel = ViewModelProvider(requireActivity()).get(InicioViewModel::class.java)
 
         firestoreDB = FirebaseFirestore.getInstance()
+
+        userId = auth.currentUser?.uid.toString() // Obtener el ID del usuario actual
+
+        // Obtener el total de vidas desde el ViewModel compartido
+        sharedViewModel.totalVidas.value = totalVidas
+
+        cargarPerfilUsuario()
 
         // Obtiene las tareas de Firestore
         obtenerTareasDesdeFirestore()
@@ -127,10 +141,100 @@ class InicioFragment : Fragment(), TareasAdapter.OnClickListener {
         // Obtener la experiencia actual del ViewModel y guardarla
         val experienciaActual = inicioViewModel.expUser.value ?: 0
         inicioViewModel.actualizarExperiencia(experienciaActual)
+
+        // Guardar los valores del perfil al cerrar sesión
+        guardarPerfilUsuario()
     }
 
+    private fun cargarPerfilUsuario() {
+        // Obtener referencia al documento de perfil del usuario actual
+        val perfilRef = firestoreDB.collection("profiles").document(userId)
+
+        // Obtener los datos del documento de perfil
+        perfilRef.get().addOnSuccessListener { document ->
+            if (document.exists()) {
+                // El documento existe, cargar los valores del perfil en la aplicación
+                perfil = document.toObject(Perfil::class.java) ?: Perfil()
+                cargarValoresPerfil(perfil)
+            } else {
+                // El documento no existe, crear un nuevo perfil para el usuario
+                crearNuevoPerfil()
+            }
+        }.addOnFailureListener { e ->
+            // Manejar el error al obtener el documento
+            Log.e(TAG, "Error al obtener el documento de perfil: $e")
+        }
+    }
+
+    private fun cargarValoresPerfil(perfil: Perfil) {
+        // Cargar los valores del perfil en la aplicación
+        nivel = perfil.nivel
+        monedas = perfil.monedas
+        vidasPerdidas = perfil.vidasPerdidas
+        // Otros campos del perfil...
+
+        // Actualizar la interfaz de usuario con los valores del perfil
+        // (por ejemplo, TextViews, ProgressBar, etc.)
+        actualizarInterfazUsuario(perfil)
+    }
+
+    private fun crearNuevoPerfil() {
+        // Crear un nuevo documento de perfil para el usuario actual
+        val nuevoPerfil = Perfil(userId = userId)
+
+        // Añadir el documento a la colección "profiles" con el ID del usuario actual
+        firestoreDB.collection("profiles").document(userId)
+            .set(nuevoPerfil)
+            .addOnSuccessListener {
+                Log.d(TAG, "Documento de perfil creado correctamente")
+                // Cargar el nuevo perfil
+                cargarValoresPerfil(nuevoPerfil)
+            }
+            .addOnFailureListener { e ->
+                // Manejar el error al crear el documento
+                Log.e(TAG, "Error al crear el documento de perfil: $e")
+            }
+    }
+
+    private fun guardarPerfilUsuario() {
+        // Actualizar el documento de perfil con los valores actuales del perfil
+        val perfilRef = firestoreDB.collection("profiles").document(userId)
+
+        val datosPerfil = hashMapOf(
+            "nivel" to nivel,
+            "monedas" to monedas,
+            "vidasPerdidas" to vidasPerdidas
+            // Otros campos del perfil...
+        )
+
+        perfilRef.set(datosPerfil)
+            .addOnSuccessListener {
+                Log.d(TAG, "Perfil actualizado correctamente")
+            }
+            .addOnFailureListener { e ->
+                // Manejar el error al actualizar el documento
+                Log.e(TAG, "Error al actualizar el perfil: $e")
+            }
+    }
+
+    private fun actualizarInterfazUsuario(perfil: Perfil) {
+        // Actualizar TextViews
+        binding.textViewNivel.text = "Nivel ${perfil.nivel}"
+        binding.textViewMonedas.text = perfil.monedas.toString()
+        binding.textViewPorcentajeNivel.text = "$progresoActual / ${porcentajeNecesario.value}"
+        // Otros TextViews...
+
+        // Actualizar ProgressBar
+        val totalVidas = 11 // Total de vidas
+        val vidasRestantes = totalVidas - perfil.vidasPerdidas
+        val porcentajeVidasRestantes = vidasRestantes.toFloat() / totalVidas.toFloat() * 100 // Calcular porcentaje
+        healthBar.progress = porcentajeVidasRestantes.toInt()
+
+        // Otros elementos de la interfaz de usuario...
+    }
+
+
     private fun obtenerTareasDesdeFirestore() {
-        val userId = auth.currentUser?.uid // Obtener el ID del usuario actual
 
         userId?.let { uid ->
             firestoreDB.collection("tasks")
@@ -154,23 +258,6 @@ class InicioFragment : Fragment(), TareasAdapter.OnClickListener {
                     // Manejar la excepción mostrando un mensaje de error
                     Toast.makeText(context, "Error al obtener tareas: ${e.message}", Toast.LENGTH_SHORT).show()
                 }
-        }
-    }
-
-
-    override fun onDecrementClick(position: Int) {
-        val totalVidas = 11 // Total de vidas
-        vidasPerdidas++
-
-        val vidasRestantes = totalVidas - vidasPerdidas
-        if (vidasRestantes >= 0) {
-            actualizarBarraDeVida(vidasRestantes, totalVidas)
-            Toast.makeText(context, "Vidas restantes: $vidasRestantes", Toast.LENGTH_SHORT).show()
-            if (vidasRestantes == 0) {
-                Toast.makeText(context, "¡Te has quedado sin vidas!", Toast.LENGTH_SHORT).show()
-            }
-        } else {
-            Toast.makeText(context, "Ya no quedan más vidas", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -227,8 +314,103 @@ class InicioFragment : Fragment(), TareasAdapter.OnClickListener {
 
             // Actualizar y mostrar las monedas
             binding.textViewMonedas.text = progresoActualMonedas.toString()
+
+            // Actualizar los datos en Firestore después del incremento
+            actualizarDatosEnFirestore()
         }
     }
+
+    // Función para actualizar los datos en Firestore después del incremento
+    private fun actualizarDatosEnFirestore() {
+        // Obtener la referencia al documento de perfil del usuario actual
+        val perfilRef = firestoreDB.collection("profiles").document(userId)
+
+        // Crear un mapa con los nuevos valores a actualizar
+        val datosActualizados = hashMapOf(
+            "nivel" to nivel,
+            "monedas" to progresoActualMonedas,
+            "exp" to inicioViewModel.expUser.value,
+            // Otros campos del perfil...
+        )
+
+        // Actualizar los datos en Firestore
+        perfilRef.update(datosActualizados as Map<String, Any>)
+            .addOnSuccessListener {
+                Log.d(TAG, "Datos actualizados correctamente en Firestore")
+                // Obtener los datos actualizados del perfil del usuario
+                obtenerDatosPerfilDesdeFirestore()
+            }
+            .addOnFailureListener { e ->
+                // Manejar el error al actualizar los datos
+                Log.e(TAG, "Error al actualizar los datos en Firestore: $e")
+            }
+    }
+
+    // Función para obtener los datos actualizados del perfil del usuario desde Firestore
+    private fun obtenerDatosPerfilDesdeFirestore() {
+        // Obtener referencia al documento de perfil del usuario actual
+        val perfilRef = firestoreDB.collection("profiles").document(userId)
+
+        // Obtener los datos del documento de perfil
+        perfilRef.get().addOnSuccessListener { document ->
+            if (document.exists()) {
+                // El documento existe, cargar los nuevos valores del perfil en la aplicación
+                val nuevoPerfil = document.toObject(Perfil::class.java)
+                nuevoPerfil?.let {
+                    cargarValoresPerfil(it)
+                }
+            } else {
+                // Manejar el caso en que el documento no exista
+                Log.e(TAG, "El documento de perfil no existe en Firestore")
+            }
+        }.addOnFailureListener { e ->
+            // Manejar el error al obtener el documento
+            Log.e(TAG, "Error al obtener el documento de perfil desde Firestore: $e")
+        }
+    }
+
+// Dentro de la función onDecrementClick()
+
+    override fun onDecrementClick(position: Int) { // Total de vidas
+        vidasPerdidas++
+
+        val vidasRestantes = totalVidas - vidasPerdidas
+        if (vidasRestantes >= 0) {
+            actualizarBarraDeVida(vidasRestantes, totalVidas)
+            Toast.makeText(context, "Vidas restantes: $vidasRestantes", Toast.LENGTH_SHORT).show()
+            if (vidasRestantes == 0) {
+                Toast.makeText(context, "¡Te has quedado sin vidas!", Toast.LENGTH_SHORT).show()
+            }
+        } else {
+            Toast.makeText(context, "Ya no quedan más vidas", Toast.LENGTH_SHORT).show()
+        }
+
+        // Actualizar los datos en Firestore después del decremento
+        actualizarBarraDeVidaEnFirestore()
+    }
+
+    // Función para actualizar la barra de vida en Firestore después del decremento
+    private fun actualizarBarraDeVidaEnFirestore() {
+        // Obtener la referencia al documento de perfil del usuario actual
+        val perfilRef = firestoreDB.collection("profiles").document(userId)
+
+        // Crear un mapa con el nuevo valor de vidas perdidas
+        val datosActualizados = hashMapOf(
+            "vidasPerdidas" to vidasPerdidas
+            // Otros campos del perfil...
+        )
+
+        // Actualizar los datos en Firestore
+        perfilRef.update(datosActualizados as Map<String, Any>)
+            .addOnSuccessListener {
+                Log.d(TAG, "Datos actualizados correctamente en Firestore")
+            }
+            .addOnFailureListener { e ->
+                // Manejar el error al actualizar los datos
+                Log.e(TAG, "Error al actualizar los datos en Firestore: $e")
+            }
+    }
+
 
 
     private fun actualizarBarraDeVida(vidasRestantes: Int, totalVidas: Int) {

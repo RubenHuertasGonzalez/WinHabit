@@ -28,6 +28,9 @@ class SharedViewModel : ViewModel() {
         selectedImageResId.value = imageResId
     }
 
+    val totalVidas = MutableLiveData<Int>()
+    var vidasPerdidas: Int = 0
+
     fun signOut() {
         // Aquí debes realizar el cierre de sesión en Firebase Auth
         FirebaseAuth.getInstance().signOut()

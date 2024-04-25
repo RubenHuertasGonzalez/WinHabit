@@ -9,6 +9,44 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+        <!-- Sección "VIDAS" -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardViewVidas"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:padding="8dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <!-- Título de la sección -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="VIDAS"
+                    android:textColor="@color/black"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    android:gravity="center"/>
+
+                <!-- RecyclerView para Vidas -->
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerViewVidas"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:clipToPadding="false"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
+                    android:orientation="horizontal"
+                    android:scrollbars="horizontal"/>
+
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
         <!-- Sección "PERSONAJES" -->
         <androidx.cardview.widget.CardView
             android:id="@+id/cardViewPersonajes"

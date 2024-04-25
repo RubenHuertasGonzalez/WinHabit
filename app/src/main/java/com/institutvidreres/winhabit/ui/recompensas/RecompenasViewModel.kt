@@ -69,4 +69,15 @@ class RecompenasViewModel : ViewModel() {
         Recompensa("Banner", 26, R.drawable.gradiante_azul_purpura_rojo, "Fuego Violeta ¡TRICOLOR!", 500),
         Recompensa("Banner", 27, R.drawable.gradiante_dorado_negro, "Sombra Dorada", 1000)
     )
+
+    val vidasList = listOf(
+        Recompensa("Vidas", 40, R.drawable.vida, "3 vidas", 30),
+        Recompensa("Vidas", 41, R.drawable.vidas, "10 vidas", 80),
+    )
+
+    // En el ViewModel
+    fun esRecompensaVida(recompensa: Recompensa): Boolean {
+        return recompensa.nombre.contains("Vidas", ignoreCase = true)
+    }
+
 }

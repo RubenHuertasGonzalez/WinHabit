@@ -45,6 +45,7 @@ class RecompensasAdapter(
     }
 
     @SuppressLint("SuspiciousIndentation")
+    // En el adaptador
     override fun onBindViewHolder(holder: RecompensaViewHolder, position: Int) {
         val recompensa = recompensasList[position]
         holder.imagenImageView.setImageResource(recompensa.imagenResId)
@@ -52,34 +53,40 @@ class RecompensasAdapter(
 
         val isConnectedToFirebase = AppUtils.isInternetConnected(context)
 
-            if (isConnectedToFirebase) {
-                holder.botonRecompensa.visibility = View.VISIBLE
-                holder.imagenMoneda.visibility = View.VISIBLE
-                holder.progressBar.visibility = View.GONE
+        if (isConnectedToFirebase) {
+            holder.progressBar.visibility = View.GONE
 
-                val currentUserID = FirebaseAuth.getInstance().currentUser?.uid
-                if (currentUserID != null) {
-                    CoroutineScope(Dispatchers.Main).launch {
-                        val objetoComprado = viewModel.verificarObjetoComprado(currentUserID, recompensa.firebaseId)
-                        if (objetoComprado) {
-                            holder.botonRecompensa.visibility = View.GONE
-                            holder.imagenMoneda.visibility = View.GONE
-                        } else {
-                            holder.botonRecompensa.text = "${recompensa.precio}"
-                            holder.botonRecompensa.visibility = View.VISIBLE
-                            holder.imagenMoneda.visibility = View.VISIBLE
-                            holder.botonRecompensa.setOnClickListener {
-                                mostrarDialogoCompra(recompensa)
-                            }
+            if (viewModel.esRecompensaVida(recompensa)) {
+                // Si es una vida, mostramos la cantidad de vidas como texto en el botón
+                holder.botonRecompensa.text = "${recompensa.descripcion} (${recompensa.precio})"
+            } else {
+                // Si no es una vida, mostramos el precio normal
+                holder.botonRecompensa.text = "${recompensa.precio}"
+            }
+
+            val currentUserID = FirebaseAuth.getInstance().currentUser?.uid
+            if (currentUserID != null) {
+                CoroutineScope(Dispatchers.Main).launch {
+                    val objetoComprado = viewModel.verificarObjetoComprado(currentUserID, recompensa.firebaseId)
+                    if (objetoComprado) {
+                        holder.botonRecompensa.visibility = View.GONE
+                        holder.imagenMoneda.visibility = View.GONE
+                    } else {
+                        holder.botonRecompensa.visibility = View.VISIBLE
+                        holder.imagenMoneda.visibility = View.VISIBLE
+                        holder.botonRecompensa.setOnClickListener {
+                            mostrarDialogoCompra(recompensa)
                         }
                     }
                 }
-            } else {
-                holder.botonRecompensa.visibility = View.GONE
-                holder.imagenMoneda.visibility = View.GONE
-                holder.progressBar.visibility = View.VISIBLE
             }
+        } else {
+            holder.botonRecompensa.visibility = View.GONE
+            holder.imagenMoneda.visibility = View.GONE
+            holder.progressBar.visibility = View.VISIBLE
+        }
     }
+
 
     override fun getItemCount(): Int {
         return recompensasList.size

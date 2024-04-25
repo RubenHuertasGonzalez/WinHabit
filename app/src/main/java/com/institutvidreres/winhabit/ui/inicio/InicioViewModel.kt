@@ -41,4 +41,8 @@ class InicioViewModel : ViewModel() {
     fun actualizarNivel(nuevoNivel: Int) {
         _levelUser.value = nuevoNivel
     }
+
+    private val _vidasUser = MutableLiveData<Int>()
+    val vidasUser: LiveData<Int>
+        get() = _vidasUser
 }

@@ -32,6 +32,7 @@ class RecompensasFragment : Fragment() {
         setupRecyclerView(binding.recyclerViewPersonajesPremium, viewModel.personajesPremiumList, viewModel)
         setupRecyclerView(binding.recyclerViewBannersPerfil, viewModel.bannersPerfil, viewModel)
         setupRecyclerView(binding.recyclerViewBannersMulticolorPerfil, viewModel.bannersMulticolorPerfil, viewModel)
+        setupRecyclerView(binding.recyclerViewVidas, viewModel.vidasList, viewModel)
 
         return root
     }
