@@ -16,7 +16,9 @@ data class Recompensa(
     @ColumnInfo(name = "descripcion")
     var descripcion: String,
     @ColumnInfo(name = "precio")
-    var precio: Int
+    var precio: Int,
+    @ColumnInfo(name = "usuarioId") // Nueva columna para el ID del usuario
+    var usuarioId: String
 ) {
     @PrimaryKey(autoGenerate = true)
     var Id: Int? = null

@@ -28,22 +28,22 @@ class RoomRepository {
             }
         }
 
-        // Obtener los personajes de recompensas
-        fun getPersonajes(context: Context): LiveData<List<Recompensa>>? {
+        // Obtener los personajes de recompensas para un usuario específico
+        fun getPersonajes(context: Context, userId: String): LiveData<List<Recompensa>>? {
 
             recompensasDatabase = initializeDB(context)
 
-            recompensa = recompensasDatabase!!.recompensaDao().getPersonajes()
+            recompensa = recompensasDatabase!!.recompensaDao().getPersonajesForUser(userId)
 
             return recompensa
         }
 
-        // Obtener los banenrs de recompensas
-        fun getBanners(context: Context): LiveData<List<Recompensa>>? {
+        // Obtener los banners de recompensas para un usuario específico
+        fun getBanners(context: Context, userId: String): LiveData<List<Recompensa>>? {
 
             recompensasDatabase = initializeDB(context)
 
-            recompensa = recompensasDatabase!!.recompensaDao().getBanners()
+            recompensa = recompensasDatabase!!.recompensaDao().getBannersForUser(userId)
 
             return recompensa
         }

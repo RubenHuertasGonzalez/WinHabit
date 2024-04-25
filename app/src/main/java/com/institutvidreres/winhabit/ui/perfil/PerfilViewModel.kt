@@ -15,11 +15,11 @@ class PerfilViewModel : ViewModel() {
     fun setSelectedItem(item: Recompensa) {
         _selectedItem.value = item
     }
-    fun getPersonajes(context: Context) : LiveData<List<Recompensa>>? {
-        return RoomRepository.getPersonajes(context)
+    fun getPersonajes(context: Context, usuarioId: String) : LiveData<List<Recompensa>>? {
+        return RoomRepository.getPersonajes(context, usuarioId)
     }
 
-    fun getBanners(context: Context) : LiveData<List<Recompensa>>? {
-        return RoomRepository.getBanners(context)
+    fun getBanners(context: Context, usuarioId: String) : LiveData<List<Recompensa>>? {
+        return RoomRepository.getBanners(context, usuarioId)
     }
 }
