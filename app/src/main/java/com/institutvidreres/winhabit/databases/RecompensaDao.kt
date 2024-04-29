@@ -12,9 +12,9 @@ interface RecompensaDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun addRecompensa(recompensa: Recompensa)
 
-    @Query("SELECT * FROM RecompensaData WHERE nombre = 'Personaje'")
-    fun getPersonajes(): LiveData<List<Recompensa>>
+    @Query("SELECT * FROM RecompensaData WHERE nombre = 'Personaje' AND usuarioId = :userId")
+    fun getPersonajesForUser(userId: String): LiveData<List<Recompensa>>
 
-    @Query("SELECT * FROM RecompensaData WHERE nombre = 'Banner'")
-    fun getBanners(): LiveData<List<Recompensa>>
+    @Query("SELECT * FROM RecompensaData WHERE nombre = 'Banner' AND usuarioId = :userId")
+    fun getBannersForUser(userId: String): LiveData<List<Recompensa>>
 }

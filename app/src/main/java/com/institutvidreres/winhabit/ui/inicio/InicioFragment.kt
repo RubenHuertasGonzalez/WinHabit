@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -24,7 +23,7 @@ import com.institutvidreres.winhabit.MainActivity
 import com.institutvidreres.winhabit.R
 import com.institutvidreres.winhabit.SharedViewModel
 import com.institutvidreres.winhabit.databinding.FragmentInicioBinding
-import com.institutvidreres.winhabit.model.Perfil
+import com.institutvidreres.winhabit.model.InicioPerfil
 import com.institutvidreres.winhabit.tareas.Tarea
 import com.institutvidreres.winhabit.tareas.TareasAdapter
 import kotlin.random.Random
@@ -38,7 +37,7 @@ class InicioFragment : Fragment(), TareasAdapter.OnClickListener {
     private lateinit var firestoreDB: FirebaseFirestore
 
     private lateinit var userId: String // ID del usuario actual
-    private lateinit var perfil: Perfil // Perfil del usuario
+    private lateinit var inicioPerfil: InicioPerfil // Perfil del usuario
 
     private lateinit var binding: FragmentInicioBinding
 
@@ -154,8 +153,8 @@ class InicioFragment : Fragment(), TareasAdapter.OnClickListener {
         perfilRef.get().addOnSuccessListener { document ->
             if (document.exists()) {
                 // El documento existe, cargar los valores del perfil en la aplicación
-                perfil = document.toObject(Perfil::class.java) ?: Perfil()
-                cargarValoresPerfil(perfil)
+                inicioPerfil = document.toObject(InicioPerfil::class.java) ?: InicioPerfil()
+                cargarValoresPerfil(inicioPerfil)
             } else {
                 // El documento no existe, crear un nuevo perfil para el usuario
                 crearNuevoPerfil()
@@ -166,29 +165,29 @@ class InicioFragment : Fragment(), TareasAdapter.OnClickListener {
         }
     }
 
-    private fun cargarValoresPerfil(perfil: Perfil) {
+    private fun cargarValoresPerfil(inicioPerfil: InicioPerfil) {
         // Cargar los valores del perfil en la aplicación
-        nivel = perfil.nivel
-        monedas = perfil.monedas
-        vidasPerdidas = perfil.vidasPerdidas
+        nivel = inicioPerfil.nivel
+        monedas = inicioPerfil.monedas
+        vidasPerdidas = inicioPerfil.vidasPerdidas
         // Otros campos del perfil...
 
         // Actualizar la interfaz de usuario con los valores del perfil
         // (por ejemplo, TextViews, ProgressBar, etc.)
-        actualizarInterfazUsuario(perfil)
+        actualizarInterfazUsuario(inicioPerfil)
     }
 
     private fun crearNuevoPerfil() {
         // Crear un nuevo documento de perfil para el usuario actual
-        val nuevoPerfil = Perfil(userId = userId)
+        val nuevoInicioPerfil = InicioPerfil(userId = userId)
 
         // Añadir el documento a la colección "profiles" con el ID del usuario actual
         firestoreDB.collection("profiles").document(userId)
-            .set(nuevoPerfil)
+            .set(nuevoInicioPerfil)
             .addOnSuccessListener {
                 Log.d(TAG, "Documento de perfil creado correctamente")
                 // Cargar el nuevo perfil
-                cargarValoresPerfil(nuevoPerfil)
+                cargarValoresPerfil(nuevoInicioPerfil)
             }
             .addOnFailureListener { e ->
                 // Manejar el error al crear el documento
@@ -217,16 +216,16 @@ class InicioFragment : Fragment(), TareasAdapter.OnClickListener {
             }
     }
 
-    private fun actualizarInterfazUsuario(perfil: Perfil) {
+    private fun actualizarInterfazUsuario(inicioPerfil: InicioPerfil) {
         // Actualizar TextViews
-        binding.textViewNivel.text = "Nivel ${perfil.nivel}"
-        binding.textViewMonedas.text = perfil.monedas.toString()
+        binding.textViewNivel.text = "Nivel ${inicioPerfil.nivel}"
+        binding.textViewMonedas.text = inicioPerfil.monedas.toString()
         binding.textViewPorcentajeNivel.text = "$progresoActual / ${porcentajeNecesario.value}"
         // Otros TextViews...
 
         // Actualizar ProgressBar
         val totalVidas = 11 // Total de vidas
-        val vidasRestantes = totalVidas - perfil.vidasPerdidas
+        val vidasRestantes = totalVidas - inicioPerfil.vidasPerdidas
         val porcentajeVidasRestantes = vidasRestantes.toFloat() / totalVidas.toFloat() * 100 // Calcular porcentaje
         healthBar.progress = porcentajeVidasRestantes.toInt()
 
@@ -355,8 +354,8 @@ class InicioFragment : Fragment(), TareasAdapter.OnClickListener {
         perfilRef.get().addOnSuccessListener { document ->
             if (document.exists()) {
                 // El documento existe, cargar los nuevos valores del perfil en la aplicación
-                val nuevoPerfil = document.toObject(Perfil::class.java)
-                nuevoPerfil?.let {
+                val nuevoInicioPerfil = document.toObject(InicioPerfil::class.java)
+                nuevoInicioPerfil?.let {
                     cargarValoresPerfil(it)
                 }
             } else {

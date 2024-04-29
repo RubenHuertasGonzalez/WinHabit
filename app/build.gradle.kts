@@ -71,4 +71,7 @@ dependencies {
     kapt ("androidx.room:room-compiler:2.6.1") // Utilize kapt
     implementation ("androidx.room:room-ktx:2.6.1") // Kotlin Extensions and Coroutines support for Room
     implementation ("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2") // LifecycleScope
+
+    implementation ("org.greenrobot:eventbus:3.2.0")
+
 }

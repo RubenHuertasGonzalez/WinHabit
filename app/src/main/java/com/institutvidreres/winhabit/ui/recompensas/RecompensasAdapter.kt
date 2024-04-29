@@ -44,8 +44,6 @@ class RecompensasAdapter(
         return RecompensaViewHolder(itemView)
     }
 
-    @SuppressLint("SuspiciousIndentation")
-    // En el adaptador
     override fun onBindViewHolder(holder: RecompensaViewHolder, position: Int) {
         val recompensa = recompensasList[position]
         holder.imagenImageView.setImageResource(recompensa.imagenResId)
@@ -57,10 +55,8 @@ class RecompensasAdapter(
             holder.progressBar.visibility = View.GONE
 
             if (viewModel.esRecompensaVida(recompensa)) {
-                // Si es una vida, mostramos la cantidad de vidas como texto en el botón
                 holder.botonRecompensa.text = "${recompensa.descripcion} (${recompensa.precio})"
             } else {
-                // Si no es una vida, mostramos el precio normal
                 holder.botonRecompensa.text = "${recompensa.precio}"
             }
 
@@ -75,7 +71,7 @@ class RecompensasAdapter(
                         holder.botonRecompensa.visibility = View.VISIBLE
                         holder.imagenMoneda.visibility = View.VISIBLE
                         holder.botonRecompensa.setOnClickListener {
-                            mostrarDialogoCompra(recompensa)
+                            mostrarDialogoCompra(recompensa, currentUserID)
                         }
                     }
                 }
@@ -87,37 +83,33 @@ class RecompensasAdapter(
         }
     }
 
-
     override fun getItemCount(): Int {
         return recompensasList.size
     }
 
-    private fun mostrarDialogoCompra(recompensa: Recompensa) {
-        val currentUserID = FirebaseAuth.getInstance().currentUser?.uid
-        if (currentUserID != null) {
-            CoroutineScope(Dispatchers.Main).launch {
-                val objetoComprado = viewModel.verificarObjetoComprado(currentUserID, recompensa.firebaseId)
-                if (objetoComprado) {
-                    Toast.makeText(context, "¡Recompensa ya comprada!", Toast.LENGTH_SHORT).show()
-                } else {
-                    val builder = AlertDialog.Builder(context)
-                    builder.setTitle("Confirmar Compra")
-                    builder.setMessage("¿Te gustaría comprar '${recompensa.descripcion}' por ${recompensa.precio} monedas?")
-                    builder.setPositiveButton("CONFIRMAR") { _, _ ->
-                        db.collection("users").document(currentUserID)
-                            .update("objetosComprados", FieldValue.arrayUnion(recompensa.firebaseId))
-                            .addOnSuccessListener {
-                                Toast.makeText(context, "¡Recompensa comprada!", Toast.LENGTH_SHORT).show()
-                                notifyDataSetChanged()
-                            }
-                            .addOnFailureListener { e ->
-                                Log.w(TAG, "Error adding document", e)
-                            }
-                        viewModel.newRecompensa(context, recompensa.nombre, recompensa.firebaseId, recompensa.imagenResId, recompensa.descripcion, recompensa.precio)
-                    }
-                    builder.setNegativeButton("CANCELAR") { _, _ -> }
-                    builder.show()
+    private fun mostrarDialogoCompra(recompensa: Recompensa, userId: String) {
+        CoroutineScope(Dispatchers.Main).launch {
+            val objetoComprado = viewModel.verificarObjetoComprado(userId, recompensa.firebaseId)
+            if (objetoComprado) {
+                Toast.makeText(context, "¡Recompensa ya comprada!", Toast.LENGTH_SHORT).show()
+            } else {
+                val builder = AlertDialog.Builder(context)
+                builder.setTitle("Confirmar Compra")
+                builder.setMessage("¿Te gustaría comprar '${recompensa.descripcion}' por ${recompensa.precio} monedas?")
+                builder.setPositiveButton("CONFIRMAR") { _, _ ->
+                    db.collection("users").document(userId)
+                        .update("objetosComprados", FieldValue.arrayUnion(recompensa.firebaseId))
+                        .addOnSuccessListener {
+                            Toast.makeText(context, "¡Recompensa comprada!", Toast.LENGTH_SHORT).show()
+                            notifyDataSetChanged()
+                        }
+                        .addOnFailureListener { e ->
+                            Log.w(TAG, "Error adding document", e)
+                        }
+                    viewModel.newRecompensa(context, recompensa.nombre, recompensa.firebaseId, recompensa.imagenResId, recompensa.descripcion, recompensa.precio, userId)
                 }
+                builder.setNegativeButton("CANCELAR") { _, _ -> }
+                builder.show()
             }
         }
     }
