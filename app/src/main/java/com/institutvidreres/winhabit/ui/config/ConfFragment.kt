@@ -13,6 +13,7 @@ import android.widget.ArrayAdapter
 import android.widget.Spinner
 import androidx.fragment.app.Fragment
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
@@ -42,6 +43,8 @@ class ConfFragment : Fragment() {
         val view = binding.root
 
         modeSpinner = binding.modeSpinner
+
+        (activity as AppCompatActivity).supportActionBar?.title = "CONFIGURACIÓN"
 
         viewModel = ViewModelProvider(this).get(ConfViewModel::class.java)
         sharedViewModel = ViewModelProvider(this).get(SharedViewModel::class.java)

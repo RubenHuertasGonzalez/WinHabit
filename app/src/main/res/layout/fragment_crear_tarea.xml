@@ -1,146 +1,197 @@
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".tareas.CrearTareaFragment">
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@color/light_gray">
 
-    <LinearLayout
+    <!-- Título "Crea Tu Tarea" -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="¡CREA TU TAREA!"
+        android:textSize="36sp"
+        android:textStyle="bold"
+        android:textColor="@color/dark_blue"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="24dp"/>
+
+    <!-- EditText para el nombre de la tarea -->
+    <EditText
+        android:id="@+id/editTextNombreTarea"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp">
+        android:ems="10"
+        android:hint="Nombre de la tarea"
+        android:inputType="text"
+        android:background="@drawable/edit_text_background"
+        android:padding="12dp"
+        android:layout_marginBottom="16dp"/>
 
-        <EditText
-            android:id="@+id/editTextNombreTarea"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="Nombre tarea"
-            android:inputType="text" />
+    <!-- MultiAutoCompleteTextView para la descripción de la tarea -->
+    <MultiAutoCompleteTextView
+        android:id="@+id/editTextDescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Descripción"
+        android:inputType="textMultiLine"
+        android:gravity="start|top"
+        android:minLines="5"
+        android:maxLines="10"
+        android:scrollbars="vertical"
+        android:overScrollMode="always"
+        android:background="@drawable/edit_text_background"
+        android:padding="12dp"
+        android:layout_marginBottom="16dp"/>
 
-        <MultiAutoCompleteTextView
-            android:id="@+id/editTextDescription"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="Descripción"
-            android:inputType="textMultiLine"
-            android:gravity="start|top"
-            android:minLines="5"
-            android:maxLines="10"
-            android:scrollbars="vertical"
-            android:overScrollMode="always"
-            android:layout_marginTop="8dp" />
+    <!-- Texto "Dificultad" -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="DIFICULTAD"
+        android:textStyle="bold"
+        android:textSize="18sp"
+        android:textColor="@color/dark_blue"
+        android:layout_marginBottom="8dp"/>
 
-        <TextView
-            android:layout_width="wrap_content"
+    <!-- Radio Buttons de Dificultad -->
+    <RadioGroup
+        android:id="@+id/dificultad"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <!-- RadioButton Fácil -->
+        <RadioButton
+            android:id="@+id/radioButtonFacil"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="DIFICULTAD"
-            android:textStyle="bold"
+            android:layout_weight="1"
+            android:text="★"
+            android:button="@null"
+            android:background="@drawable/selector_checkbox_background"
+            android:textColor="@color/dark_blue"
+            android:textSize="24sp"
+            android:gravity="center"
+            android:layout_marginEnd="8dp"/>
+
+        <!-- RadioButton Normal -->
+        <RadioButton
+            android:id="@+id/radioButtonNormal"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="★★"
+            android:button="@null"
+            android:background="@drawable/selector_checkbox_background"
+            android:textColor="@color/dark_blue"
+            android:textSize="24sp"
+            android:gravity="center"
+            android:layout_marginEnd="8dp"/>
+
+        <!-- RadioButton Difícil -->
+        <RadioButton
+            android:id="@+id/radioButtonDificil"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="★★★"
+            android:button="@null"
+            android:background="@drawable/selector_checkbox_background"
+            android:textColor="@color/dark_blue"
+            android:textSize="24sp"
+            android:gravity="center"/>
+
+    </RadioGroup>
+
+    <!-- Espacio entre botones de dificultad y botón "Crear Tarea" -->
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="16dp"/>
+
+    <!-- Texto "Duración" -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="DURACIÓN"
+        android:textStyle="bold"
+        android:textSize="18sp"
+        android:textColor="@color/dark_blue"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="8dp"/>
+
+    <!-- Radio Buttons de Duración -->
+    <RadioGroup
+        android:id="@+id/duracion"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <!-- RadioButton Diario -->
+        <RadioButton
+            android:id="@+id/radioButtonDiario"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Diario"
+            android:button="@null"
+            android:background="@drawable/selector_checkbox_background"
+            android:textColor="@color/dark_blue"
             android:textSize="18sp"
-            android:layout_marginTop="16dp"/>
+            android:gravity="center"
+            android:layout_marginEnd="8dp"/>
 
-        <!-- Radio Buttons de Dificultad -->
-        <RadioGroup
-            android:id="@+id/dificultad"
-            android:layout_width="match_parent"
+        <!-- RadioButton Semanal -->
+        <RadioButton
+            android:id="@+id/radioButtonSemanal"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="8dp">
-
-            <RadioButton
-                android:id="@+id/radioButtonFacil"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="★"
-                android:button="@null"
-                android:background="@drawable/selector_checkbox_background"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:layout_marginEnd="8dp" /> <!-- Añadir margen al final del botón -->
-
-            <RadioButton
-                android:id="@+id/radioButtonNormal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="★★"
-                android:button="@null"
-                android:background="@drawable/selector_checkbox_background"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:layout_marginEnd="8dp" /> <!-- Añadir margen al final del botón -->
-
-            <RadioButton
-                android:id="@+id/radioButtonDificil"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="★★★"
-                android:button="@null"
-                android:background="@drawable/selector_checkbox_background"
-                android:layout_weight="1"
-                android:gravity="center" /> <!-- No añadir margen al final del último botón -->
-
-        </RadioGroup>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="DURACIÓN"
-            android:textStyle="bold"
+            android:layout_weight="1"
+            android:text="Semanal"
+            android:button="@null"
+            android:background="@drawable/selector_checkbox_background"
+            android:textColor="@color/dark_blue"
             android:textSize="18sp"
-            android:layout_marginTop="16dp"/>
+            android:gravity="center"
+            android:layout_marginEnd="8dp"/>
 
-        <RadioGroup
-            android:id="@+id/duracion"
-            android:layout_width="match_parent"
+        <!-- RadioButton Mensual -->
+        <RadioButton
+            android:id="@+id/radioButtonMensual"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="8dp">
+            android:layout_weight="1"
+            android:text="Mensual"
+            android:button="@null"
+            android:background="@drawable/selector_checkbox_background"
+            android:textColor="@color/dark_blue"
+            android:textSize="18sp"
+            android:gravity="center"/>
 
-            <RadioButton
-                android:id="@+id/radioButtonDiario"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Diario"
-                android:button="@null"
-                android:background="@drawable/selector_checkbox_background"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:layout_marginEnd="8dp" /> <!-- Añadir margen al final del botón -->
+    </RadioGroup>
 
-            <RadioButton
-                android:id="@+id/radioButtonSemanal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Semanal"
-                android:button="@null"
-                android:background="@drawable/selector_checkbox_background"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:layout_marginEnd="8dp" /> <!-- Añadir margen al final del botón -->
+    <!-- Espacio entre botones de duración y botón "Crear Tarea" -->
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="16dp"/>
 
-            <RadioButton
-                android:id="@+id/radioButtonMensual"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Mensual"
-                android:button="@null"
-                android:background="@drawable/selector_checkbox_background"
-                android:layout_weight="1"
-                android:gravity="center" /> <!-- No añadir margen al final del último botón -->
+    <!-- Botón "Crear Tarea" -->
+    <Button
+        android:id="@+id/buttonAcabarDeCrear"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="CREAR TAREA"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        android:background="@drawable/button_background"
+        android:layout_gravity="center_horizontal"
+        android:paddingStart="24dp"
+        android:paddingEnd="24dp"
+        android:paddingTop="12dp"
+        android:paddingBottom="12dp"/>
 
-        </RadioGroup>
-
-
-        <Button
-            android:id="@+id/buttonAcabarDeCrear"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="CREAR TAREA"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="50dp"/>
-
-    </LinearLayout>
-
-</ScrollView>
+</LinearLayout>
