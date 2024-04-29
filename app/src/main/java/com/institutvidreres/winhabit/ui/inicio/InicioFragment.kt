@@ -6,6 +6,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.Toast
@@ -141,8 +143,6 @@ class InicioFragment : Fragment(), TareasAdapter.OnClickListener {
         val experienciaActual = inicioViewModel.expUser.value ?: 0
         inicioViewModel.actualizarExperiencia(experienciaActual)
 
-        // Guardar los valores del perfil al cerrar sesión
-        guardarPerfilUsuario()
     }
 
     private fun cargarPerfilUsuario() {
@@ -279,6 +279,33 @@ class InicioFragment : Fragment(), TareasAdapter.OnClickListener {
             progresoActual += incrementoProgreso
             progresoActualMonedas += incrementoMonedas
 
+            // Actualizar y mostrar las monedas
+            monedas += incrementoMonedas
+
+            // Aplicar la animación de desvanecimiento al TextView de las monedas
+            val fadeOutAnimation = AnimationUtils.loadAnimation(context, R.anim.fade_out)
+            binding.textViewMonedas.startAnimation(fadeOutAnimation)
+
+            // Actualizar el valor del TextView después de la animación
+            fadeOutAnimation.setAnimationListener(object : Animation.AnimationListener {
+                override fun onAnimationStart(animation: Animation?) {
+                    // Acciones a realizar al comenzar la animación (opcional)
+                }
+
+                override fun onAnimationEnd(animation: Animation?) {
+                    // Actualizar el valor del TextView después de la animación
+                    binding.textViewMonedas.text = monedas.toString()
+
+                    // Mostrar el TextView nuevamente con una animación de desvanecimiento
+                    val fadeInAnimation = AnimationUtils.loadAnimation(context, R.anim.fade_in)
+                    binding.textViewMonedas.startAnimation(fadeInAnimation)
+                }
+
+                override fun onAnimationRepeat(animation: Animation?) {
+                    // Acciones a realizar al repetir la animación (opcional)
+                }
+            })
+
             // Verificar si se alcanzó o superó el porcentaje necesario
             if (progresoActual >= porcentajeNecesario.value!!) {
                 // Incrementar el nivel y reiniciar el progreso
@@ -296,7 +323,7 @@ class InicioFragment : Fragment(), TareasAdapter.OnClickListener {
                     nivel = nivelMaximo
 
                     // Mostrar el mensaje de nivel máximo en el TextView correspondiente
-                    binding.textViewPorcentajeNivel.text = "¡NIVEL MAXIMO!"
+                    binding.textViewPorcentajeNivel.text = "¡NIVEL MÁXIMO!"
                 } else {
                     // Actualizar el texto del nivel
                     binding.textViewNivel.text = "Nivel $nivel"
@@ -312,12 +339,13 @@ class InicioFragment : Fragment(), TareasAdapter.OnClickListener {
             Toast.makeText(context, "¡Tarea completada!", Toast.LENGTH_SHORT).show()
 
             // Actualizar y mostrar las monedas
-            binding.textViewMonedas.text = progresoActualMonedas.toString()
+            inicioViewModel.actualizarMonedas(progresoActualMonedas)
 
             // Actualizar los datos en Firestore después del incremento
             actualizarDatosEnFirestore()
         }
     }
+
 
     // Función para actualizar los datos en Firestore después del incremento
     private fun actualizarDatosEnFirestore() {
@@ -327,7 +355,7 @@ class InicioFragment : Fragment(), TareasAdapter.OnClickListener {
         // Crear un mapa con los nuevos valores a actualizar
         val datosActualizados = hashMapOf(
             "nivel" to nivel,
-            "monedas" to progresoActualMonedas,
+            "monedas" to monedas,
             "exp" to inicioViewModel.expUser.value,
             // Otros campos del perfil...
         )
