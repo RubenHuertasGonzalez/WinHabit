@@ -47,8 +47,8 @@ class InicioFragment : Fragment(), TareasAdapter.OnClickListener {
     private var nivel = 1
     private val nivelMaximo = 20
     private var nivelMaximoAlcanzado = false
-    private var porcentajeNecesario = MutableLiveData(20)
-    private val incrementoPorcentaje = 20
+    private var porcentajeNecesario = MutableLiveData(10)
+    private val incrementoPorcentaje = 5
 
     private var progresoActualMonedas = 0
     private var monedas = 0
@@ -127,9 +127,6 @@ class InicioFragment : Fragment(), TareasAdapter.OnClickListener {
             binding.textViewNivel.text = "Nivel $level"
         }
 
-        inicioViewModel.expUser.observe(viewLifecycleOwner) { exp ->
-            // Puedes realizar acciones adicionales aquí si es necesario
-        }
     }
 
     override fun onDestroyView() {
@@ -139,9 +136,8 @@ class InicioFragment : Fragment(), TareasAdapter.OnClickListener {
         inicioViewModel.actualizarMonedas(binding.textViewMonedas.text.toString().toInt())
         inicioViewModel.actualizarNivel(binding.textViewNivel.text.toString().split(" ")[1].toInt())
 
-        // Obtener la experiencia actual del ViewModel y guardarla
-        val experienciaActual = inicioViewModel.expUser.value ?: 0
-        inicioViewModel.actualizarExperiencia(experienciaActual)
+        val tareasCompletadas = inicioViewModel.tareasUser.value ?: 0
+        inicioViewModel.contadorTareas(tareasCompletadas)
 
     }
 
@@ -263,11 +259,8 @@ class InicioFragment : Fragment(), TareasAdapter.OnClickListener {
     override fun onIncrementClick(position: Int) {
         // Verificar si se ha alcanzado el nivel máximo
         if (!nivelMaximoAlcanzado) {
-            // Incrementar la experiencia
-            val nuevaExperiencia = (inicioViewModel.expUser.value ?: 0) + 1 // Incremento de experiencia
-
-            // Actualizar la experiencia en el ViewModel
-            inicioViewModel.actualizarExperiencia(nuevaExperiencia)
+            // Incrementar las tareas
+            inicioPerfil.tareasCompletadas += 1 // Incremento de tareas
 
             // Generar un número aleatorio entre 1 y 5 para el progreso
             val incrementoProgreso = Random.nextInt(1, 6)
@@ -289,7 +282,7 @@ class InicioFragment : Fragment(), TareasAdapter.OnClickListener {
             // Actualizar el valor del TextView después de la animación
             fadeOutAnimation.setAnimationListener(object : Animation.AnimationListener {
                 override fun onAnimationStart(animation: Animation?) {
-                    // Acciones a realizar al comenzar la animación (opcional)
+                    binding.textViewMonedas.text = "..."
                 }
 
                 override fun onAnimationEnd(animation: Animation?) {
@@ -356,7 +349,7 @@ class InicioFragment : Fragment(), TareasAdapter.OnClickListener {
         val datosActualizados = hashMapOf(
             "nivel" to nivel,
             "monedas" to monedas,
-            "exp" to inicioViewModel.expUser.value,
+            "tareasCompletadas" to inicioPerfil.tareasCompletadas,
             // Otros campos del perfil...
         )
 

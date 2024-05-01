@@ -33,7 +33,7 @@ class LogrosAdapter(private val logrosList: MutableList<LogrosItem>) :
         holder.descripcionTextView.text = logro.descripcion
         holder.imageInsignia.setImageResource(logro.imagenResource)
 
-        if (logro.completado && logro.tipo == "Nivel" && !logro.reclamado) {
+        if (logro.completado && !logro.reclamado) {
             holder.btnReclamar.visibility = View.VISIBLE
         } else {
             holder.btnReclamar.visibility = View.GONE
