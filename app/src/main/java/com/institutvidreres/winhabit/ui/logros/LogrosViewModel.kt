@@ -34,10 +34,10 @@ class LogrosViewModel : ViewModel() {
         LogrosItem("Recompensas", "MAGNATE DEL CANJE", "Compra un total de 12 recompensas", R.drawable.insignia_modified, 12),
         LogrosItem("RecompensaPremium", "ABUNDANCIA", "Compra una recompensa premium", R.drawable.insignia_modified, 1),
         LogrosItem("RecompensaPremium", "EL ÉXITO ESTÁ EN EL AHORRO", "Compra todas las recompensas premium", R.drawable.insignia_modified, 3),
-        LogrosItem("Logros", "INICIADO EN LOGROS", "Completa 2 logros", R.drawable.insignia_modified, 2),
-        LogrosItem("Logros", "AVANZADO EN LOGROS", "Completa 6 logros", R.drawable.insignia_modified, 6),
-        LogrosItem("Logros", "MAESTRO EN LOGROS", "Completa 13 logros", R.drawable.insignia_modified, 13),
-        LogrosItem("Logros", "DOMINADOR ABSOLUTO", "Completa el juego y todos los logros", R.drawable.insignia_modified, 19)
+        LogrosItem("Logros", "INICIADO EN LOGROS", "Completa 3 logros", R.drawable.insignia_modified, 3),
+        LogrosItem("Logros", "AVANZADO EN LOGROS", "Completa 7 logros", R.drawable.insignia_modified, 7),
+        LogrosItem("Logros", "MAESTRO EN LOGROS", "Completa 13 logros", R.drawable.insignia_modified, 15),
+        LogrosItem("Logros", "DOMINADOR ABSOLUTO", "Completa el juego y todos los logros", R.drawable.insignia_modified, 23)
     )
 
     suspend fun obtenerNivelUsuario(): Int {
