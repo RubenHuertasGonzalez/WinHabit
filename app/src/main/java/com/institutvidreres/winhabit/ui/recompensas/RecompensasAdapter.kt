@@ -1,6 +1,5 @@
 package com.institutvidreres.winhabit.ui.recompensas
 
-import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.ContentValues.TAG
 import android.content.Context
@@ -88,29 +87,52 @@ class RecompensasAdapter(
     }
 
     private fun mostrarDialogoCompra(recompensa: Recompensa, userId: String) {
-        CoroutineScope(Dispatchers.Main).launch {
-            val objetoComprado = viewModel.verificarObjetoComprado(userId, recompensa.firebaseId)
-            if (objetoComprado) {
-                Toast.makeText(context, "¡Recompensa ya comprada!", Toast.LENGTH_SHORT).show()
+        val builder = AlertDialog.Builder(context)
+        builder.setTitle("Confirmar Compra")
+        builder.setMessage("¿Te gustaría comprar '${recompensa.descripcion}' por ${recompensa.precio} monedas?")
+        builder.setPositiveButton("CONFIRMAR") { _, _ ->
+            // No actualices la base de datos para marcar la recompensa como comprada
+            if (viewModel.esRecompensaVida(recompensa)) {
+                // Verificar si la recompensa es de tipo "Vidas" y restar las vidas correspondientes
+                incrementarVidas(userId, recompensa)
             } else {
-                val builder = AlertDialog.Builder(context)
-                builder.setTitle("Confirmar Compra")
-                builder.setMessage("¿Te gustaría comprar '${recompensa.descripcion}' por ${recompensa.precio} monedas?")
-                builder.setPositiveButton("CONFIRMAR") { _, _ ->
-                    db.collection("users").document(userId)
-                        .update("objetosComprados", FieldValue.arrayUnion(recompensa.firebaseId))
-                        .addOnSuccessListener {
-                            Toast.makeText(context, "¡Recompensa comprada!", Toast.LENGTH_SHORT).show()
-                            notifyDataSetChanged()
-                        }
-                        .addOnFailureListener { e ->
-                            Log.w(TAG, "Error adding document", e)
-                        }
-                    viewModel.newRecompensa(context, recompensa.nombre, recompensa.firebaseId, recompensa.imagenResId, recompensa.descripcion, recompensa.precio, userId)
-                }
-                builder.setNegativeButton("CANCELAR") { _, _ -> }
-                builder.show()
+                db.collection("users").document(userId)
+                    .update("objetosComprados", FieldValue.arrayUnion(recompensa.firebaseId))
+                    .addOnSuccessListener {
+                        Toast.makeText(context, "¡Recompensa comprada!", Toast.LENGTH_SHORT).show()
+                        notifyDataSetChanged()
+                    }
+                    .addOnFailureListener { e ->
+                        Log.w(TAG, "Error adding document", e)
+                    }
             }
+            viewModel.newRecompensa(context, recompensa.nombre, recompensa.firebaseId, recompensa.imagenResId, recompensa.descripcion, recompensa.precio, userId)
         }
+        builder.setNegativeButton("CANCELAR") { _, _ -> }
+        builder.show()
+    }
+
+    private fun incrementarVidas(userId: String, recompensa: Recompensa) {
+        val vidasPerdidas = when (recompensa.descripcion) {
+            "3 vidas" -> 3L
+            "10 vidas" -> 10L
+            else -> 0L
+        }
+        // Obtener las vidas actuales del usuario
+        db.collection("profiles").document(userId)
+            .get()
+            .addOnSuccessListener { document ->
+                val vidasActuales = document.getLong("vidasPerdidas") ?: 0L
+                val nuevasVidas = if (vidasActuales - vidasPerdidas < 0) 0 else vidasActuales - vidasPerdidas
+                // Actualizar las vidas perdidas en la base de datos
+                db.collection("profiles").document(userId)
+                    .update("vidasPerdidas", nuevasVidas)
+                    .addOnFailureListener { e ->
+                        Log.w(TAG, "Error updating vidasPerdidas", e)
+                    }
+            }
+            .addOnFailureListener { e ->
+                Log.w(TAG, "Error getting document", e)
+            }
     }
 }

@@ -95,6 +95,22 @@ class LogrosViewModel : ViewModel() {
         }
     }
 
+    suspend fun contarLogrosCompletados(): Int {
+        val userId = auth.currentUser?.uid ?: ""
+        val documentSnapshot = db.collection("profiles").document(userId).get().await()
+        val logrosMap = documentSnapshot.data ?: return 0
+        // Contador para almacenar la cantidad total de logros completados
+        var totalLogrosCompletados = 0
+        // Iterar sobre el mapa de logros y contar aquellos que están marcados como completados
+        for ((_, value) in logrosMap) {
+            if (value is Boolean && value) {
+                totalLogrosCompletados++
+            }
+        }
+        return totalLogrosCompletados
+    }
+
+
     suspend fun reclamarRecompensa(logro: LogrosItem) {
         val userId = auth.currentUser?.uid ?: ""
         // Actualizar el estado del logro reclamado en el ViewModel
@@ -123,6 +139,7 @@ class LogrosViewModel : ViewModel() {
         val recompensasUsuario = obtenerCantidadRecompensasCompradas()
         val recompensasPremiumUsuario = obtenerCantidadRecompensasPremiumCompradas()
         val tareasCompletadas = obtenerTareasCompletadas()
+        val logrosObtenidos = contarLogrosCompletados()
 
         logrosList.filter { it.tipo == "Nivel" }.forEach { logro ->
             if (logro.cantidad > 0) {
@@ -157,6 +174,12 @@ class LogrosViewModel : ViewModel() {
         logrosList.filter { it.tipo == "Tareas" }.forEach { logro ->
             if (logro.cantidad > 0) {
                 logro.completado = tareasCompletadas >= logro.cantidad
+            }
+        }
+
+        logrosList.filter { it.tipo == "Logros" }.forEach { logro ->
+            if (logro.cantidad > 0) {
+                logro.completado = logrosObtenidos >= logro.cantidad
             }
         }
     }

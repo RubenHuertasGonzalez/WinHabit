@@ -1,11 +1,14 @@
 package com.institutvidreres.winhabit.ui.inicio
 
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
 import android.content.ContentValues.TAG
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AccelerateInterpolator
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.Button
@@ -279,6 +282,10 @@ class InicioFragment : Fragment(), TareasAdapter.OnClickListener {
             val fadeOutAnimation = AnimationUtils.loadAnimation(context, R.anim.fade_out)
             binding.textViewMonedas.startAnimation(fadeOutAnimation)
 
+            val animTareaCompletada = AnimationUtils.loadAnimation(context, R.anim.animation_on_increment)
+            binding.imageView2.startAnimation(animTareaCompletada)
+
+
             // Actualizar el valor del TextView después de la animación
             fadeOutAnimation.setAnimationListener(object : Animation.AnimationListener {
                 override fun onAnimationStart(animation: Animation?) {
@@ -327,9 +334,6 @@ class InicioFragment : Fragment(), TareasAdapter.OnClickListener {
                 // Actualizar el texto del progreso (textViewLvl) si no se ha alcanzado el porcentaje necesario
                 binding.textViewPorcentajeNivel.text = "$progresoActual / ${porcentajeNecesario.value}"
             }
-
-            // Mostrar un mensaje de tarea completada
-            Toast.makeText(context, "¡Tarea completada!", Toast.LENGTH_SHORT).show()
 
             // Actualizar y mostrar las monedas
             inicioViewModel.actualizarMonedas(progresoActualMonedas)
@@ -391,22 +395,48 @@ class InicioFragment : Fragment(), TareasAdapter.OnClickListener {
 
 // Dentro de la función onDecrementClick()
 
-    override fun onDecrementClick(position: Int) { // Total de vidas
-        vidasPerdidas++
+    override fun onDecrementClick(position: Int) {
+        if (vidasPerdidas < totalVidas) { // Verificar si aún hay vidas restantes
+            vidasPerdidas++
 
-        val vidasRestantes = totalVidas - vidasPerdidas
-        if (vidasRestantes >= 0) {
-            actualizarBarraDeVida(vidasRestantes, totalVidas)
-            Toast.makeText(context, "Vidas restantes: $vidasRestantes", Toast.LENGTH_SHORT).show()
-            if (vidasRestantes == 0) {
-                Toast.makeText(context, "¡Te has quedado sin vidas!", Toast.LENGTH_SHORT).show()
+            animationRestarVida()
+
+            val vidasRestantes = totalVidas - vidasPerdidas
+            if (vidasRestantes >= 0) {
+                actualizarBarraDeVida(vidasRestantes, totalVidas)
+                Toast.makeText(context, "Vidas restantes: $vidasRestantes", Toast.LENGTH_SHORT).show()
+                if (vidasRestantes == 0) {
+                    Toast.makeText(context, "¡Te has quedado sin vidas!", Toast.LENGTH_SHORT).show()
+                }
+            } else {
+                Toast.makeText(context, "Ya no quedan más vidas", Toast.LENGTH_SHORT).show()
             }
+
+            // Actualizar los datos en Firestore después del decremento
+            actualizarBarraDeVidaEnFirestore()
         } else {
             Toast.makeText(context, "Ya no quedan más vidas", Toast.LENGTH_SHORT).show()
         }
+    }
 
-        // Actualizar los datos en Firestore después del decremento
-        actualizarBarraDeVidaEnFirestore()
+
+    fun animationRestarVida(){
+        // Crear una interpolación de aceleración
+        val interpolator = AccelerateInterpolator()
+
+        val moveLeft = ObjectAnimator.ofFloat(binding.imageView2, "translationX", 0f, -20f)
+        moveLeft.duration = 100
+        moveLeft.interpolator = interpolator
+
+        val moveRightBack = ObjectAnimator.ofFloat(binding.imageView2, "translationX", -20f, 20f, 0f)
+        moveRightBack.duration = 200
+        moveRightBack.startDelay = 100 // Retraso para que comience después de la primera animación
+        moveRightBack.interpolator = interpolator
+
+        val animatorSet = AnimatorSet()
+        animatorSet.playSequentially(moveLeft, moveRightBack)
+
+        animatorSet.start()
     }
 
     // Función para actualizar la barra de vida en Firestore después del decremento
