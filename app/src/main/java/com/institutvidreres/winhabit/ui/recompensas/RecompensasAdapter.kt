@@ -54,7 +54,7 @@ class RecompensasAdapter(
             holder.progressBar.visibility = View.GONE
 
             if (viewModel.esRecompensaVida(recompensa)) {
-                holder.botonRecompensa.text = "${recompensa.descripcion} (${recompensa.precio})"
+                holder.botonRecompensa.text = "${recompensa.precio}"
             } else {
                 holder.botonRecompensa.text = "${recompensa.precio}"
             }
@@ -114,8 +114,8 @@ class RecompensasAdapter(
 
     private fun incrementarVidas(userId: String, recompensa: Recompensa) {
         val vidasPerdidas = when (recompensa.descripcion) {
+            "1 vida" -> 1L
             "3 vidas" -> 3L
-            "10 vidas" -> 10L
             else -> 0L
         }
         // Obtener las vidas actuales del usuario

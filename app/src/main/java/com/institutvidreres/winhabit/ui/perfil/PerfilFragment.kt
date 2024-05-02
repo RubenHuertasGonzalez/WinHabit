@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
@@ -50,8 +51,8 @@ class PerfilFragment : Fragment() {
         perfilViewModel = ViewModelProvider(this).get(PerfilViewModel::class.java)
         sharedViewModel = ViewModelProvider(this).get(SharedViewModel::class.java)
 
-        viewManagerPersonajes = LinearLayoutManager(context)
-        viewManagerBanner = LinearLayoutManager(context)
+        viewManagerPersonajes = GridLayoutManager(context, 2)
+        viewManagerBanner = GridLayoutManager(context, 2)
 
         // RecyclerView para mostrar la lista de personajes
         recyclerViewPersonajes = binding.recyclerViewPerfilPersonajes.apply {

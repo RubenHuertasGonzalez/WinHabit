@@ -74,8 +74,8 @@ class RecompenasViewModel : ViewModel() {
     )
 
     val vidasList = listOf(
-        Recompensa("Vidas", 40, R.drawable.vida, "3 vidas", 30, userId),
-        Recompensa("Vidas", 41, R.drawable.vidas, "10 vidas", 80, userId)
+        Recompensa("Vidas", 40, R.drawable.vida, "1 vida", 15, userId),
+        Recompensa("Vidas", 41, R.drawable.vidas, "3 vidas", 40, userId)
     )
 
     // En el ViewModel
