@@ -1,21 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<androidx.core.widget.NestedScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.logros.LogrosFragment">
+    android:layout_height="match_parent">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerViewLogros"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:padding="8dp"
-        />
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/gradiante_radial_rojo_morado"> <!-- Fondo degradado -->
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <!-- Título de los logros -->
+        <TextView
+            android:id="@+id/textViewTituloLogros"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Logros"
+            android:textSize="36sp"
+            android:textColor="#FFFFFF"
+            android:gravity="center"
+            android:fontFamily="sans-serif-condensed"
+            android:textStyle="bold"
+            android:padding="16dp"/>
+
+        <!-- Subtítulo "¡Compra recompensas especiales!" -->
+        <TextView
+            android:id="@+id/subtituloRecompensas"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="¡Completa los logros y gana recompensas!"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:padding="8dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/gradiante_subtitulo"/>
+
+        <!-- RecyclerView para Vidas -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewLogros"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:clipToPadding="false"/>
+
+    </LinearLayout>
+
+</androidx.core.widget.NestedScrollView>
+
