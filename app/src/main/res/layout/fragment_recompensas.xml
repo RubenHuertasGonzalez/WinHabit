@@ -15,7 +15,7 @@
             android:id="@+id/textViewTitulo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="¡Tienda de WinHabit!"
+            android:text="Tienda de WinHabit"
             android:textSize="36sp"
             android:textColor="#FFFFFF"
             android:gravity="center"
@@ -23,12 +23,17 @@
             android:letterSpacing="0.05"
             android:textStyle="bold"/>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@color/black"/>
+
         <!-- Subtítulo "Compra recompensas especiales" -->
         <TextView
             android:id="@+id/subtituloRecompensas"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Compra recompensas especiales"
+            android:text="¡Compra recompensas especiales!"
             android:textColor="#FFFFFF"
             android:textSize="18sp"
             android:textStyle="bold"
@@ -36,6 +41,7 @@
             android:padding="8dp"
             android:layout_marginTop="8dp"
             android:background="@drawable/gradiante_subtitulo"/>
+
 
         <!-- Sección "Recompensas" en una cuadrícula -->
         <GridLayout
@@ -69,6 +75,11 @@
                         android:textSize="24sp"
                         android:textStyle="bold"
                         android:gravity="center"/>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="2dp"
+                        android:background="@color/black"/>
 
                     <!-- RecyclerView para Vidas -->
                     <androidx.recyclerview.widget.RecyclerView
@@ -108,6 +119,11 @@
                         android:textStyle="bold"
                         android:gravity="center"/>
 
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="2dp"
+                        android:background="@color/black"/>
+
                     <!-- RecyclerView para Personajes -->
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/recyclerViewPersonajes"
@@ -146,6 +162,11 @@
                         android:textStyle="bold"
                         android:gravity="center"/>
 
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="2dp"
+                        android:background="@color/black"/>
+
                     <!-- RecyclerView para Personajes Premium -->
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/recyclerViewPersonajesPremium"
@@ -183,6 +204,11 @@
                         android:textStyle="bold"
                         android:gravity="center"/>
 
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="2dp"
+                        android:background="@color/black"/>
+
                     <!-- RecyclerView para Banners Perfil -->
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/recyclerViewBannersPerfil"
@@ -219,6 +245,11 @@
                         android:textSize="24sp"
                         android:textStyle="bold"
                         android:gravity="center"/>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="2dp"
+                        android:background="@color/black"/>
 
                     <!-- RecyclerView para Banners Multicolor -->
                     <androidx.recyclerview.widget.RecyclerView
