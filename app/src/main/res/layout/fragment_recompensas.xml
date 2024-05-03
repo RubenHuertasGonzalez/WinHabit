@@ -1,4 +1,4 @@
-<!-- fragment_recompensas.xml -->
+<?xml version="1.0" encoding="utf-8"?>
 <androidx.core.widget.NestedScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
@@ -7,194 +7,234 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:background="@drawable/gradiante_radial_rojo_morado"> <!-- Fondo degradado -->
 
-        <!-- Sección "VIDAS" -->
-        <androidx.cardview.widget.CardView
-            android:id="@+id/cardViewVidas"
+        <!-- Título de la tienda -->
+        <TextView
+            android:id="@+id/textViewTitulo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:padding="8dp">
+            android:text="¡Tienda de WinHabit!"
+            android:textSize="36sp"
+            android:textColor="#FFFFFF"
+            android:gravity="center"
+            android:fontFamily="sans-serif-condensed"
+            android:letterSpacing="0.05"
+            android:textStyle="bold"/>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <!-- Título de la sección -->
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="VIDAS"
-                    android:textColor="@color/black"
-                    android:textSize="24sp"
-                    android:textStyle="bold"
-                    android:gravity="center"/>
-
-                <!-- RecyclerView para Vidas -->
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recyclerViewVidas"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:clipToPadding="false"
-                    android:paddingTop="8dp"
-                    android:paddingBottom="8dp"
-                    android:orientation="horizontal"
-                    android:scrollbars="horizontal"/>
-
-            </LinearLayout>
-        </androidx.cardview.widget.CardView>
-
-        <!-- Sección "PERSONAJES" -->
-        <androidx.cardview.widget.CardView
-            android:id="@+id/cardViewPersonajes"
+        <!-- Subtítulo "Compra recompensas especiales" -->
+        <TextView
+            android:id="@+id/subtituloRecompensas"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:padding="8dp">
+            android:text="Compra recompensas especiales"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:padding="8dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/gradiante_subtitulo"/>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <!-- Título de la sección -->
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="PERSONAJES"
-                    android:textColor="@color/black"
-                    android:textSize="24sp"
-                    android:textStyle="bold"
-                    android:gravity="center"/>
-
-                <!-- RecyclerView para Personajes -->
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recyclerViewPersonajes"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:clipToPadding="false"
-                    android:paddingTop="8dp"
-                    android:paddingBottom="8dp"
-                    android:orientation="horizontal"
-                    android:scrollbars="horizontal"/>
-
-            </LinearLayout>
-        </androidx.cardview.widget.CardView>
-
-        <!-- Sección "PERSONAJES PREMIUM" -->
-        <androidx.cardview.widget.CardView
-            android:id="@+id/cardViewPersonajesPremium"
+        <!-- Sección "Recompensas" en una cuadrícula -->
+        <GridLayout
+            android:id="@+id/gridLayoutRecompensas"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp"
+            android:columnCount="1"
+            android:rowCount="2"
             android:padding="8dp">
 
-            <LinearLayout
+            <!-- Sección "VIDAS" -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardViewVidas"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_margin="8dp"
+                android:padding="8dp"
+                android:layout_below="@id/subtituloRecompensas">
 
-                <!-- Título de la sección -->
-                <TextView
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="PERSONAJES PREMIUM"
-                    android:textColor="@color/black"
-                    android:textSize="24sp"
-                    android:textStyle="bold"
-                    android:gravity="center"/>
+                    android:orientation="vertical">
 
-                <!-- RecyclerView para Personajes Premium -->
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recyclerViewPersonajesPremium"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:clipToPadding="false"
-                    android:paddingTop="8dp"
-                    android:paddingBottom="8dp"
-                    android:nestedScrollingEnabled="false"/> <!-- Deshabilitar el desplazamiento -->
+                    <!-- Título de la sección -->
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="VIDAS"
+                        android:textColor="@color/black"
+                        android:textSize="24sp"
+                        android:textStyle="bold"
+                        android:gravity="center"/>
 
-            </LinearLayout>
-        </androidx.cardview.widget.CardView>
+                    <!-- RecyclerView para Vidas -->
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recyclerViewVidas"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:clipToPadding="false"
+                        android:paddingTop="8dp"
+                        android:paddingBottom="8dp"
+                        android:orientation="horizontal"
+                        android:scrollbars="horizontal"/>
 
-        <!-- Sección "BANNERS PERFIL" -->
-        <androidx.cardview.widget.CardView
-            android:id="@+id/cardViewBannersPerfil"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:padding="8dp">
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
 
-            <LinearLayout
+            <!-- Sección "PERSONAJES" -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardViewPersonajes"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_margin="8dp"
+                android:padding="8dp">
 
-                <!-- Título de la sección -->
-                <TextView
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="BANNERS DE PERFIL"
-                    android:textColor="@color/black"
-                    android:textSize="24sp"
-                    android:textStyle="bold"
-                    android:gravity="center"/>
+                    android:orientation="vertical">
 
-                <!-- RecyclerView para Banners Perfil -->
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recyclerViewBannersPerfil"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:clipToPadding="false"
-                    android:paddingTop="8dp"
-                    android:paddingBottom="8dp"
-                    android:nestedScrollingEnabled="false"/> <!-- Deshabilitar el desplazamiento -->
+                    <!-- Título de la sección -->
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="PERSONAJES"
+                        android:textColor="@color/black"
+                        android:textSize="24sp"
+                        android:textStyle="bold"
+                        android:gravity="center"/>
 
-            </LinearLayout>
-        </androidx.cardview.widget.CardView>
+                    <!-- RecyclerView para Personajes -->
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recyclerViewPersonajes"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:clipToPadding="false"
+                        android:paddingTop="8dp"
+                        android:paddingBottom="8dp"
+                        android:orientation="horizontal"
+                        android:scrollbars="horizontal"/>
 
-        <!-- Sección "BANNERS MULTICOLOR PERFIL" -->
-        <androidx.cardview.widget.CardView
-            android:id="@+id/cardViewBannersMulticolorPerfil"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:padding="8dp">
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
 
-            <LinearLayout
+            <!-- Sección "PERSONAJES PREMIUM" -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardViewPersonajesPremium"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_margin="8dp"
+                android:padding="8dp">
 
-                <!-- Título de la sección -->
-                <TextView
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="BANNERS MULTICOLOR"
-                    android:textColor="@color/black"
-                    android:textSize="24sp"
-                    android:textStyle="bold"
-                    android:gravity="center"/>
+                    android:orientation="vertical">
 
-                <!-- RecyclerView para Banners Multicolor -->
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recyclerViewBannersMulticolorPerfil"
+                    <!-- Título de la sección -->
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="PERSONAJES PREMIUM"
+                        android:textColor="@color/black"
+                        android:textSize="24sp"
+                        android:textStyle="bold"
+                        android:gravity="center"/>
+
+                    <!-- RecyclerView para Personajes Premium -->
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recyclerViewPersonajesPremium"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:clipToPadding="false"
+                        android:paddingTop="8dp"
+                        android:paddingBottom="8dp"
+                        android:nestedScrollingEnabled="false"/> <!-- Deshabilitar el desplazamiento -->
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Sección "BANNERS PERFIL" -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardViewBannersPerfil"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:padding="8dp">
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:clipToPadding="false"
-                    android:paddingTop="8dp"
-                    android:paddingBottom="8dp"
-                    android:nestedScrollingEnabled="false"/> <!-- Deshabilitar el desplazamiento -->
+                    android:orientation="vertical">
 
-            </LinearLayout>
-        </androidx.cardview.widget.CardView>
+                    <!-- Título de la sección -->
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="BANNERS DE PERFIL"
+                        android:textColor="@color/black"
+                        android:textSize="24sp"
+                        android:textStyle="bold"
+                        android:gravity="center"/>
+
+                    <!-- RecyclerView para Banners Perfil -->
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recyclerViewBannersPerfil"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:clipToPadding="false"
+                        android:paddingTop="8dp"
+                        android:paddingBottom="8dp"
+                        android:nestedScrollingEnabled="false"/> <!-- Deshabilitar el desplazamiento -->
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Sección "BANNERS MULTICOLOR PERFIL" -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardViewBannersMulticolorPerfil"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:padding="8dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <!-- Título de la sección -->
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="BANNERS MULTICOLOR"
+                        android:textColor="@color/black"
+                        android:textSize="24sp"
+                        android:textStyle="bold"
+                        android:gravity="center"/>
+
+                    <!-- RecyclerView para Banners Multicolor -->
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recyclerViewBannersMulticolorPerfil"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:clipToPadding="false"
+                        android:paddingTop="8dp"
+                        android:paddingBottom="8dp"
+                        android:nestedScrollingEnabled="false"/> <!-- Deshabilitar el desplazamiento -->
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+        </GridLayout>
 
     </LinearLayout>
 
