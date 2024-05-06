@@ -1,26 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_marginHorizontal="16dp"
     android:layout_marginVertical="8dp"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
     app:cardCornerRadius="16dp"
     app:cardElevation="8dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
         <Button
             android:id="@+id/btnIncrementar"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="32dp"
-            android:backgroundTint="@color/holo_green_light"
+            android:layout_marginTop="16dp"
+            android:backgroundTint="@color/green"
             android:text="+"
             android:textColor="@android:color/white"
             android:textSize="18sp"
@@ -29,61 +28,66 @@
 
         <TextView
             android:id="@+id/tvNombreTarea"
-            android:layout_width="283dp"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="36dp"
-            android:layout_marginTop="6dp"
-            android:layout_marginBottom="74dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
             android:textAlignment="center"
             android:textColor="@android:color/black"
-            android:textSize="24sp"
+            android:textSize="18sp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/btnDecrementar"
+            app:layout_constraintStart_toEndOf="@+id/btnIncrementar"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="1.0"
-            tools:hint="Nombre tarea" />
+            tools:text="Nombre de la tarea" />
 
         <TextView
             android:id="@+id/tvDescripcionTarea"
-            android:layout_width="220dp"
-            android:layout_height="49dp"
-            android:layout_marginTop="40dp"
-            android:layout_marginEnd="72dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
             android:textAlignment="center"
+            android:textColor="@android:color/black"
+            android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:hint="Descripcion tarea" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvNombreTarea"
+            tools:text="Descripción de la tarea" />
 
         <TextView
             android:id="@+id/tvDificultadTarea"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="93dp"
+            android:layout_marginTop="8dp"
             android:textAlignment="viewStart"
+            android:textColor="@android:color/black"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvDescripcionTarea"
             tools:text="Dificultad" />
 
         <TextView
             android:id="@+id/tvDuracionTarea"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="93dp"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="16dp"
             android:textAlignment="viewEnd"
+            android:textColor="@android:color/black"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="Duracion" />
+            app:layout_constraintTop_toBottomOf="@+id/tvDescripcionTarea"
+            tools:text="Duración" />
 
         <Button
             android:id="@+id/btnDecrementar"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
-            android:backgroundTint="@color/holo_red_light"
+            android:backgroundTint="@color/red"
             android:text="-"
             android:textColor="@android:color/white"
             android:textSize="18sp"
