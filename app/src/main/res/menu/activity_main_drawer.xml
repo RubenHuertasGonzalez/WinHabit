@@ -5,6 +5,11 @@
     tools:showIn="navigation_view">
 
     <item
+        android:id="@+id/perfilFragment"
+        android:icon="@drawable/ic_user"
+        android:title="Perfil" />
+
+    <item
         android:id="@+id/confFragment"
         android:icon="@drawable/ic_conf"
         android:title="Configuración" />
