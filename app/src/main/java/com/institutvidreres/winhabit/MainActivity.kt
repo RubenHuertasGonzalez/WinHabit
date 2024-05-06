@@ -251,6 +251,8 @@ class MainActivity : AppCompatActivity() {
             25 -> R.drawable.gradiante_azul_rojo
             26 -> R.drawable.gradiante_azul_purpura_rojo
             27 -> R.drawable.gradiante_dorado_negro
+            28 -> R.drawable.gradiante_radial_rojo_morado
+            29 -> R.drawable.gradiante_tropical
 
             else -> throw IllegalArgumentException("Valor de banner no válido")
         }

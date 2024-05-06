@@ -22,7 +22,6 @@ class PerfilAdapter(private val recompensas: List<Recompensa>, private val conte
     class PerfilViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
         val imagenImageView: ImageView = itemView.findViewById(R.id.imagen_perfil_recompensa)
         val descripcionTextView: TextView = itemView.findViewById(R.id.descripcion_perfil_recompensa)
-        val botonRecompensa: Button = itemView.findViewById(R.id.boton_perfil_recompensa)
     }
 
     // Crea una nova vista (invocada per el layout manager)
@@ -38,7 +37,7 @@ class PerfilAdapter(private val recompensas: List<Recompensa>, private val conte
 
         holder.imagenImageView.setImageResource(recompensa.imagenResId)
         holder.descripcionTextView.text = recompensa.descripcion
-        holder.botonRecompensa.setOnClickListener {
+        holder.itemView.setOnClickListener {
             mostrarDialogoEquipar(recompensa)
             sharedViewModel.setSelectedImage(recompensa.imagenResId)
         }

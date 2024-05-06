@@ -1,6 +1,7 @@
 package com.institutvidreres.winhabit.ui.recompensas
 
-import android.annotation.SuppressLint
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
 import android.app.AlertDialog
 import android.content.ContentValues.TAG
 import android.content.Context
@@ -8,6 +9,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.ProgressBar
@@ -33,6 +35,7 @@ class RecompensasAdapter(
     class RecompensaViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val imagenImageView: ImageView = itemView.findViewById(R.id.imagen_recompensa)
         val descripcionTextView: TextView = itemView.findViewById(R.id.descripcion_recompensa)
+        val precioTextView: TextView = itemView.findViewById(R.id.precio_recompensa)
         val botonRecompensa: Button = itemView.findViewById(R.id.boton_recompensa)
         val imagenMoneda: ImageView = itemView.findViewById(R.id.imagen_moneda)
         val progressBar: ProgressBar = itemView.findViewById(R.id.progress_bar)
@@ -48,17 +51,12 @@ class RecompensasAdapter(
         val recompensa = recompensasList[position]
         holder.imagenImageView.setImageResource(recompensa.imagenResId)
         holder.descripcionTextView.text = recompensa.descripcion
+        holder.precioTextView.text = "Precio: " + recompensa.precio.toString()
 
         val isConnectedToFirebase = AppUtils.isInternetConnected(context)
 
         if (isConnectedToFirebase) {
             holder.progressBar.visibility = View.GONE
-
-            if (viewModel.esRecompensaVida(recompensa)) {
-                holder.botonRecompensa.text = "${recompensa.descripcion} (${recompensa.precio})"
-            } else {
-                holder.botonRecompensa.text = "${recompensa.precio}"
-            }
 
             val currentUserID = FirebaseAuth.getInstance().currentUser?.uid
             if (currentUserID != null) {
@@ -67,11 +65,12 @@ class RecompensasAdapter(
                     if (objetoComprado) {
                         holder.botonRecompensa.visibility = View.GONE
                         holder.imagenMoneda.visibility = View.GONE
+                        animateCompra(holder.precioTextView)
                     } else {
                         holder.botonRecompensa.visibility = View.VISIBLE
                         holder.imagenMoneda.visibility = View.VISIBLE
                         holder.botonRecompensa.setOnClickListener {
-                            mostrarDialogoCompra(recompensa, currentUserID)
+                            mostrarDialogoCompra(recompensa, currentUserID, holder.itemView, holder.botonRecompensa)
                         }
                     }
                 }
@@ -80,6 +79,7 @@ class RecompensasAdapter(
             holder.botonRecompensa.visibility = View.GONE
             holder.imagenMoneda.visibility = View.GONE
             holder.progressBar.visibility = View.VISIBLE
+            holder.precioTextView.text = "Cargando..."
         }
     }
 
@@ -87,30 +87,81 @@ class RecompensasAdapter(
         return recompensasList.size
     }
 
-    private fun mostrarDialogoCompra(recompensa: Recompensa, userId: String) {
-        CoroutineScope(Dispatchers.Main).launch {
-            val objetoComprado = viewModel.verificarObjetoComprado(userId, recompensa.firebaseId)
-            if (objetoComprado) {
-                Toast.makeText(context, "¡Recompensa ya comprada!", Toast.LENGTH_SHORT).show()
+    private fun mostrarDialogoCompra(
+        recompensa: Recompensa,
+        userId: String,
+        itemView: View,
+        botonRecompensa: Button,
+    ) {
+        // Iniciar la animación
+        val anim = AnimationUtils.loadAnimation(context, R.anim.animation_compra)
+        botonRecompensa.startAnimation(anim)
+        val builder = AlertDialog.Builder(context)
+        builder.setTitle("Confirmar Compra")
+        builder.setMessage("¿Te gustaría comprar '${recompensa.descripcion}' por ${recompensa.precio} monedas?")
+        builder.setPositiveButton("CONFIRMAR") { _, _ ->
+            // No actualices la base de datos para marcar la recompensa como comprada
+            if (viewModel.esRecompensaVida(recompensa)) {
+                // Verificar si la recompensa es de tipo "Vidas" y restar las vidas correspondientes
+                incrementarVidas(userId, recompensa)
             } else {
-                val builder = AlertDialog.Builder(context)
-                builder.setTitle("Confirmar Compra")
-                builder.setMessage("¿Te gustaría comprar '${recompensa.descripcion}' por ${recompensa.precio} monedas?")
-                builder.setPositiveButton("CONFIRMAR") { _, _ ->
-                    db.collection("users").document(userId)
-                        .update("objetosComprados", FieldValue.arrayUnion(recompensa.firebaseId))
-                        .addOnSuccessListener {
-                            Toast.makeText(context, "¡Recompensa comprada!", Toast.LENGTH_SHORT).show()
-                            notifyDataSetChanged()
-                        }
-                        .addOnFailureListener { e ->
-                            Log.w(TAG, "Error adding document", e)
-                        }
-                    viewModel.newRecompensa(context, recompensa.nombre, recompensa.firebaseId, recompensa.imagenResId, recompensa.descripcion, recompensa.precio, userId)
-                }
-                builder.setNegativeButton("CANCELAR") { _, _ -> }
-                builder.show()
+                db.collection("users").document(userId)
+                    .update("objetosComprados", FieldValue.arrayUnion(recompensa.firebaseId))
+                    .addOnSuccessListener {
+                        Toast.makeText(context, "¡Recompensa comprada!", Toast.LENGTH_SHORT).show()
+                        notifyDataSetChanged()
+                    }
+                    .addOnFailureListener { e ->
+                        Log.w(TAG, "Error adding document", e)
+                    }
             }
+            itemView.startAnimation(anim)
+            viewModel.newRecompensa(context, recompensa.nombre, recompensa.firebaseId, recompensa.imagenResId, recompensa.descripcion, recompensa.precio, userId)
         }
+        builder.setNegativeButton("CANCELAR") { _, _ -> }
+        builder.show()
     }
+
+    private fun incrementarVidas(userId: String, recompensa: Recompensa) {
+        val vidasPerdidas = when (recompensa.descripcion) {
+            "1 vida" -> 1L
+            "3 vidas" -> 3L
+            else -> 0L
+        }
+        // Obtener las vidas actuales del usuario
+        db.collection("profiles").document(userId)
+            .get()
+            .addOnSuccessListener { document ->
+                val vidasActuales = document.getLong("vidasPerdidas") ?: 0L
+                val nuevasVidas = if (vidasActuales - vidasPerdidas < 0) 0 else vidasActuales - vidasPerdidas
+                // Actualizar las vidas perdidas en la base de datos
+                db.collection("profiles").document(userId)
+                    .update("vidasPerdidas", nuevasVidas)
+                    .addOnFailureListener { e ->
+                        Log.w(TAG, "Error updating vidasPerdidas", e)
+                    }
+            }
+            .addOnFailureListener { e ->
+                Log.w(TAG, "Error getting document", e)
+            }
+    }
+
+    private fun animateCompra(view: TextView) {
+        val initialX = -view.width.toFloat() // Posición inicial fuera de la pantalla
+        view.translationX = initialX // Configurar la posición inicial
+
+        // Animación de translación hacia la derecha
+        val translateIn = ObjectAnimator.ofFloat(view, "translationX", initialX, 0f)
+        translateIn.duration = 500
+
+        // Animación de desvanecimiento
+        val fadeIn = ObjectAnimator.ofFloat(view, "alpha", 0f, 1f)
+        fadeIn.duration = 500
+
+        val set = AnimatorSet()
+        set.playTogether(translateIn, fadeIn) // Ejecutar ambas animaciones simultáneamente
+        set.start()
+        view.text = "¡Comprado!"
+    }
+
 }

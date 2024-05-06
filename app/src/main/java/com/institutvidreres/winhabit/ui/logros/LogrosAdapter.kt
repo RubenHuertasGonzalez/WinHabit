@@ -9,14 +9,16 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.institutvidreres.winhabit.R
 
-class LogrosAdapter(private val logrosList: List<LogrosItem>) :
+class LogrosAdapter(private val logrosList: MutableList<LogrosItem>) :
     RecyclerView.Adapter<LogrosAdapter.LogrosViewHolder>() {
+
+    var onLogroClickListener: ((LogrosItem) -> Unit)? = null
 
     class LogrosViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val imageInsignia: ImageView = itemView.findViewById(R.id.image_insignia)
         val tituloTextView: TextView = itemView.findViewById(R.id.text_titulo)
         val descripcionTextView: TextView = itemView.findViewById(R.id.text_descripcion)
-        val btnCambiarImagen: Button = itemView.findViewById(R.id.btnCambiarImagen)
+        val btnReclamar: Button = itemView.findViewById(R.id.btnCambiarImagen)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LogrosViewHolder {
@@ -31,10 +33,18 @@ class LogrosAdapter(private val logrosList: List<LogrosItem>) :
         holder.descripcionTextView.text = logro.descripcion
         holder.imageInsignia.setImageResource(logro.imagenResource)
 
-        holder.btnCambiarImagen.setOnClickListener {
-            // Cambiar la imagen al hacer clic en el botón
-            logro.toggleImagen()
-            holder.imageInsignia.setImageResource(logro.imagenResource)
+        if (logro.completado && !logro.reclamado) {
+            holder.btnReclamar.visibility = View.VISIBLE
+        } else {
+            holder.btnReclamar.visibility = View.GONE
+        }
+
+        holder.btnReclamar.setOnClickListener {
+            onLogroClickListener?.invoke(logro)
+            holder.btnReclamar.visibility = View.GONE // Ocultar el botón después de reclamar la recompensa
+            logro.toggleImagen() // Cambiar la imagen al reclamar la recompensa
+            logro.reclamado = true // Marcar el logro como reclamado
+            holder.imageInsignia.setImageResource(logro.imagenResource) // Actualizar la imagen en el ImageView
         }
     }
 

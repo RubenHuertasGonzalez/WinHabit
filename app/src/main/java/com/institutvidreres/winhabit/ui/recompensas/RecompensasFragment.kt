@@ -1,15 +1,18 @@
 package com.institutvidreres.winhabit.ui.recompensas
 
-import android.content.Context
+import android.R
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.institutvidreres.winhabit.databinding.FragmentRecompensasBinding
+
 
 class RecompensasFragment : Fragment() {
 
@@ -33,6 +36,18 @@ class RecompensasFragment : Fragment() {
         setupRecyclerView(binding.recyclerViewBannersPerfil, viewModel.bannersPerfil, viewModel)
         setupRecyclerView(binding.recyclerViewBannersMulticolorPerfil, viewModel.bannersMulticolorPerfil, viewModel)
         setupRecyclerView(binding.recyclerViewVidas, viewModel.vidasList, viewModel)
+
+        val textViewTitulo = binding.textViewTitulo
+        val textViewSubtitulo = binding.subtituloRecompensas
+
+
+        // Mostrar el TextView nuevamente con una animación de desvanecimiento
+        val animTitle = AnimationUtils.loadAnimation(context, com.institutvidreres.winhabit.R.anim.slide_from_top)
+        textViewTitulo.startAnimation(animTitle)
+
+        // Mostrar el TextView nuevamente con una animación de desvanecimiento
+        val animSubTitle = AnimationUtils.loadAnimation(context, com.institutvidreres.winhabit.R.anim.animation_aumento)
+        textViewSubtitulo.startAnimation(animSubTitle)
 
         return root
     }

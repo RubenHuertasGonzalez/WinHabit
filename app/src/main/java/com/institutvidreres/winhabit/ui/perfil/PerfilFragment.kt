@@ -8,6 +8,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
@@ -15,6 +17,7 @@ import com.institutvidreres.winhabit.MainActivity
 import com.institutvidreres.winhabit.SharedViewModel
 import com.institutvidreres.winhabit.adapter.PerfilAdapter
 import com.institutvidreres.winhabit.databinding.FragmentPerfilBinding
+import kotlinx.coroutines.launch
 
 class PerfilFragment : Fragment() {
 
@@ -48,8 +51,8 @@ class PerfilFragment : Fragment() {
         perfilViewModel = ViewModelProvider(this).get(PerfilViewModel::class.java)
         sharedViewModel = ViewModelProvider(this).get(SharedViewModel::class.java)
 
-        viewManagerPersonajes = LinearLayoutManager(context)
-        viewManagerBanner = LinearLayoutManager(context)
+        viewManagerPersonajes = GridLayoutManager(context, 2)
+        viewManagerBanner = GridLayoutManager(context, 2)
 
         // RecyclerView para mostrar la lista de personajes
         recyclerViewPersonajes = binding.recyclerViewPerfilPersonajes.apply {
@@ -62,6 +65,9 @@ class PerfilFragment : Fragment() {
             setHasFixedSize(true)
             layoutManager = viewManagerBanner
         }
+
+        // Observar los datos del usuario y actualizar la interfaz de usuario
+        actualizarDatosUsuario()
 
         // Observa los cambios en la lista de personajes y actualiza el RecyclerView
         firebaseAuth.currentUser?.uid?.let { userId ->
@@ -103,5 +109,37 @@ class PerfilFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun actualizarDatosUsuario() {
+        // Utilizar coroutines para llamar a las funciones suspendidas del ViewModel
+        lifecycleScope.launch {
+            // Obtener el nivel del usuario
+            val nivel = perfilViewModel.obtenerNivelUsuario()
+            // Actualizar la interfaz de usuario con el nivel obtenido
+            binding.textViewNivel.text = nivel.toString()
+
+            // Obtener las monedas del usuario
+            val monedas = perfilViewModel.obtenerMonedasUsuario()
+            // Actualizar la interfaz de usuario con las monedas obtenidas
+            binding.textViewMonedas.text = monedas.toString()
+
+            // Obtener las tareas completadas del usuario
+            val tareasCompletadas = perfilViewModel.obtenerTareasCompletadas()
+            // Actualizar la interfaz de usuario con las tareas completadas obtenidas
+            binding.textViewTareasCompletadas.text = tareasCompletadas.toString()
+
+            // Obtener las recompensas compradas del usuario
+            val recompensasCompradas = perfilViewModel.obtenerCantidadRecompensasCompradas()
+            binding.textViewRecompensasDesbloqueadas.text = "$recompensasCompradas / 19"
+
+            // Obtener username
+            val user = perfilViewModel.obtenerNombreUsuario()
+            binding.textViewUsername.text = user
+
+            // Obtener username
+            val email = perfilViewModel.obtenerCorreoUsuario()
+            binding.textViewEmail.text = email
+        }
     }
 }

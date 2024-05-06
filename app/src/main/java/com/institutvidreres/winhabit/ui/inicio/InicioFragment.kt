@@ -1,11 +1,16 @@
 package com.institutvidreres.winhabit.ui.inicio
 
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
 import android.content.ContentValues.TAG
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AccelerateInterpolator
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.Toast
@@ -45,8 +50,8 @@ class InicioFragment : Fragment(), TareasAdapter.OnClickListener {
     private var nivel = 1
     private val nivelMaximo = 20
     private var nivelMaximoAlcanzado = false
-    private var porcentajeNecesario = MutableLiveData(20)
-    private val incrementoPorcentaje = 20
+    private var porcentajeNecesario = MutableLiveData(10)
+    private val incrementoPorcentaje = 5
 
     private var progresoActualMonedas = 0
     private var monedas = 0
@@ -125,9 +130,6 @@ class InicioFragment : Fragment(), TareasAdapter.OnClickListener {
             binding.textViewNivel.text = "Nivel $level"
         }
 
-        inicioViewModel.expUser.observe(viewLifecycleOwner) { exp ->
-            // Puedes realizar acciones adicionales aquí si es necesario
-        }
     }
 
     override fun onDestroyView() {
@@ -137,12 +139,9 @@ class InicioFragment : Fragment(), TareasAdapter.OnClickListener {
         inicioViewModel.actualizarMonedas(binding.textViewMonedas.text.toString().toInt())
         inicioViewModel.actualizarNivel(binding.textViewNivel.text.toString().split(" ")[1].toInt())
 
-        // Obtener la experiencia actual del ViewModel y guardarla
-        val experienciaActual = inicioViewModel.expUser.value ?: 0
-        inicioViewModel.actualizarExperiencia(experienciaActual)
+        val tareasCompletadas = inicioViewModel.tareasUser.value ?: 0
+        inicioViewModel.contadorTareas(tareasCompletadas)
 
-        // Guardar los valores del perfil al cerrar sesión
-        guardarPerfilUsuario()
     }
 
     private fun cargarPerfilUsuario() {
@@ -263,11 +262,8 @@ class InicioFragment : Fragment(), TareasAdapter.OnClickListener {
     override fun onIncrementClick(position: Int) {
         // Verificar si se ha alcanzado el nivel máximo
         if (!nivelMaximoAlcanzado) {
-            // Incrementar la experiencia
-            val nuevaExperiencia = (inicioViewModel.expUser.value ?: 0) + 1 // Incremento de experiencia
-
-            // Actualizar la experiencia en el ViewModel
-            inicioViewModel.actualizarExperiencia(nuevaExperiencia)
+            // Incrementar las tareas
+            inicioPerfil.tareasCompletadas += 1 // Incremento de tareas
 
             // Generar un número aleatorio entre 1 y 5 para el progreso
             val incrementoProgreso = Random.nextInt(1, 6)
@@ -278,6 +274,37 @@ class InicioFragment : Fragment(), TareasAdapter.OnClickListener {
             // Sumar los números aleatorios al progreso actual y a las monedas
             progresoActual += incrementoProgreso
             progresoActualMonedas += incrementoMonedas
+
+            // Actualizar y mostrar las monedas
+            monedas += incrementoMonedas
+
+            // Aplicar la animación de desvanecimiento al TextView de las monedas
+            val fadeOutAnimation = AnimationUtils.loadAnimation(context, R.anim.fade_out)
+            binding.textViewMonedas.startAnimation(fadeOutAnimation)
+
+            val animTareaCompletada = AnimationUtils.loadAnimation(context, R.anim.animation_on_increment)
+            binding.imageView2.startAnimation(animTareaCompletada)
+
+
+            // Actualizar el valor del TextView después de la animación
+            fadeOutAnimation.setAnimationListener(object : Animation.AnimationListener {
+                override fun onAnimationStart(animation: Animation?) {
+                    binding.textViewMonedas.text = "..."
+                }
+
+                override fun onAnimationEnd(animation: Animation?) {
+                    // Actualizar el valor del TextView después de la animación
+                    binding.textViewMonedas.text = monedas.toString()
+
+                    // Mostrar el TextView nuevamente con una animación de desvanecimiento
+                    val fadeInAnimation = AnimationUtils.loadAnimation(context, R.anim.fade_in)
+                    binding.textViewMonedas.startAnimation(fadeInAnimation)
+                }
+
+                override fun onAnimationRepeat(animation: Animation?) {
+                    // Acciones a realizar al repetir la animación (opcional)
+                }
+            })
 
             // Verificar si se alcanzó o superó el porcentaje necesario
             if (progresoActual >= porcentajeNecesario.value!!) {
@@ -296,7 +323,7 @@ class InicioFragment : Fragment(), TareasAdapter.OnClickListener {
                     nivel = nivelMaximo
 
                     // Mostrar el mensaje de nivel máximo en el TextView correspondiente
-                    binding.textViewPorcentajeNivel.text = "¡NIVEL MAXIMO!"
+                    binding.textViewPorcentajeNivel.text = "¡NIVEL MÁXIMO!"
                 } else {
                     // Actualizar el texto del nivel
                     binding.textViewNivel.text = "Nivel $nivel"
@@ -308,16 +335,14 @@ class InicioFragment : Fragment(), TareasAdapter.OnClickListener {
                 binding.textViewPorcentajeNivel.text = "$progresoActual / ${porcentajeNecesario.value}"
             }
 
-            // Mostrar un mensaje de tarea completada
-            Toast.makeText(context, "¡Tarea completada!", Toast.LENGTH_SHORT).show()
-
             // Actualizar y mostrar las monedas
-            binding.textViewMonedas.text = progresoActualMonedas.toString()
+            inicioViewModel.actualizarMonedas(progresoActualMonedas)
 
             // Actualizar los datos en Firestore después del incremento
             actualizarDatosEnFirestore()
         }
     }
+
 
     // Función para actualizar los datos en Firestore después del incremento
     private fun actualizarDatosEnFirestore() {
@@ -327,8 +352,8 @@ class InicioFragment : Fragment(), TareasAdapter.OnClickListener {
         // Crear un mapa con los nuevos valores a actualizar
         val datosActualizados = hashMapOf(
             "nivel" to nivel,
-            "monedas" to progresoActualMonedas,
-            "exp" to inicioViewModel.expUser.value,
+            "monedas" to monedas,
+            "tareasCompletadas" to inicioPerfil.tareasCompletadas,
             // Otros campos del perfil...
         )
 
@@ -370,22 +395,48 @@ class InicioFragment : Fragment(), TareasAdapter.OnClickListener {
 
 // Dentro de la función onDecrementClick()
 
-    override fun onDecrementClick(position: Int) { // Total de vidas
-        vidasPerdidas++
+    override fun onDecrementClick(position: Int) {
+        if (vidasPerdidas < totalVidas) { // Verificar si aún hay vidas restantes
+            vidasPerdidas++
 
-        val vidasRestantes = totalVidas - vidasPerdidas
-        if (vidasRestantes >= 0) {
-            actualizarBarraDeVida(vidasRestantes, totalVidas)
-            Toast.makeText(context, "Vidas restantes: $vidasRestantes", Toast.LENGTH_SHORT).show()
-            if (vidasRestantes == 0) {
-                Toast.makeText(context, "¡Te has quedado sin vidas!", Toast.LENGTH_SHORT).show()
+            animationRestarVida()
+
+            val vidasRestantes = totalVidas - vidasPerdidas
+            if (vidasRestantes >= 0) {
+                actualizarBarraDeVida(vidasRestantes, totalVidas)
+                Toast.makeText(context, "Vidas restantes: $vidasRestantes", Toast.LENGTH_SHORT).show()
+                if (vidasRestantes == 0) {
+                    Toast.makeText(context, "¡Te has quedado sin vidas!", Toast.LENGTH_SHORT).show()
+                }
+            } else {
+                Toast.makeText(context, "Ya no quedan más vidas", Toast.LENGTH_SHORT).show()
             }
+
+            // Actualizar los datos en Firestore después del decremento
+            actualizarBarraDeVidaEnFirestore()
         } else {
             Toast.makeText(context, "Ya no quedan más vidas", Toast.LENGTH_SHORT).show()
         }
+    }
 
-        // Actualizar los datos en Firestore después del decremento
-        actualizarBarraDeVidaEnFirestore()
+
+    fun animationRestarVida(){
+        // Crear una interpolación de aceleración
+        val interpolator = AccelerateInterpolator()
+
+        val moveLeft = ObjectAnimator.ofFloat(binding.imageView2, "translationX", 0f, -20f)
+        moveLeft.duration = 100
+        moveLeft.interpolator = interpolator
+
+        val moveRightBack = ObjectAnimator.ofFloat(binding.imageView2, "translationX", -20f, 20f, 0f)
+        moveRightBack.duration = 200
+        moveRightBack.startDelay = 100 // Retraso para que comience después de la primera animación
+        moveRightBack.interpolator = interpolator
+
+        val animatorSet = AnimatorSet()
+        animatorSet.playSequentially(moveLeft, moveRightBack)
+
+        animatorSet.start()
     }
 
     // Función para actualizar la barra de vida en Firestore después del decremento

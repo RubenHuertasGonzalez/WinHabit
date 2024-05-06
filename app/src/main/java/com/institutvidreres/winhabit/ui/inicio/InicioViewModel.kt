@@ -18,15 +18,15 @@ class InicioViewModel : ViewModel() {
     val levelUser: LiveData<Int> get() = _levelUser
 
     //TODO Acabar guardado de experiencia del usuario cuando cambia el fragment
-    private val _expUser = MutableLiveData<Int>()
-    val expUser: LiveData<Int> get() = _expUser
+    private val _cantidadTareas = MutableLiveData<Int>()
+    val tareasUser: LiveData<Int> get() = _cantidadTareas
 
     init {
         // Valores iniciales
         _healthBarWidth.value = 1.0f
         _coinsUser.value = 0 // Puedes inicializarlo con el valor que corresponda
         _levelUser.value = 1 // Puedes inicializarlo con el valor que corresponda
-        _expUser.value = 0 // Puedes inicializarlo con el valor que corresponda
+        _cantidadTareas.value = 0 // Puedes inicializarlo con el valor que corresponda
     }
 
     // Métodos para actualizar las monedas, la experiencia y el nivel
@@ -34,8 +34,8 @@ class InicioViewModel : ViewModel() {
         _coinsUser.value = nuevasMonedas
     }
 
-    fun actualizarExperiencia(nuevaExp: Int) {
-        _expUser.value = nuevaExp
+    fun contadorTareas(nuevaTarea: Int) {
+        _cantidadTareas.value = nuevaTarea
     }
 
     fun actualizarNivel(nuevoNivel: Int) {
