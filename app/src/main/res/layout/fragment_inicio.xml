@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.inicio.InicioFragment"
-    android:background="@drawable/gradiante_radial_rojo_morado">
+    android:background="@drawable/gradiante_fondo_inicio">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/banner"

@@ -24,6 +24,8 @@ import com.institutvidreres.winhabit.utils.AppUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
+
 
 class RecompensasAdapter(
     private var recompensasList: List<Recompensa>,
@@ -61,17 +63,26 @@ class RecompensasAdapter(
             val currentUserID = FirebaseAuth.getInstance().currentUser?.uid
             if (currentUserID != null) {
                 CoroutineScope(Dispatchers.Main).launch {
-                    val objetoComprado = viewModel.verificarObjetoComprado(currentUserID, recompensa.firebaseId)
-                    if (objetoComprado) {
-                        holder.botonRecompensa.visibility = View.GONE
-                        holder.imagenMoneda.visibility = View.GONE
-                        animateCompra(holder.precioTextView)
-                    } else {
-                        holder.botonRecompensa.visibility = View.VISIBLE
-                        holder.imagenMoneda.visibility = View.VISIBLE
-                        holder.botonRecompensa.setOnClickListener {
-                            mostrarDialogoCompra(recompensa, currentUserID, holder.itemView, holder.botonRecompensa)
+                    try {
+                        // Obtener las monedas del usuario desde Firebase
+                        val monedasSnapshot = db.collection("profiles").document(currentUserID).get().await()
+                        val monedasUsuario = monedasSnapshot.getLong("monedas") ?: 0L
+
+                        val objetoComprado = viewModel.verificarObjetoComprado(currentUserID, recompensa.firebaseId)
+                        if (objetoComprado) {
+                            holder.botonRecompensa.visibility = View.GONE
+                            holder.imagenMoneda.visibility = View.GONE
+                            animateCompra(holder.precioTextView)
+                        } else {
+                            holder.botonRecompensa.visibility = View.VISIBLE
+                            holder.imagenMoneda.visibility = View.VISIBLE
+                            holder.botonRecompensa.setOnClickListener {
+                                mostrarDialogoCompra(recompensa, currentUserID, holder.itemView, holder.botonRecompensa, monedasUsuario)
+                            }
                         }
+                    } catch (e: Exception) {
+                        Log.e(TAG, "Error al obtener las monedas del usuario", e)
+                        // Manejar el error aquí
                     }
                 }
             }
@@ -92,36 +103,60 @@ class RecompensasAdapter(
         userId: String,
         itemView: View,
         botonRecompensa: Button,
+        monedasUsuario: Long
     ) {
-        // Iniciar la animación
-        val anim = AnimationUtils.loadAnimation(context, R.anim.animation_compra)
-        botonRecompensa.startAnimation(anim)
-        val builder = AlertDialog.Builder(context)
-        builder.setTitle("Confirmar Compra")
-        builder.setMessage("¿Te gustaría comprar '${recompensa.descripcion}' por ${recompensa.precio} monedas?")
-        builder.setPositiveButton("CONFIRMAR") { _, _ ->
-            // No actualices la base de datos para marcar la recompensa como comprada
-            if (viewModel.esRecompensaVida(recompensa)) {
-                // Verificar si la recompensa es de tipo "Vidas" y restar las vidas correspondientes
-                incrementarVidas(userId, recompensa)
-            } else {
-                db.collection("users").document(userId)
-                    .update("objetosComprados", FieldValue.arrayUnion(recompensa.firebaseId))
-                    .addOnSuccessListener {
-                        Toast.makeText(context, "¡Recompensa comprada!", Toast.LENGTH_SHORT).show()
-                        notifyDataSetChanged()
-                    }
-                    .addOnFailureListener { e ->
-                        Log.w(TAG, "Error adding document", e)
-                    }
+        if (monedasUsuario >= recompensa.precio) {
+            // Iniciar la animación
+            val anim = AnimationUtils.loadAnimation(context, R.anim.animation_compra)
+            botonRecompensa.startAnimation(anim)
+            val builder = AlertDialog.Builder(context)
+            builder.setTitle("Confirmar Compra")
+            builder.setMessage("¿Te gustaría comprar '${recompensa.descripcion}' por ${recompensa.precio} monedas?")
+            builder.setPositiveButton("CONFIRMAR") { _, _ ->
+                // No actualices la base de datos para marcar la recompensa como comprada
+                if (viewModel.esRecompensaVida(recompensa)) {
+                    // Verificar si la recompensa es de tipo "Vidas" y restar las vidas correspondientes
+                    incrementarVidas(userId, recompensa)
+                } else {
+                    db.collection("users").document(userId)
+                        .update("objetosComprados", FieldValue.arrayUnion(recompensa.firebaseId))
+                        .addOnSuccessListener {
+                            Toast.makeText(context, "¡Recompensa comprada!", Toast.LENGTH_SHORT)
+                                .show()
+                            notifyDataSetChanged()
+                        }
+                        .addOnFailureListener { e ->
+                            Log.w(TAG, "Error adding document", e)
+                        }
+                }
+                restarMonedasDespuesDeCompra(userId, recompensa)
+                itemView.startAnimation(anim)
+                viewModel.newRecompensa(
+                    context,
+                    recompensa.nombre,
+                    recompensa.firebaseId,
+                    recompensa.imagenResId,
+                    recompensa.descripcion,
+                    recompensa.precio,
+                    userId
+                )
             }
-            itemView.startAnimation(anim)
-            viewModel.newRecompensa(context, recompensa.nombre, recompensa.firebaseId, recompensa.imagenResId, recompensa.descripcion, recompensa.precio, userId)
+            builder.setNegativeButton("CANCELAR") { _, _ -> }
+            builder.show()
         }
-        builder.setNegativeButton("CANCELAR") { _, _ -> }
-        builder.show()
+        else {
+            Toast.makeText(context, "Monedas Insuficientes", Toast.LENGTH_SHORT).show()
+        }
     }
 
+    private fun restarMonedasDespuesDeCompra(userId: String, recompensa: Recompensa) {
+        // Restar el precio de la recompensa de las monedas del usuario en Firestore
+        db.collection("profiles").document(userId)
+            .update("monedas", FieldValue.increment(-recompensa.precio.toLong()))
+            .addOnFailureListener { e ->
+                Log.w(TAG, "Error updating monedas", e)
+            }
+    }
     private fun incrementarVidas(userId: String, recompensa: Recompensa) {
         val vidasPerdidas = when (recompensa.descripcion) {
             "1 vida" -> 1L
@@ -163,5 +198,4 @@ class RecompensasAdapter(
         set.start()
         view.text = "¡Comprado!"
     }
-
 }

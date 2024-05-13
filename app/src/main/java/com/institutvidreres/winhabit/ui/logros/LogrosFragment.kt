@@ -64,7 +64,6 @@ class LogrosFragment : Fragment() {
                 logrosViewModel.verificarLogrosCompletados()
                 logrosAdapter.notifyDataSetChanged()
             } catch (e: Exception) {
-                Toast.makeText(requireContext(), "Error al cargar los logros", Toast.LENGTH_SHORT).show()
                 e.printStackTrace()
             }
         }
