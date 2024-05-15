@@ -2,6 +2,7 @@ package com.institutvidreres.winhabit.ui.inicio
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
+import android.app.AlertDialog
 import android.content.ContentValues.TAG
 import android.os.Bundle
 import android.util.Log
@@ -50,7 +51,7 @@ class InicioFragment : Fragment(), TareasAdapter.OnClickListener {
     private var nivel = 1
     private val nivelMaximo = 20
     private var nivelMaximoAlcanzado = false
-    private var porcentajeNecesario = MutableLiveData(10)
+    private var porcentajeNecesario = MutableLiveData(5)
     private val incrementoPorcentaje = 5
 
     private var progresoActualMonedas = 0
@@ -130,6 +131,8 @@ class InicioFragment : Fragment(), TareasAdapter.OnClickListener {
             binding.textViewNivel.text = "Nivel $level"
         }
 
+        observarNivelMaximoAlcanzado()
+
     }
 
     override fun onDestroyView() {
@@ -165,14 +168,13 @@ class InicioFragment : Fragment(), TareasAdapter.OnClickListener {
     }
 
     private fun cargarValoresPerfil(inicioPerfil: InicioPerfil) {
-        // Cargar los valores del perfil en la aplicación
         nivel = inicioPerfil.nivel
         monedas = inicioPerfil.monedas
         vidasPerdidas = inicioPerfil.vidasPerdidas
+        progresoActual = inicioPerfil.experiencia
+        porcentajeNecesario.value = inicioPerfil.porcentajeNecesario // Cargar experiencia
+        nivelMaximoAlcanzado = inicioPerfil.nivelMaximoAlcanzado
         // Otros campos del perfil...
-
-        // Actualizar la interfaz de usuario con los valores del perfil
-        // (por ejemplo, TextViews, ProgressBar, etc.)
         actualizarInterfazUsuario(inicioPerfil)
     }
 
@@ -194,42 +196,21 @@ class InicioFragment : Fragment(), TareasAdapter.OnClickListener {
             }
     }
 
-    private fun guardarPerfilUsuario() {
-        // Actualizar el documento de perfil con los valores actuales del perfil
-        val perfilRef = firestoreDB.collection("profiles").document(userId)
-
-        val datosPerfil = hashMapOf(
-            "nivel" to nivel,
-            "monedas" to monedas,
-            "vidasPerdidas" to vidasPerdidas
-            // Otros campos del perfil...
-        )
-
-        perfilRef.set(datosPerfil)
-            .addOnSuccessListener {
-                Log.d(TAG, "Perfil actualizado correctamente")
-            }
-            .addOnFailureListener { e ->
-                // Manejar el error al actualizar el documento
-                Log.e(TAG, "Error al actualizar el perfil: $e")
-            }
-    }
-
     private fun actualizarInterfazUsuario(inicioPerfil: InicioPerfil) {
-        // Actualizar TextViews
         binding.textViewNivel.text = "Nivel ${inicioPerfil.nivel}"
         binding.textViewMonedas.text = inicioPerfil.monedas.toString()
-        binding.textViewPorcentajeNivel.text = "$progresoActual / ${porcentajeNecesario.value}"
-        // Otros TextViews...
-
-        // Actualizar ProgressBar
-        val totalVidas = 11 // Total de vidas
-        val vidasRestantes = totalVidas - inicioPerfil.vidasPerdidas
-        val porcentajeVidasRestantes = vidasRestantes.toFloat() / totalVidas.toFloat() * 100 // Calcular porcentaje
-        healthBar.progress = porcentajeVidasRestantes.toInt()
-
+        if (nivelMaximoAlcanzado) {
+            binding.textViewPorcentajeNivel.text = "¡NIVEL MÁXIMO!"
+        } else {
+            binding.textViewPorcentajeNivel.text = "${inicioPerfil.experiencia} / ${porcentajeNecesario.value}"
+        }
         // Otros elementos de la interfaz de usuario...
+        val totalVidas = 11
+        val vidasRestantes = totalVidas - inicioPerfil.vidasPerdidas
+        val porcentajeVidasRestantes = vidasRestantes.toFloat() / totalVidas.toFloat() * 100
+        healthBar.progress = porcentajeVidasRestantes.toInt()
     }
+
 
 
     private fun obtenerTareasDesdeFirestore() {
@@ -260,112 +241,112 @@ class InicioFragment : Fragment(), TareasAdapter.OnClickListener {
     }
 
     override fun onIncrementClick(position: Int) {
-        // Verificar si se ha alcanzado el nivel máximo
+        val incrementoProgreso = Random.nextInt(1, 6)
+        val incrementoMonedas = Random.nextInt(5, 11)
+
         if (!nivelMaximoAlcanzado) {
-            // Incrementar las tareas
-            inicioPerfil.tareasCompletadas += 1 // Incremento de tareas
-
-            // Generar un número aleatorio entre 1 y 5 para el progreso
-            val incrementoProgreso = Random.nextInt(1, 6)
-
-            // Generar un número aleatorio entre 5 y 10 para las monedas
-            val incrementoMonedas = Random.nextInt(5, 11)
-
-            // Sumar los números aleatorios al progreso actual y a las monedas
+            inicioPerfil.tareasCompletadas += 1
             progresoActual += incrementoProgreso
-            progresoActualMonedas += incrementoMonedas
 
-            // Actualizar y mostrar las monedas
-            monedas += incrementoMonedas
-
-            // Aplicar la animación de desvanecimiento al TextView de las monedas
-            val fadeOutAnimation = AnimationUtils.loadAnimation(context, R.anim.fade_out)
-            binding.textViewMonedas.startAnimation(fadeOutAnimation)
-
-            val animTareaCompletada = AnimationUtils.loadAnimation(context, R.anim.animation_on_increment)
-            binding.imageView2.startAnimation(animTareaCompletada)
-
-
-            // Actualizar el valor del TextView después de la animación
-            fadeOutAnimation.setAnimationListener(object : Animation.AnimationListener {
-                override fun onAnimationStart(animation: Animation?) {
-                    binding.textViewMonedas.text = "..."
-                }
-
-                override fun onAnimationEnd(animation: Animation?) {
-                    // Actualizar el valor del TextView después de la animación
-                    binding.textViewMonedas.text = monedas.toString()
-
-                    // Mostrar el TextView nuevamente con una animación de desvanecimiento
-                    val fadeInAnimation = AnimationUtils.loadAnimation(context, R.anim.fade_in)
-                    binding.textViewMonedas.startAnimation(fadeInAnimation)
-                }
-
-                override fun onAnimationRepeat(animation: Animation?) {
-                    // Acciones a realizar al repetir la animación (opcional)
-                }
-            })
-
-            // Verificar si se alcanzó o superó el porcentaje necesario
             if (progresoActual >= porcentajeNecesario.value!!) {
-                // Incrementar el nivel y reiniciar el progreso
                 nivel++
                 progresoActual = 0
-
-                // Aumentar la dificultad para el próximo nivel
                 porcentajeNecesario.value = porcentajeNecesario.value!! + incrementoPorcentaje
 
-                // Verificar si el nivel alcanzó el nivel máximo después de la actualización
                 if (nivel >= nivelMaximo) {
-                    // Establecer la bandera de nivel máximo alcanzado
                     nivelMaximoAlcanzado = true
-                    // Establecer el nivel en el nivel máximo
                     nivel = nivelMaximo
 
-                    // Mostrar el mensaje de nivel máximo en el TextView correspondiente
+                    // Actualiza el valor directamente en Firestore
+                    val perfilRef = firestoreDB.collection("profiles").document(userId)
+                    perfilRef.update("nivelMaximoAlcanzado", true)
+                        .addOnSuccessListener {
+                            Log.d(TAG, "¡Nivel máximo alcanzado! Actualizado correctamente en Firestore")
+                        }
+                        .addOnFailureListener { e ->
+                            // Manejar el error al actualizar los datos
+                            Log.e(TAG, "Error al actualizar el nivel máximo en Firestore: $e")
+                        }
+
                     binding.textViewPorcentajeNivel.text = "¡NIVEL MÁXIMO!"
+                    actualizarDatosEnFirestore()
                 } else {
-                    // Actualizar el texto del nivel
                     binding.textViewNivel.text = "Nivel $nivel"
-                    // Actualizar el texto del progreso (textViewLvl)
                     binding.textViewPorcentajeNivel.text = "$progresoActual / ${porcentajeNecesario.value}"
+                    // Actualiza los datos en Firestore solo si el nivel no ha alcanzado el máximo
+                    inicioViewModel.actualizarMonedas(progresoActualMonedas)
+                    actualizarDatosEnFirestore()
                 }
             } else {
-                // Actualizar el texto del progreso (textViewLvl) si no se ha alcanzado el porcentaje necesario
                 binding.textViewPorcentajeNivel.text = "$progresoActual / ${porcentajeNecesario.value}"
             }
+        }
 
-            // Actualizar y mostrar las monedas
-            inicioViewModel.actualizarMonedas(progresoActualMonedas)
+        // Esta parte siempre debe ejecutarse para incrementar las monedas
+        progresoActualMonedas += incrementoMonedas
+        monedas += incrementoMonedas
 
-            // Actualizar los datos en Firestore después del incremento
-            actualizarDatosEnFirestore()
+        val fadeOutAnimation = AnimationUtils.loadAnimation(context, R.anim.fade_out)
+        binding.textViewMonedas.startAnimation(fadeOutAnimation)
+
+        val animTareaCompletada = AnimationUtils.loadAnimation(context, R.anim.animation_on_increment)
+        binding.imageView2.startAnimation(animTareaCompletada)
+
+        fadeOutAnimation.setAnimationListener(object : Animation.AnimationListener {
+            override fun onAnimationStart(animation: Animation?) {
+                binding.textViewMonedas.text = "..."
+            }
+
+            override fun onAnimationEnd(animation: Animation?) {
+                binding.textViewMonedas.text = monedas.toString()
+                val fadeInAnimation = AnimationUtils.loadAnimation(context, R.anim.fade_in)
+                binding.textViewMonedas.startAnimation(fadeInAnimation)
+            }
+
+            override fun onAnimationRepeat(animation: Animation?) {}
+        })
+        actualizarDatosEnFirestore()
+    }
+
+
+
+    private fun observarNivelMaximoAlcanzado() {
+        val perfilRef = firestoreDB.collection("profiles").document(userId)
+        perfilRef.addSnapshotListener { snapshot, error ->
+            if (error != null) {
+                Log.e(TAG, "Error al observar el nivel máximo alcanzado: $error")
+                return@addSnapshotListener
+            }
+            if (snapshot != null && snapshot.exists()) {
+                nivelMaximoAlcanzado = snapshot.getBoolean("nivelMaximoAlcanzado") ?: false
+
+                // Actualizar la interfaz de usuario si el valor de nivelMaximoAlcanzado es true
+                if (nivelMaximoAlcanzado) {
+                    binding.textViewPorcentajeNivel.text = "¡NIVEL MÁXIMO!"
+                }
+            }
         }
     }
 
 
     // Función para actualizar los datos en Firestore después del incremento
     private fun actualizarDatosEnFirestore() {
-        // Obtener la referencia al documento de perfil del usuario actual
         val perfilRef = firestoreDB.collection("profiles").document(userId)
-
-        // Crear un mapa con los nuevos valores a actualizar
         val datosActualizados = hashMapOf(
             "nivel" to nivel,
             "monedas" to monedas,
             "tareasCompletadas" to inicioPerfil.tareasCompletadas,
+            "experiencia" to progresoActual, // Actualizar experiencia
+            "porcentajeNecesario" to porcentajeNecesario.value,
+            "nivelMaximoAlcanzado" to nivelMaximoAlcanzado
             // Otros campos del perfil...
         )
-
-        // Actualizar los datos en Firestore
         perfilRef.update(datosActualizados as Map<String, Any>)
             .addOnSuccessListener {
                 Log.d(TAG, "Datos actualizados correctamente en Firestore")
-                // Obtener los datos actualizados del perfil del usuario
                 obtenerDatosPerfilDesdeFirestore()
             }
             .addOnFailureListener { e ->
-                // Manejar el error al actualizar los datos
                 Log.e(TAG, "Error al actualizar los datos en Firestore: $e")
             }
     }
@@ -406,7 +387,7 @@ class InicioFragment : Fragment(), TareasAdapter.OnClickListener {
                 actualizarBarraDeVida(vidasRestantes, totalVidas)
                 Toast.makeText(context, "Vidas restantes: $vidasRestantes", Toast.LENGTH_SHORT).show()
                 if (vidasRestantes == 0) {
-                    Toast.makeText(context, "¡Te has quedado sin vidas!", Toast.LENGTH_SHORT).show()
+                    mostrarDialogoSinVidas()
                 }
             } else {
                 Toast.makeText(context, "Ya no quedan más vidas", Toast.LENGTH_SHORT).show()
@@ -417,6 +398,31 @@ class InicioFragment : Fragment(), TareasAdapter.OnClickListener {
         } else {
             Toast.makeText(context, "Ya no quedan más vidas", Toast.LENGTH_SHORT).show()
         }
+    }
+
+    private fun mostrarDialogoSinVidas() {
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setTitle("¡Te has quedado sin vidas!")
+        builder.setMessage("Recibirás 3 vidas adicionales pero perderás todas tus monedas.")
+        builder.setPositiveButton("Aceptar") { dialog, _ ->
+        }
+        builder.setOnDismissListener {
+        }
+        reiniciarVidasYMonedas()
+        builder.show()
+    }
+
+    private fun reiniciarVidasYMonedas() {
+        // Reiniciar vidas perdidas y monedas a 0
+        vidasPerdidas = 8
+        monedas = 0
+
+        // Actualizar los datos en Firestore
+        actualizarDatosEnFirestore()
+
+        actualizarBarraDeVidaEnFirestore()
+        // Actualizar la interfaz de usuario
+        actualizarInterfazUsuario(inicioPerfil)
     }
 
 
