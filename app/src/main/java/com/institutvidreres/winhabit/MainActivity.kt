@@ -95,6 +95,9 @@ class MainActivity : AppCompatActivity() {
                 R.id.perfilFragment -> {
                     bottomNavigationView.visibility = View.GONE
                 }
+                R.id.confFragment -> {
+                    bottomNavigationView.visibility = View.GONE
+                }
                 else -> {
                     bottomNavigationView.visibility = View.VISIBLE
                 }
