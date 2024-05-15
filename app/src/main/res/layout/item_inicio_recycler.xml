@@ -2,7 +2,7 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="150dp"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_marginHorizontal="16dp"
     android:layout_marginVertical="8dp"
@@ -11,14 +11,14 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
         <Button
             android:id="@+id/btnIncrementar"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="56dp"
             android:backgroundTint="@color/green"
             android:text="+"
             android:textColor="@android:color/white"
@@ -47,12 +47,13 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="28dp"
             android:layout_marginEnd="16dp"
             android:textAlignment="center"
             android:textColor="@android:color/black"
             android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tvNombreTarea"
             tools:text="Descripción de la tarea" />
@@ -62,7 +63,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="32dp"
             android:textAlignment="viewStart"
             android:textColor="@android:color/black"
             app:layout_constraintStart_toStartOf="parent"
@@ -73,7 +74,7 @@
             android:id="@+id/tvDuracionTarea"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="32dp"
             android:layout_marginEnd="16dp"
             android:textAlignment="viewEnd"
             android:textColor="@android:color/black"
@@ -85,7 +86,7 @@
             android:id="@+id/btnDecrementar"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="56dp"
             android:layout_marginEnd="16dp"
             android:backgroundTint="@color/red"
             android:text="-"
@@ -93,6 +94,19 @@
             android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tvClose"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="X"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="22sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="8dp"/>
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

@@ -18,6 +18,7 @@
     </string-array>
 
     <string name="default_web_client_id">95637224574-clt2blfcdlhf0bss814dks0sfsll5akj.apps.googleusercontent.com</string>
+    <string name="EliminarTarea">X</string>
 
 
 </resources>
