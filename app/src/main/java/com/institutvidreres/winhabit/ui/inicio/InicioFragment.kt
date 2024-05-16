@@ -51,7 +51,7 @@ class InicioFragment : Fragment(), TareasAdapter.OnClickListener {
     private var nivel = 1
     private val nivelMaximo = 20
     private var nivelMaximoAlcanzado = false
-    private var porcentajeNecesario = MutableLiveData(5)
+    private var porcentajeNecesario = MutableLiveData(10)
     private val incrementoPorcentaje = 5
 
     private var progresoActualMonedas = 0
@@ -245,7 +245,6 @@ class InicioFragment : Fragment(), TareasAdapter.OnClickListener {
         val incrementoMonedas = Random.nextInt(5, 11)
 
         if (!nivelMaximoAlcanzado) {
-            inicioPerfil.tareasCompletadas += 1
             progresoActual += incrementoProgreso
 
             if (progresoActual >= porcentajeNecesario.value!!) {
@@ -282,8 +281,9 @@ class InicioFragment : Fragment(), TareasAdapter.OnClickListener {
             }
         }
 
-        // Esta parte siempre debe ejecutarse para incrementar las monedas
-        progresoActualMonedas += incrementoMonedas
+        // Esta parte siempre debe ejecutarse
+        inicioPerfil.tareasCompletadas += 1 // Tareas completadas
+        progresoActualMonedas += incrementoMonedas // Incremento de monedas
         monedas += incrementoMonedas
 
         val fadeOutAnimation = AnimationUtils.loadAnimation(context, R.anim.fade_out)
