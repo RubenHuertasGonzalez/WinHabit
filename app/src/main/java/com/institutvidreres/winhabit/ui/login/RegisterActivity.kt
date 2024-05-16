@@ -66,16 +66,28 @@ class RegisterActivity : AppCompatActivity() {
 
         buttonRegister.setOnClickListener {
             if (AppUtils.isInternetConnected(this)) {
-                // Check if a character is selected
-                if (selectedCharacter == -1) {
-                    Toast.makeText(this, "Por favor, selecciona un personaje", Toast.LENGTH_SHORT).show()
-                    return@setOnClickListener
-                }
 
                 // Resto de tu código para registrar al usuario
                 val email = binding.editTextEmail.text.toString()
                 val password = binding.editTextPassword.text.toString()
                 val username = binding.editTextUsername.text.toString()
+
+                if (username.isEmpty() || email.isEmpty() || password.isEmpty()) {
+                    Toast.makeText(this, "Por favor, completa todos los campos", Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
+
+                // Check if password has at least 6 characters
+                if (password.length < 6) {
+                    Toast.makeText(this, "La contraseña debe tener al menos 6 caracteres", Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
+
+                // Check if a character is selected
+                if (selectedCharacter == -1) {
+                    Toast.makeText(this, "Por favor, selecciona un personaje", Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
 
                 val auth = FirebaseAuth.getInstance()
                 val db = FirebaseFirestore.getInstance()
@@ -95,7 +107,8 @@ class RegisterActivity : AppCompatActivity() {
                                 db.collection("users").document(user.uid)
                                     .set(userInfo)
                                     .addOnSuccessListener {
-                                        Toast.makeText(this, "CORRECTO CREADO", Toast.LENGTH_SHORT).show()
+                                        val successMessage = "Bienvenido a WinHabit: $email"
+                                        Toast.makeText(this, successMessage, Toast.LENGTH_SHORT).show()
                                         Log.d(TAG, "DocumentSnapshot successfully written!")
                                         val sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE)
                                         sharedPreferences.edit().putInt("user_character", selectedCharacter).apply()

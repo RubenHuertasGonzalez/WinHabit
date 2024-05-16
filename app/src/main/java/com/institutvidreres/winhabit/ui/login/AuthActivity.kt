@@ -84,49 +84,73 @@ class AuthActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
             val email = binding.editTextEmail.text.toString()
             val password = binding.editTextPassword.text.toString()
 
-            // Verificar la conectividad antes de iniciar sesión
-            if (AppUtils.isInternetConnected(this)) {
-                progressBar.visibility = View.VISIBLE
-                auth.signInWithEmailAndPassword(email, password)
-                    .addOnCompleteListener(this) { task ->
-                        if (task.isSuccessful) {
-                            // Inicio de sesión exitoso, redirigir a la actividad principal
-                            val user = auth.currentUser
-                            if (user != null) {
-                                // Obtener el ID del personaje del usuario desde Firestore
-                                val db = FirebaseFirestore.getInstance()
-                                db.collection("users").document(user.uid)
-                                    .get()
-                                    .addOnSuccessListener { document ->
-                                        val characterId = document.getLong("character")
-                                        if (characterId != null) {
-                                            progressBar.visibility = View.GONE // Ocultar progressBar
-                                            val sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE)
-                                            sharedPreferences.edit().putInt("user_character", characterId.toInt()).apply()
-                                            val intent = Intent(this, MainActivity::class.java).apply {
-                                                putExtra("user_email", user.email)
-                                                putExtra("user_name", username)
+            if (email.isNotEmpty() && password.isNotEmpty()) {
+                // Verificar la conectividad antes de iniciar sesión
+                if (AppUtils.isInternetConnected(this)) {
+                    progressBar.visibility = View.VISIBLE
+                    auth.signInWithEmailAndPassword(email, password)
+                        .addOnCompleteListener(this) { task ->
+                            if (task.isSuccessful) {
+                                // Inicio de sesión exitoso, redirigir a la actividad principal
+                                val user = auth.currentUser
+                                val email = user?.email
+                                if (user != null) {
+                                    // Obtener el ID del personaje del usuario desde Firestore
+                                    val db = FirebaseFirestore.getInstance()
+                                    db.collection("users").document(user.uid)
+                                        .get()
+                                        .addOnSuccessListener { document ->
+                                            val successMessage = "Bienvenido de nuevo: $email"
+                                            Toast.makeText(this, successMessage, Toast.LENGTH_SHORT).show()
+                                            val characterId = document.getLong("character")
+                                            if (characterId != null) {
+                                                progressBar.visibility =
+                                                    View.GONE // Ocultar progressBar
+                                                val sharedPreferences =
+                                                    getSharedPreferences("MyPrefs", MODE_PRIVATE)
+                                                sharedPreferences.edit()
+                                                    .putInt("user_character", characterId.toInt())
+                                                    .apply()
+                                                val intent =
+                                                    Intent(this, MainActivity::class.java).apply {
+                                                        putExtra("user_email", user.email)
+                                                        putExtra("user_name", username)
+                                                    }
+                                                startActivity(intent)
+                                                finish()
+                                            } else {
+                                                Log.e(
+                                                    TAG,
+                                                    "Error: No se encontró el ID del personaje para el usuario"
+                                                )
                                             }
-                                            startActivity(intent)
-                                            finish()
-                                        } else {
-                                            Log.e(TAG, "Error: No se encontró el ID del personaje para el usuario")
                                         }
-                                    }
-                                    .addOnFailureListener { e ->
-                                        Log.e(TAG, "Error al obtener el ID del personaje del usuario", e)
-                                        progressBar.visibility = View.GONE // Ocultar progressBar
-                                    }
+                                        .addOnFailureListener { e ->
+                                            Log.e(
+                                                TAG,
+                                                "Error al obtener el ID del personaje del usuario",
+                                                e
+                                            )
+                                            progressBar.visibility =
+                                                View.GONE // Ocultar progressBar
+                                        }
+                                }
+                            } else { // Fallo en el inicio de sesión
+                                Log.w(TAG, "signInWithEmailAndPassword:failure", task.exception)
+                                Toast.makeText(
+                                    this,
+                                    "Correo o contraseña incorrecto",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                                progressBar.visibility = View.GONE // Ocultar progressBar
                             }
-                        } else { // Fallo en el inicio de sesión
-                            Log.w(TAG, "signInWithEmailAndPassword:failure", task.exception)
-                            Toast.makeText(this, "Correo o contraseña incorrecto", Toast.LENGTH_SHORT).show()
-                            progressBar.visibility = View.GONE // Ocultar progressBar
                         }
-                    }
+                } else {
+                    // No hay conexión a Internet
+                    Toast.makeText(this, "No hay conexión a Internet", Toast.LENGTH_SHORT).show()
+                }
             } else {
-                // No hay conexión a Internet
-                Toast.makeText(this, "No hay conexión a Internet", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Por favor, complete todos los campos", Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -228,7 +252,7 @@ class AuthActivity : AppCompatActivity(), GoogleApiClient.OnConnectionFailedList
     fun updateUI(isConnected: Boolean) {
         if (!isConnected) {
             // No hay conexión a Internet
-            Toast.makeText(this, "Error de Conexión", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "No hay conexión a Internet", Toast.LENGTH_SHORT).show()
             progressBar.visibility = View.VISIBLE
         } else {
             // Hay conexión a Internet
