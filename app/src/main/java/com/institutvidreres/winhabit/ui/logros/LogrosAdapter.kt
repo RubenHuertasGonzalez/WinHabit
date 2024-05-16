@@ -1,5 +1,7 @@
 package com.institutvidreres.winhabit.ui.logros
 
+import android.app.AlertDialog
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -46,9 +48,25 @@ class LogrosAdapter(private val logrosList: MutableList<LogrosItem>) :
             logro.reclamado = true // Marcar el logro como reclamado
             holder.imageInsignia.setImageResource(logro.imagenResource) // Actualizar la imagen en el ImageView
         }
+
+        holder.itemView.setOnClickListener {
+            // Mostrar el diálogo
+            showLogroDialog(holder.itemView.context, logro.titulo, logro.descripcion)
+        }
     }
 
     override fun getItemCount(): Int {
         return logrosList.size
+    }
+
+    private fun showLogroDialog(context: Context, titulo: String, descripcion: String) {
+        val dialogBuilder = AlertDialog.Builder(context)
+        dialogBuilder.setTitle(titulo)
+        dialogBuilder.setMessage(descripcion)
+        dialogBuilder.setPositiveButton("Cerrar") { dialog, _ ->
+            dialog.dismiss()
+        }
+        val dialog = dialogBuilder.create()
+        dialog.show()
     }
 }
