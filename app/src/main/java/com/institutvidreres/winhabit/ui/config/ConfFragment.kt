@@ -53,7 +53,17 @@ class ConfFragment : Fragment() {
             val currentPassword = binding.currentPasswordEditText.text.toString()
             val newPassword = binding.newPasswordEditText.text.toString()
             val confirmPassword = binding.confirmPasswordEditText.text.toString()
+
+            if (currentPassword.isEmpty() || newPassword.isEmpty() || confirmPassword.isEmpty()) {
+                Toast.makeText(requireContext(), "Por favor, completa todos los campos", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
             viewModel.changePassword(currentPassword, newPassword, confirmPassword)
+            // Borrar los campos de entrada
+            binding.currentPasswordEditText.text.clear()
+            binding.newPasswordEditText.text.clear()
+            binding.confirmPasswordEditText.text.clear()
         }
 
         binding.deleteAccountButton.setOnClickListener {
