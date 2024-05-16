@@ -30,6 +30,16 @@ class PerfilViewModel : ViewModel() {
         return RoomRepository.getBanners(context, usuarioId)
     }
 
+    suspend fun actualizarCharacter(characterId: Int) {
+        val userId = auth.currentUser?.uid ?: return
+        db.collection("users").document(userId).update("character", characterId).await()
+    }
+
+    suspend fun actualizarBanner(bannerId: Int) {
+        val userId = auth.currentUser?.uid ?: return
+        db.collection("users").document(userId).update("banner", bannerId).await()
+    }
+
     suspend fun obtenerNombreUsuario(): String {
         val userId = auth.currentUser?.uid ?: ""
         val documentSnapshot = db.collection("users").document(userId).get().await()

@@ -81,6 +81,11 @@ class PerfilFragment : Fragment() {
 
                         // Actualizar la ID del personaje en MainActivity
                         (requireActivity() as MainActivity).updateFirebaseIdCharacter(selectedItem.firebaseId)
+
+                        // Actualizar la ID del personaje en Firestore
+                        lifecycleScope.launch {
+                            perfilViewModel.actualizarCharacter(selectedItem.firebaseId)
+                        }
                     }
                     recyclerViewPersonajes.adapter = personajesAdapter
                 }
@@ -97,6 +102,11 @@ class PerfilFragment : Fragment() {
 
                         // Actualizar la ID del banner en MainActivity
                         (requireActivity() as MainActivity).updateFirebaseIdBanner(selectedItem.firebaseId)
+
+                        // Actualizar la ID del banner en Firestore
+                        lifecycleScope.launch {
+                            perfilViewModel.actualizarBanner(selectedItem.firebaseId)
+                        }
                     }
                     recyclerViewBanners.adapter = bannersAdapter
                 }

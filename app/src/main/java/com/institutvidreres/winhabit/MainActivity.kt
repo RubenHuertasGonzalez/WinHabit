@@ -148,11 +148,19 @@ class MainActivity : AppCompatActivity() {
         // Obtén el valor del personaje seleccionado del Intent
         val sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE)
         val character = sharedPreferences.getInt("user_character", -1)
+        val banner = sharedPreferences.getInt("user_banner", -1)
         if (character != -1) {
             updateFirebaseIdCharacter(character)
             Log.d("MainActivity", "Personaje seleccionado: $character")
         } else {
             Log.e("MainActivity", "No se pudo obtener el personaje seleccionado")
+        }
+
+        if (banner != -1) { // Agregado para verificar si se recuperó correctamente el ID del banner
+            updateFirebaseIdBanner(banner) // Agregado para actualizar la interfaz con el banner seleccionado
+            Log.d("MainActivity", "Banner seleccionado: $banner")
+        } else {
+            Log.e("MainActivity", "No se pudo obtener el banner seleccionado")
         }
 
         username = sharedPreferences.getString("user_name", null)

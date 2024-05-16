@@ -102,6 +102,7 @@ class RegisterActivity : AppCompatActivity() {
                                 "username" to username,
                                 "password" to password,
                                 "character" to selectedCharacter,
+                                "banner" to 19
                             )
                             if (user != null) {
                                 db.collection("users").document(user.uid)
